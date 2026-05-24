@@ -32,8 +32,8 @@
   .progress-bar-track { display: inline-block; font-size: 12px; color: #00FF41; letter-spacing: 1px; }
 
   /* NICK SCREEN */
-#nick-screen { display: none; opacity: 0; position: relative; z-index: 10; text-align: center; transition: opacity 0.4s ease; }
-#nick-screen.show { opacity: 1; }
+  #nick-screen { display: none; opacity: 0; position: relative; z-index: 2; text-align: center; transition: opacity 0.4s ease; }
+  #nick-screen.show { opacity: 1; }
   .nick-title { font-size: 12px; color: #00FF41; opacity: 0.6; letter-spacing: 2px; margin-bottom: 20px; }
   .nick-label { font-size: 11px; color: #00FF41; opacity: 0.45; letter-spacing: 1px; margin-bottom: 8px; }
   #nick-setup-input {
@@ -365,10 +365,10 @@
         main.style.transition = '';
 
         const ns = document.getElementById('nick-screen');
-        ns.style.transition = '';
-        ns.style.opacity = '0';
-        ns.style.display = 'block';
         ns.classList.remove('show');
+        ns.style.opacity = '';
+        ns.style.transition = '';
+        ns.style.display = 'block';
 
         const input = document.getElementById('nick-setup-input');
         input.value = '';
@@ -386,7 +386,8 @@
         const newBtn = oldBtn.cloneNode(true);
         oldBtn.parentNode.replaceChild(newBtn, oldBtn);
 
-        await d(50);
+        await d(80);
+        ns.style.transition = 'opacity 0.4s ease';
         ns.classList.add('show');
         input.focus();
 
