@@ -38,7 +38,7 @@
   .win-btn.active-btn { background: rgba(0,255,65,0.15); }
 
   /* BODY */
-  .win-body { flex: 1; overflow: auto; position: relative; display: flex; flex-direction: column; }
+  .win-body { flex: 1; overflow: hidden; position: relative; display: flex; flex-direction: column; }
 
   /* RESIZE */
   .win-resize {
@@ -51,11 +51,12 @@
     border-bottom: 2px solid rgba(0,255,65,0.4);
   }
 
-  /* SCANLINE — теперь на window, не на terminal */
+  /* SCANLINE */
   .scanline {
-    position: absolute; left: 0; width: 100%; height: 60px; pointer-events: none; z-index: 6;
+    position: absolute; left: 0; width: 100%; height: 60px; pointer-events: none; z-index: 50;
     background: linear-gradient(to bottom, transparent 0%, rgba(0,255,65,0.06) 40%, rgba(0,255,65,0.10) 50%, rgba(0,255,65,0.06) 60%, transparent 100%);
     animation: scanmove 4s linear infinite;
+    top: -80px;
   }
   @keyframes scanmove { 0% { top: -80px; } 100% { top: calc(100% + 80px); } }
 
@@ -66,7 +67,7 @@
   }
 
   /* TERMINAL INNER */
-  .terminal-inner { padding: 24px 30px; flex: 1; display: flex; flex-direction: column; position: relative; z-index: 2; }
+  .terminal-inner { padding: 24px 30px; flex: 1; display: flex; flex-direction: column; position: relative; z-index: 2; overflow: hidden; }
 
   /* BOOT */
   #boot-screen { font-size: 12px; color: #00FF41; text-align: left; }
@@ -157,7 +158,7 @@
   /* SETTINGS WINDOW */
   #window2 { display: none; }
   #window2.visible { display: flex; }
-  .settings-body { padding: 20px 24px; flex: 1; overflow: auto; }
+  .settings-body { padding: 20px 24px; flex: 1; overflow-y: auto; overflow-x: hidden; }
   .settings-title { font-size: 11px; color: #00FF41; opacity: 0.5; letter-spacing: 2px; margin-bottom: 18px; }
   .settings-row { margin-bottom: 20px; }
   .settings-label { font-size: 10px; color: #00FF41; opacity: 0.45; letter-spacing: 1px; margin-bottom: 10px; }
@@ -176,6 +177,7 @@
 
 <!-- WINDOW 1: CHAT -->
 <div class="window active" id="window1" style="top:40px; left:40px; width:620px; height:560px;">
+  <div class="scanline"></div>
   <div class="win-titlebar" id="titlebar1">
     <span class="win-title">NANOTRASEN OS — TERMINAL</span>
     <div class="win-controls">
@@ -184,7 +186,6 @@
   </div>
   <div class="win-body">
     <div class="crt-overlay"></div>
-    <div class="scanline"></div>
     <div class="terminal-inner">
 
       <!-- BOOT -->
@@ -244,12 +245,12 @@
 
 <!-- WINDOW 2: SETTINGS -->
 <div class="window" id="window2" style="top:40px; left:690px; width:300px; height:360px;">
+  <div class="scanline"></div>
   <div class="win-titlebar" id="titlebar2">
     <span class="win-title">НАСТРОЙКИ</span>
   </div>
   <div class="win-body">
     <div class="crt-overlay"></div>
-    <div class="scanline"></div>
     <div class="settings-body">
       <div class="settings-title">> ПАРАМЕТРЫ ИНТЕРФЕЙСА</div>
 
