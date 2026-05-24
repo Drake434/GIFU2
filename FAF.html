@@ -6,12 +6,36 @@
 <title>NANOTRASEN OS</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0d0d0d; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Courier New', monospace; }
-  .terminal {
+  body { background: #0d0d0d; min-height: 100vh; font-family: 'Courier New', monospace; overflow: hidden; }
+  .window {
     background: #0d0d0d; border: 1px solid #00FF41; border-radius: 8px;
-    padding: 24px 30px; box-shadow: 0 0 20px rgba(0,255,65,0.15), inset 0 0 30px rgba(0,0,0,0.5);
-    position: relative; overflow: hidden; width: 620px; max-width: 98vw;
+    box-shadow: 0 0 20px rgba(0,255,65,0.15), inset 0 0 30px rgba(0,0,0,0.5);
+    position: fixed; overflow: hidden; min-width: 220px; min-height: 140px;
+    display: flex; flex-direction: column;
   }
+  .window.active { border-color: #00FF41; box-shadow: 0 0 30px rgba(0,255,65,0.3); z-index: 100; }
+  .window:not(.active) { border-color: rgba(0,255,65,0.35); box-shadow: 0 0 10px rgba(0,255,65,0.07); z-index: 10; }
+  .win-titlebar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 5px 10px; border-bottom: 1px solid rgba(0,255,65,0.2);
+    cursor: grab; user-select: none; flex-shrink: 0; height: 28px;
+    background: rgba(0,255,65,0.04);
+  }
+  .win-titlebar:active { cursor: grabbing; }
+  .win-title { font-size: 10px; color: #00FF41; opacity: 0.6; letter-spacing: 2px; }
+  .win-body { padding: 24px 30px; flex: 1; overflow: auto; position: relative; }
+  .win-resize {
+    position: absolute; bottom: 0; right: 0; width: 16px; height: 16px; cursor: nwse-resize; z-index: 20;
+  }
+  .win-resize::after {
+    content: ''; position: absolute; bottom: 3px; right: 3px;
+    width: 7px; height: 7px;
+    border-right: 2px solid rgba(0,255,65,0.5);
+    border-bottom: 2px solid rgba(0,255,65,0.5);
+  }
+  #window2 .win-body { display: flex; align-items: center; justify-content: center; }
+  .empty-label { font-size: 11px; color: #00FF41; opacity: 0.2; letter-spacing: 3px; }
+  .terminal {
   .terminal::before {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.13) 3px, rgba(0,0,0,0.13) 4px);
@@ -114,7 +138,12 @@
 </style>
 </head>
 <body>
-<div class="terminal">
+<div class="window active" id="window1" style="top:40px; left:40px; width:620px;">
+  <div class="win-titlebar" id="titlebar1">
+    <span class="win-title">NANOTRASEN OS — TERMINAL</span>
+  </div>
+  <div class="win-body">
+  <div class="terminal">
   <div class="scanline"></div>
 
   <!-- BOOT -->
@@ -167,6 +196,19 @@
     </div>
   </div>
 </div>
+  </div><!-- win-body -->
+  <div class="win-resize" id="resize1"></div>
+</div><!-- window1 -->
+
+<div class="window" id="window2" style="top:40px; left:700px; width:320px; height:400px;">
+  <div class="win-titlebar" id="titlebar2">
+    <span class="win-title">NANOTRASEN — AUX TERMINAL</span>
+  </div>
+  <div class="win-body">
+    <div class="empty-label">[ ПУСТО ]</div>
+  </div>
+  <div class="win-resize" id="resize2"></div>
+</div><!-- window2 -->
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -422,6 +464,68 @@
   }
 
   runBoot();
+</script>
+
+<script>
+  // Drag & Resize for windows
+  (function() {
+    const windows = document.querySelectorAll('.window');
+
+    function bringToFront(win) {
+      windows.forEach(w => w.classList.remove('active'));
+      win.classList.add('active');
+    }
+
+    windows.forEach(win => {
+      win.addEventListener('mousedown', () => bringToFront(win));
+
+      const titlebar = win.querySelector('.win-titlebar');
+      const resizeHandle = win.querySelector('.win-resize');
+
+      // DRAG
+      let dragging = false, dx = 0, dy = 0;
+      titlebar.addEventListener('mousedown', e => {
+        dragging = true;
+        dx = e.clientX - win.offsetLeft;
+        dy = e.clientY - win.offsetTop;
+        bringToFront(win);
+        e.preventDefault();
+      });
+
+      // RESIZE
+      let resizing = false, startX, startY, startW, startH;
+      resizeHandle.addEventListener('mousedown', e => {
+        resizing = true;
+        startX = e.clientX; startY = e.clientY;
+        startW = win.offsetWidth; startH = win.offsetHeight;
+        bringToFront(win);
+        e.preventDefault();
+        e.stopPropagation();
+      });
+
+      document.addEventListener('mousemove', e => {
+        if (dragging) {
+          let nx = e.clientX - dx;
+          let ny = e.clientY - dy;
+          nx = Math.max(0, Math.min(window.innerWidth - win.offsetWidth, nx));
+          ny = Math.max(0, Math.min(window.innerHeight - win.offsetHeight, ny));
+          win.style.left = nx + 'px';
+          win.style.top = ny + 'px';
+        }
+        if (resizing) {
+          let nw = Math.max(220, startW + (e.clientX - startX));
+          let nh = Math.max(140, startH + (e.clientY - startY));
+          win.style.width = nw + 'px';
+          win.style.height = nh + 'px';
+        }
+      });
+
+      document.addEventListener('mouseup', () => {
+        dragging = false;
+        resizing = false;
+      });
+    });
+  })();
 </script>
 </body>
 </html>
