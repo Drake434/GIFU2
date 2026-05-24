@@ -369,8 +369,17 @@
         ns.style.opacity = '0';
         ns.style.display = 'block';
         ns.classList.remove('show');
-        document.getElementById('nick-setup-input').value = '';
-        document.getElementById('nick-setup-input').style.borderBottomColor = '';
+
+        const input = document.getElementById('nick-setup-input');
+        input.value = '';
+        input.style.borderBottomColor = '';
+        input.style.color = '#62F1F5';
+
+        // Сбрасываем выбор цвета на дефолтный
+        currentColor = '#62F1F5';
+        document.querySelectorAll('.color-swatch').forEach(sw => {
+          sw.classList.toggle('selected', sw.style.background === 'rgb(98, 241, 245)');
+        });
 
         // Сбрасываем обработчики — пересоздаём кнопку
         const oldBtn = document.getElementById('nick-confirm-btn');
@@ -379,14 +388,14 @@
 
         await d(50);
         ns.classList.add('show');
-        document.getElementById('nick-setup-input').focus();
+        input.focus();
 
         function confirm() {
-          const val = document.getElementById('nick-setup-input').value.trim();
-          if (!val) { document.getElementById('nick-setup-input').style.borderBottomColor = '#ff4444'; return; }
+          const val = input.value.trim();
+          if (!val) { input.style.borderBottomColor = '#ff4444'; return; }
           currentNick = val;
           currentColor = document.querySelector('.color-swatch.selected')?.style.background || '#62F1F5';
-          localStorage.setItem('nt_nick', val);
+          localStorage.setItem('nt_nick', currentNick);
           localStorage.setItem('nt_color', currentColor);
           ns.style.transition = 'opacity 0.3s ease';
           ns.style.opacity = '0';
@@ -396,11 +405,17 @@
             m.style.display = 'block';
             await d(50);
             m.style.opacity = '1';
+            const messages = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = 'msg-system';
+            div.textContent = '> Позывной изменён на: ' + currentNick;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
           }, 320);
         }
 
         document.getElementById('nick-confirm-btn').addEventListener('click', confirm);
-        document.getElementById('nick-setup-input').addEventListener('keydown', e => { if (e.key === 'Enter') confirm(); });
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') confirm(); });
       }, 320);
     });
   }
