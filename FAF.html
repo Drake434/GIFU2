@@ -11,31 +11,31 @@
   /* WINDOW */
   .window {
     background: #0d0d0d; border: 1px solid var(--win-color, #00FF41); border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0,255,65,0.15), inset 0 0 30px rgba(0,0,0,0.5);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--win-color, #00FF41) 15%, transparent), inset 0 0 30px rgba(0,0,0,0.5);
     position: fixed; overflow: hidden; min-width: 220px; min-height: 140px;
     display: flex; flex-direction: column;
   }
-  .window.active { box-shadow: 0 0 30px rgba(0,255,65,0.3); z-index: 100; }
+  .window.active { box-shadow: 0 0 30px color-mix(in srgb, var(--win-color, #00FF41) 30%, transparent); z-index: 100; }
   .window:not(.active) { opacity: 0.85; z-index: 10; }
 
   /* TITLEBAR */
   .win-titlebar {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 5px 10px; border-bottom: 1px solid rgba(0,255,65,0.2);
+    padding: 5px 10px; border-bottom: 1px solid color-mix(in srgb, var(--win-color, #00FF41) 20%, transparent);
     cursor: grab; user-select: none; flex-shrink: 0; height: 28px;
-    background: rgba(0,255,65,0.04);
+    background: color-mix(in srgb, var(--win-color, #00FF41) 4%, transparent);
   }
   .win-titlebar:active { cursor: grabbing; }
   .win-title { font-size: 10px; color: var(--win-color, #00FF41); opacity: 0.6; letter-spacing: 2px; }
   .win-controls { display: flex; gap: 6px; align-items: center; }
   .win-btn {
-    background: transparent; border: 1px solid rgba(0,255,65,0.4); border-radius: 3px;
+    background: transparent; border: 1px solid color-mix(in srgb, var(--win-color, #00FF41) 40%, transparent); border-radius: 3px;
     color: var(--win-color, #00FF41); font-family: 'Courier New', monospace; font-size: 9px;
     padding: 2px 6px; cursor: pointer; letter-spacing: 1px;
     transition: background 0.15s; white-space: nowrap;
   }
-  .win-btn:hover { background: rgba(0,255,65,0.15); }
-  .win-btn.active-btn { background: rgba(0,255,65,0.15); }
+  .win-btn:hover { background: color-mix(in srgb, var(--win-color, #00FF41) 15%, transparent); }
+  .win-btn.active-btn { background: color-mix(in srgb, var(--win-color, #00FF41) 15%, transparent); }
 
   /* BODY */
   .win-body { flex: 1; overflow: hidden; position: relative; display: flex; flex-direction: column; }
@@ -47,14 +47,14 @@
   .win-resize::after {
     content: ''; position: absolute; bottom: 3px; right: 3px;
     width: 7px; height: 7px;
-    border-right: 2px solid rgba(0,255,65,0.4);
-    border-bottom: 2px solid rgba(0,255,65,0.4);
+    border-right: 2px solid color-mix(in srgb, var(--win-color, #00FF41) 40%, transparent);
+    border-bottom: 2px solid color-mix(in srgb, var(--win-color, #00FF41) 40%, transparent);
   }
 
   /* SCANLINE */
   .scanline {
     position: absolute; left: 0; width: 100%; height: 60px; pointer-events: none; z-index: 50;
-    background: linear-gradient(to bottom, transparent 0%, rgba(0,255,65,0.06) 40%, rgba(0,255,65,0.10) 50%, rgba(0,255,65,0.06) 60%, transparent 100%);
+    background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--win-color, #00FF41) 20%, transparent) 40%, color-mix(in srgb, var(--win-color, #00FF41) 35%, transparent) 50%, color-mix(in srgb, var(--win-color, #00FF41) 20%, transparent) 60%, transparent 100%);
     animation: scanmove 4s linear infinite;
     top: -80px;
   }
@@ -70,26 +70,26 @@
   .terminal-inner { padding: 24px 30px; flex: 1; display: flex; flex-direction: column; position: relative; z-index: 2; overflow: hidden; }
 
   /* BOOT */
-  #boot-screen { font-size: 12px; color: #00FF41; text-align: left; }
+  #boot-screen { font-size: 12px; color: var(--win-color, #00FF41); text-align: left; }
   .boot-line { opacity: 0; line-height: 1.8; letter-spacing: 1px; }
-  .ok { color: #00FF41; } .warn { color: #62F1F5; } .err { color: #ff4444; }
+  .ok { color: var(--win-color, #00FF41); } .warn { color: #62F1F5; } .err { color: #ff4444; }
   .progress-bar-wrap { margin: 8px 0 4px; opacity: 0; }
-  .progress-bar-track { display: inline-block; font-size: 12px; color: #00FF41; letter-spacing: 1px; }
+  .progress-bar-track { display: inline-block; font-size: 12px; color: var(--win-color, #00FF41); letter-spacing: 1px; }
 
   /* NICK SCREEN */
   #nick-screen { display: none; opacity: 0; text-align: center; transition: opacity 0.4s ease; }
   #nick-screen.show { opacity: 1; }
-  .nick-title { font-size: 12px; color: #00FF41; opacity: 0.6; letter-spacing: 2px; margin-bottom: 20px; }
-  .nick-label { font-size: 11px; color: #00FF41; opacity: 0.45; letter-spacing: 1px; margin-bottom: 8px; }
+  .nick-title { font-size: 12px; color: var(--win-color, #00FF41); opacity: 0.6; letter-spacing: 2px; margin-bottom: 20px; }
+  .nick-label { font-size: 11px; color: var(--win-color, #00FF41); opacity: 0.45; letter-spacing: 1px; margin-bottom: 8px; }
   #nick-setup-input {
-    background: transparent; border: none; border-bottom: 1px solid rgba(0,255,65,0.5);
+    background: transparent; border: none; border-bottom: 1px solid color-mix(in srgb, var(--win-color, #00FF41) 50%, transparent);
     color: #62F1F5; font-family: 'Courier New', monospace; font-size: 18px;
     padding: 6px 4px; width: 220px; outline: none; letter-spacing: 3px; text-align: center;
-    caret-color: #00FF41;
+    caret-color: var(--win-color, #00FF41);
   }
   #nick-setup-input:focus { border-bottom-color: #62F1F5; }
 
-  .color-label { font-size: 11px; color: #00FF41; opacity: 0.45; letter-spacing: 1px; margin: 18px 0 10px; }
+  .color-label { font-size: 11px; color: var(--win-color, #00FF41); opacity: 0.45; letter-spacing: 1px; margin: 18px 0 10px; }
   .color-palette { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
   .color-swatch {
     width: 22px; height: 22px; border-radius: 3px; cursor: pointer;
@@ -99,69 +99,69 @@
   .color-swatch.selected { border-color: #ffffff; transform: scale(1.2); }
 
   #nick-confirm-btn {
-    margin-top: 22px; background: transparent; border: 1px solid rgba(0,255,65,0.4);
-    border-radius: 4px; color: #00FF41; font-family: 'Courier New', monospace;
+    margin-top: 22px; background: transparent; border: 1px solid color-mix(in srgb, var(--win-color, #00FF41) 40%, transparent);
+    border-radius: 4px; color: var(--win-color, #00FF41); font-family: 'Courier New', monospace;
     font-size: 12px; padding: 8px 24px; cursor: pointer; letter-spacing: 2px;
     transition: background 0.2s, box-shadow 0.2s;
   }
-  #nick-confirm-btn:hover { background: rgba(0,255,65,0.1); box-shadow: 0 0 8px rgba(0,255,65,0.3); }
+  #nick-confirm-btn:hover { background: color-mix(in srgb, var(--win-color, #00FF41) 10%, transparent); box-shadow: 0 0 8px color-mix(in srgb, var(--win-color, #00FF41) 30%, transparent); }
 
   /* MAIN */
   #main-content { display: none; opacity: 0; flex: 1; display: none; flex-direction: column; min-height: 0; }
   #main-content.visible { display: flex; }
   .logo-wrap { text-align: center; margin-bottom: 16px; flex-shrink: 0; }
   .pixel-row {
-    font-size: 22px; line-height: 1.3; color: #00FF41;
-    text-shadow: 0 0 8px rgba(0,255,65,0.8); letter-spacing: 2px; white-space: pre;
+    font-size: 22px; line-height: 1.3; color: var(--win-color, #00FF41);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--win-color, #00FF41) 80%, transparent); letter-spacing: 2px; white-space: pre;
     opacity: 0; transform: translateY(-4px); transition: opacity 0.15s ease, transform 0.15s ease;
   }
   .pixel-row.show { opacity: 1; transform: translateY(0); }
-  .divider { color: #00FF41; opacity: 0; font-size: 13px; margin: 10px 0 8px; letter-spacing: 1px; transition: opacity 0.3s ease; }
+  .divider { color: var(--win-color, #00FF41); opacity: 0; font-size: 13px; margin: 10px 0 8px; letter-spacing: 1px; transition: opacity 0.3s ease; }
   .divider.show { opacity: 0.3; }
-  .label { color: #00FF41; font-size: 13px; opacity: 0; letter-spacing: 2px; text-shadow: 0 0 6px rgba(0,255,65,0.5); transition: opacity 0.4s ease; }
+  .label { color: var(--win-color, #00FF41); font-size: 13px; opacity: 0; letter-spacing: 2px; text-shadow: 0 0 6px color-mix(in srgb, var(--win-color, #00FF41) 50%, transparent); transition: opacity 0.4s ease; }
   .label.show { opacity: 0.7; }
 
   /* CHAT */
   #chat-area { margin-top: 16px; opacity: 0; transition: opacity 0.4s ease; flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
   #chat-area.show { opacity: 1; }
   #messages {
-    flex: 1; min-height: 0; overflow-y: auto; border: 1px solid rgba(0,255,65,0.2);
+    flex: 1; min-height: 0; overflow-y: auto; border: 1px solid color-mix(in srgb, var(--win-color, #00FF41) 20%, transparent);
     border-radius: 4px; padding: 10px; margin-bottom: 10px;
-    scrollbar-width: thin; scrollbar-color: #00FF41 #0d0d0d;
+    scrollbar-width: thin; scrollbar-color: var(--win-color, #00FF41) #0d0d0d;
   }
   #messages::-webkit-scrollbar { width: 4px; }
   #messages::-webkit-scrollbar-track { background: #0d0d0d; }
-  #messages::-webkit-scrollbar-thumb { background: #00FF41; }
+  #messages::-webkit-scrollbar-thumb { background: var(--win-color, #00FF41); }
   .msg { font-size: 12px; line-height: 1.9; letter-spacing: 0.5px; }
-  .msg .ts { color: #00FF41; opacity: 0.35; margin-right: 6px; }
-  .msg .text { color: #00FF41; }
-  .msg-system { font-size: 11px; color: #00FF41; opacity: 0.35; letter-spacing: 1px; line-height: 2; }
+  .msg .ts { color: var(--win-color, #00FF41); opacity: 0.35; margin-right: 6px; }
+  .msg .text { color: var(--win-color, #00FF41); }
+  .msg-system { font-size: 11px; color: var(--win-color, #00FF41); opacity: 0.35; letter-spacing: 1px; line-height: 2; }
 
   .input-row { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
   #msg-input {
-    background: transparent; border: 1px solid rgba(0,255,65,0.3); border-radius: 4px;
-    color: #00FF41; font-family: 'Courier New', monospace; font-size: 12px;
+    background: transparent; border: 1px solid color-mix(in srgb, var(--win-color, #00FF41) 30%, transparent); border-radius: 4px;
+    color: var(--win-color, #00FF41); font-family: 'Courier New', monospace; font-size: 12px;
     padding: 6px 8px; flex: 1; outline: none; letter-spacing: 1px;
   }
-  #msg-input:focus { border-color: rgba(0,255,65,0.7); box-shadow: 0 0 6px rgba(0,255,65,0.15); }
+  #msg-input:focus { border-color: color-mix(in srgb, var(--win-color, #00FF41) 70%, transparent); box-shadow: 0 0 6px color-mix(in srgb, var(--win-color, #00FF41) 15%, transparent); }
   #send-btn {
-    background: transparent; border: 1px solid rgba(0,255,65,0.4); border-radius: 4px;
-    color: #00FF41; font-family: 'Courier New', monospace; font-size: 12px;
+    background: transparent; border: 1px solid color-mix(in srgb, var(--win-color, #00FF41) 40%, transparent); border-radius: 4px;
+    color: var(--win-color, #00FF41); font-family: 'Courier New', monospace; font-size: 12px;
     padding: 6px 12px; cursor: pointer; letter-spacing: 1px; white-space: nowrap;
     transition: background 0.2s, box-shadow 0.2s;
   }
-  #send-btn:hover { background: rgba(0,255,65,0.1); box-shadow: 0 0 8px rgba(0,255,65,0.3); }
-  #status-bar { font-size: 10px; color: #00FF41; opacity: 0.35; margin-top: 6px; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-  #change-nick-btn { cursor: pointer; opacity: 0.4; letter-spacing: 1px; font-size: 10px; color: #00FF41; background: none; border: none; font-family: 'Courier New', monospace; transition: opacity 0.2s; }
+  #send-btn:hover { background: color-mix(in srgb, var(--win-color, #00FF41) 10%, transparent); box-shadow: 0 0 8px color-mix(in srgb, var(--win-color, #00FF41) 30%, transparent); }
+  #status-bar { font-size: 10px; color: var(--win-color, #00FF41); opacity: 0.35; margin-top: 6px; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+  #change-nick-btn { cursor: pointer; opacity: 0.4; letter-spacing: 1px; font-size: 10px; color: var(--win-color, #00FF41); background: none; border: none; font-family: 'Courier New', monospace; transition: opacity 0.2s; }
   #change-nick-btn:hover { opacity: 0.8; }
 
   /* SETTINGS WINDOW */
   #window2 { display: none; }
   #window2.visible { display: flex; }
   .settings-body { padding: 20px 24px; flex: 1; overflow-y: auto; overflow-x: hidden; }
-  .settings-title { font-size: 11px; color: #00FF41; opacity: 0.5; letter-spacing: 2px; margin-bottom: 18px; }
+  .settings-title { font-size: 11px; color: var(--win-color, #00FF41); opacity: 0.5; letter-spacing: 2px; margin-bottom: 18px; }
   .settings-row { margin-bottom: 20px; }
-  .settings-label { font-size: 10px; color: #00FF41; opacity: 0.45; letter-spacing: 1px; margin-bottom: 10px; }
+  .settings-label { font-size: 10px; color: var(--win-color, #00FF41); opacity: 0.45; letter-spacing: 1px; margin-bottom: 10px; }
   .win-color-palette { display: flex; gap: 8px; flex-wrap: wrap; }
   .win-color-swatch {
     width: 20px; height: 20px; border-radius: 3px; cursor: pointer;
@@ -171,6 +171,19 @@
   .win-color-swatch.selected { border-color: #fff; transform: scale(1.2); }
 
   @keyframes blink { 50% { opacity: 0; } }
+
+  /* ADMIN WINDOW */
+  #window3 { display: none; --win-color: #ff4444; border-color: #ff4444; }
+  #window3 .win-titlebar { border-bottom-color: rgba(255,68,68,0.3); }
+  .admin-btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .admin-btn {
+    background: transparent; border: 1px solid rgba(255,68,68,0.4); border-radius: 4px;
+    color: #ff4444; font-family: 'Courier New', monospace; font-size: 11px;
+    padding: 10px 8px; cursor: pointer; letter-spacing: 1px;
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+  .admin-btn:hover { background: rgba(255,68,68,0.1); box-shadow: 0 0 8px rgba(255,68,68,0.3); }
+
 </style>
 </head>
 <body>
@@ -270,7 +283,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, push, onChildAdded, onValue, set, remove, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBGh46wWig5a14tIG79aMC2fvy9KkBwlrM",
@@ -452,6 +465,22 @@
     const msgInput = document.getElementById('msg-input');
     const sendBtn = document.getElementById('send-btn');
 
+    // --- PRESENCE ---
+    const presenceRef = ref(db, 'terminal/online/' + currentNick);
+    set(presenceRef, { nick: currentNick, color: currentColor, ts: Date.now() });
+    onDisconnect(presenceRef).remove();
+    window.addEventListener('beforeunload', () => remove(presenceRef));
+
+    // --- PM listener ---
+    const pmRef = ref(db, 'terminal/pm/' + currentNick);
+    onChildAdded(pmRef, snap => {
+      const data = snap.val();
+      if (data && data.from && data.text) {
+        addPmMsg(data.from, data.text, data.fromColor);
+        remove(snap.ref);
+      }
+    });
+
     function escapeHtml(s) {
       return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
@@ -460,6 +489,18 @@
       const div = document.createElement('div');
       div.className = 'msg-system';
       div.textContent = '> ' + text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function addPmMsg(from, text, fromColor) {
+      const div = document.createElement('div');
+      div.className = 'msg';
+      const fc = fromColor || '#ff69b4';
+      div.innerHTML =
+        '<span class="ts">[PM]</span>' +
+        '<span class="nick" style="color:' + fc + ';text-shadow:0 0 6px ' + fc + '88;margin-right:6px">' + escapeHtml(from) + ' → тебе:</span>' +
+        '<span class="text" style="color:' + fc + '">' + escapeHtml(text) + '</span>';
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
     }
@@ -487,12 +528,87 @@
       }
     });
 
+    // --- COMMANDS ---
+    function handleCommand(raw) {
+      const parts = raw.trim().split(' ');
+      const cmd = parts[0].toLowerCase();
+
+      if (cmd === '/help') {
+        addSystemMsg('━━ КОМАНДЫ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        addSystemMsg('/help              — список команд');
+        addSystemMsg('/login             — список пользователей онлайн');
+        addSystemMsg('/msg <ник> <текст> — личное сообщение');
+        addSystemMsg('/admin <пароль>    — доступ к панели администратора');
+        addSystemMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+      } else if (cmd === '/login') {
+        const onlineRef = ref(db, 'terminal/online');
+        addSystemMsg('Запрос списка пользователей...');
+        onValue(onlineRef, snap => {
+          const data = snap.val();
+          if (!data) { addSystemMsg('Онлайн: никого нет.'); return; }
+          const users = Object.values(data);
+          addSystemMsg('━━ ОНЛАЙН [' + users.length + '] ━━━━━━━━━━━━━━━━━━━━━━━');
+          users.forEach(u => addSystemMsg('  • ' + u.nick));
+          addSystemMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        }, { onlyOnce: true });
+
+      } else if (cmd === '/msg') {
+        const target = parts[1];
+        const text = parts.slice(2).join(' ');
+        if (!target || !text) { addSystemMsg('Использование: /msg <ник> <текст>'); return; }
+        // Check target exists in online
+        const targetRef = ref(db, 'terminal/online/' + target);
+        onValue(targetRef, snap => {
+          if (!snap.exists()) {
+            addSystemMsg('Пользователь "' + target + '" не найден или офлайн.');
+            return;
+          }
+          push(ref(db, 'terminal/pm/' + target), {
+            from: currentNick, text, fromColor: currentColor, ts: Date.now()
+          });
+          // Show locally to sender
+          const div = document.createElement('div');
+          div.className = 'msg';
+          const fc = currentColor;
+          div.innerHTML =
+            '<span class="ts">[PM]</span>' +
+            '<span class="nick" style="color:' + fc + ';text-shadow:0 0 6px ' + fc + '88;margin-right:6px">ты → ' + escapeHtml(target) + ':</span>' +
+            '<span class="text" style="color:' + fc + '">' + escapeHtml(text) + '</span>';
+          messages.appendChild(div);
+          messages.scrollTop = messages.scrollHeight;
+        }, { onlyOnce: true });
+
+      } else if (cmd === '/admin') {
+        const pass = parts[1];
+        if (pass === 'TEST') {
+          addSystemMsg('Пароль принят. Открываю панель администратора...');
+          const win3 = document.getElementById('window3');
+          win3.style.display = 'flex';
+          // apply drag/resize to window3 dynamically
+          if (!win3._dragInit) {
+            win3._dragInit = true;
+            initWindowDrag(win3);
+          }
+        } else {
+          addSystemMsg('ДОСТУП ЗАПРЕЩЁН. Неверный пароль.');
+        }
+
+      } else {
+        addSystemMsg('Неизвестная команда. Введите /help для списка команд.');
+      }
+    }
+
     function send() {
       const text = msgInput.value.trim();
       if (!text) return;
-      push(msgsRef, { nick: currentNick, text, ts: Date.now(), color: currentColor });
       msgInput.value = '';
       msgInput.focus();
+      if (text.startsWith('/')) {
+        handleCommand(text);
+        return;
+      }
+      push(msgsRef, { nick: currentNick, text, ts: Date.now(), color: currentColor });
     }
 
     sendBtn.addEventListener('click', send);
@@ -566,6 +682,30 @@
 
   runBoot();
 </script>
+
+
+<!-- WINDOW 3: ADMIN -->
+<div class="window" id="window3" style="top:120px; left:400px; width:340px; height:320px;">
+  <div class="scanline"></div>
+  <div class="win-titlebar" id="titlebar3">
+    <span class="win-title">⚠ ADMIN PANEL — NANOTRASEN</span>
+  </div>
+  <div class="win-body">
+    <div class="crt-overlay"></div>
+    <div class="settings-body" id="admin-body">
+      <div class="settings-title">> АДМИНИСТРАТИВНЫЙ ДОСТУП</div>
+      <div class="admin-btn-grid">
+        <button class="admin-btn">[ТЕСТ 1]</button>
+        <button class="admin-btn">[ТЕСТ 2]</button>
+        <button class="admin-btn">[ТЕСТ 3]</button>
+        <button class="admin-btn">[ТЕСТ 4]</button>
+        <button class="admin-btn">[ТЕСТ 5]</button>
+        <button class="admin-btn">[ТЕСТ 6]</button>
+      </div>
+    </div>
+  </div>
+  <div class="win-resize" id="resize3"></div>
+</div>
 
 <script>
   // Drag & Resize
