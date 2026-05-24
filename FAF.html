@@ -283,7 +283,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, push, onChildAdded, onValue, set, remove, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, push, onChildAdded, onChildRemoved, onValue, set, remove, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBGh46wWig5a14tIG79aMC2fvy9KkBwlrM",
@@ -465,6 +465,10 @@
     const msgInput = document.getElementById('msg-input');
     const sendBtn = document.getElementById('send-btn');
 
+    const adminInput = document.getElementById('admin-input');
+    const adminSend = document.getElementById('admin-send');
+    const adminMessages = document.getElementById('admin-messages');
+
     // --- PRESENCE ---
     const presenceRef = ref(db, 'terminal/online/' + currentNick);
     set(presenceRef, { nick: currentNick, color: currentColor, ts: Date.now() });
@@ -493,6 +497,13 @@
       messages.scrollTop = messages.scrollHeight;
     }
 
+    function addAdminMsg(text) {
+      const div = document.createElement('div');
+      div.textContent = '> ' + text;
+      adminMessages.appendChild(div);
+      adminMessages.scrollTop = adminMessages.scrollHeight;
+    }
+
     function addPmMsg(from, text, fromColor) {
       const div = document.createElement('div');
       div.className = 'msg';
@@ -505,16 +516,30 @@
       messages.scrollTop = messages.scrollHeight;
     }
 
-    function addMsg(nick, text, ts, color) {
-      const time = ts ? new Date(ts).toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'}) : '--:--';
+    function addMsg(id, nick, text, ts, color) {
+      const time = ts
+        ? new Date(ts).toLocaleTimeString('ru', {
+            hour:'2-digit',
+            minute:'2-digit'
+          })
+        : '--:--';
+
       const nickColor = color || '#62F1F5';
+
       const div = document.createElement('div');
+
       div.className = 'msg';
+      div.dataset.msgId = id;
+
       div.innerHTML =
         '<span class="ts">[' + time + ']</span>' +
-        '<span class="nick" style="color:' + nickColor + ';text-shadow:0 0 6px ' + nickColor + '88;margin-right:6px">' + escapeHtml(nick) + ':</span>' +
+        '<span class="nick" style="color:' + nickColor + ';text-shadow:0 0 6px ' + nickColor + '88;margin-right:6px">' +
+        escapeHtml(nick) +
+        ':</span>' +
         '<span class="text">' + escapeHtml(text) + '</span>';
+
       messages.appendChild(div);
+
       messages.scrollTop = messages.scrollHeight;
     }
 
@@ -523,9 +548,28 @@
 
     onChildAdded(msgsRef, snap => {
       const data = snap.val();
+
       if (data && data.nick && data.text) {
-        addMsg(data.nick, data.text, data.ts, data.color);
+        addMsg(
+          snap.key,
+          data.nick,
+          data.text,
+          data.ts,
+          data.color
+        );
       }
+    });
+
+    onChildRemoved(msgsRef, snap => {
+
+      const msgEl = document.querySelector(
+        '[data-msg-id="' + snap.key + '"]'
+      );
+
+      if (msgEl) {
+        msgEl.remove();
+      }
+
     });
 
     // --- COMMANDS ---
@@ -599,6 +643,74 @@
       }
     }
 
+    async function handleAdminCommand(raw) {
+      const parts = raw.trim().split(' ');
+      const cmd = parts[0].toLowerCase();
+
+      if (cmd === '/logclear') {
+
+        const arg = parts[1];
+
+        if (!arg) {
+          addAdminMsg('Использование: /logclear all');
+          addAdminMsg('или: /logclear <минуты>');
+          return;
+        }
+
+        addAdminMsg('Получение списка сообщений...');
+
+        onValue(msgsRef, async snap => {
+
+          const data = snap.val();
+
+          if (!data) {
+            addAdminMsg('Сообщений нет.');
+            return;
+          }
+
+          const now = Date.now();
+          let removed = 0;
+
+          const entries = Object.entries(data);
+
+          for (const [key, value] of entries) {
+
+            if (!value.ts) continue;
+
+            if (arg === 'all') {
+
+              await remove(ref(db, 'terminal/messages/' + key));
+              removed++;
+
+            } else {
+
+              const mins = parseInt(arg);
+
+              if (isNaN(mins)) {
+                addAdminMsg('Неверный формат времени.');
+                return;
+              }
+
+              const diff = now - value.ts;
+
+              if (diff <= mins * 60 * 1000) {
+                await remove(ref(db, 'terminal/messages/' + key));
+                removed++;
+              }
+            }
+          }
+
+          addAdminMsg('Удалено сообщений: ' + removed);
+
+        }, { onlyOnce: true });
+
+      } else {
+
+        addAdminMsg('Неизвестная admin-команда.');
+
+      }
+    }
+
     function send() {
       const text = msgInput.value.trim();
       if (!text) return;
@@ -612,6 +724,24 @@
     }
 
     sendBtn.addEventListener('click', send);
+
+    function sendAdmin() {
+      const text = adminInput.value.trim();
+
+      if (!text) return;
+
+      adminInput.value = '';
+
+      addAdminMsg(text);
+
+      handleAdminCommand(text);
+    }
+
+    adminSend.addEventListener('click', sendAdmin);
+
+    adminInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') sendAdmin();
+    });
     msgInput.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
 
     document.getElementById('change-nick-btn').addEventListener('click', () => {
@@ -692,15 +822,43 @@
   </div>
   <div class="win-body">
     <div class="crt-overlay"></div>
+
     <div class="settings-body" id="admin-body">
-      <div class="settings-title">> АДМИНИСТРАТИВНЫЙ ДОСТУП</div>
-      <div class="admin-btn-grid">
-        <button class="admin-btn">[ТЕСТ 1]</button>
-        <button class="admin-btn">[ТЕСТ 2]</button>
-        <button class="admin-btn">[ТЕСТ 3]</button>
-        <button class="admin-btn">[ТЕСТ 4]</button>
-        <button class="admin-btn">[ТЕСТ 5]</button>
-        <button class="admin-btn">[ТЕСТ 6]</button>
+      <div class="settings-title">> ADMIN TERMINAL</div>
+
+      <div id="admin-messages" style="
+        flex:1;
+        height:180px;
+        overflow-y:hidden;
+        border:1px solid rgba(255,68,68,0.2);
+        border-radius:4px;
+        padding:10px;
+        margin-bottom:10px;
+        font-size:11px;
+        color:#ff4444;
+        line-height:1.8;
+      "></div>
+
+      <div class="input-row">
+        <input
+          id="admin-input"
+          type="text"
+          placeholder="admin command..."
+          spellcheck="false"
+          style="
+            background:transparent;
+            border:1px solid rgba(255,68,68,0.3);
+            border-radius:4px;
+            color:#ff4444;
+            font-family:'Courier New', monospace;
+            font-size:11px;
+            padding:6px 8px;
+            flex:1;
+            outline:none;
+          "
+        />
+
+        <button id="admin-send" class="admin-btn">[EXEC]</button>
       </div>
     </div>
   </div>
