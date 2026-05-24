@@ -1,0 +1,312 @@
+<style>
+  body { margin: 0; background: #0d0d0d; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+  .terminal {
+    background: #0d0d0d;
+    border: 1px solid #00FF41;
+    border-radius: 8px;
+    padding: 40px 50px;
+    box-shadow: 0 0 20px rgba(0,255,65,0.15), inset 0 0 30px rgba(0,0,0,0.5);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: terminalAppear 0.3s ease forwards;
+    animation-delay: 0.2s;
+  }
+  @keyframes terminalAppear {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .terminal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,0.13) 3px,
+      rgba(0,0,0,0.13) 4px
+    );
+    pointer-events: none;
+    z-index: 5;
+  }
+  .scanline {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0,255,65,0.06) 40%,
+      rgba(0,255,65,0.10) 50%,
+      rgba(0,255,65,0.06) 60%,
+      transparent 100%
+    );
+    animation: scanmove 4s linear infinite;
+    pointer-events: none;
+    z-index: 6;
+  }
+  @keyframes scanmove {
+    0%   { top: -80px; }
+    100% { top: calc(100% + 80px); }
+  }
+  #boot-screen {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #00FF41;
+    text-align: left;
+    min-width: 340px;
+    position: relative;
+    z-index: 2;
+  }
+  #boot-screen .boot-line {
+    opacity: 0;
+    line-height: 1.8;
+    letter-spacing: 1px;
+  }
+  #boot-screen .ok   { color: #00FF41; }
+  #boot-screen .warn { color: #62F1F5; }
+  #boot-screen .err  { color: #ff4444; }
+  .progress-bar-wrap { margin: 8px 0 4px; opacity: 0; }
+  .progress-bar-track {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #00FF41;
+    letter-spacing: 1px;
+  }
+  #main-content { display: none; opacity: 0; }
+  .pixel-row {
+    font-family: 'Courier New', monospace;
+    font-size: 28px;
+    line-height: 1.3;
+    color: #00FF41;
+    text-shadow: 0 0 8px rgba(0,255,65,0.8);
+    letter-spacing: 2px;
+    white-space: pre;
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  .pixel-row.show { opacity: 1; transform: translateY(0); }
+  .divider {
+    color: #00FF41;
+    opacity: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    margin: 16px 0 12px;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+  }
+  .divider.show { opacity: 0.3; }
+  .label {
+    font-family: 'Courier New', monospace;
+    color: #00FF41;
+    font-size: 14px;
+    opacity: 0;
+    letter-spacing: 2px;
+    text-shadow: 0 0 6px rgba(0,255,65,0.5);
+    position: relative;
+    z-index: 2;
+    transition: opacity 0.4s ease;
+  }
+  .label.show { opacity: 0.7; }
+  .welcome {
+    font-family: 'Courier New', monospace;
+    color: #00FF41;
+    font-size: 13px;
+    line-height: 2;
+    margin-top: 14px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(0,255,65,0.4);
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .welcome.show { opacity: 1; }
+  .unwelcome { color: #62F1F5; text-shadow: 0 0 8px rgba(98,241,245,0.7); }
+  .divider2 {
+    color: #00FF41;
+    opacity: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    margin: 16px 0 12px;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+  }
+  .divider2.show { opacity: 0.2; }
+  .prompt {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #00FF41;
+    opacity: 0;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 2;
+    transition: opacity 0.4s ease;
+  }
+  .prompt.show { opacity: 0.5; }
+  .prompt .cmd {
+    color: #00FF41;
+    opacity: 1;
+    text-shadow: 0 0 6px rgba(0,255,65,0.7);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .prompt .cmd:hover {
+    background: rgba(0,255,65,0.12);
+    text-shadow: 0 0 12px rgba(0,255,65,1);
+  }
+  .cursor {
+    display: inline-block;
+    width: 7px;
+    height: 13px;
+    background: #00FF41;
+    animation: blink 0.8s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+    box-shadow: 0 0 5px rgba(0,255,65,0.8);
+    position: relative;
+    z-index: 2;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
+
+<div class="terminal">
+  <div class="scanline"></div>
+
+  <div id="boot-screen">
+    <div class="boot-line" id="bl0" style="opacity:0.45">NANOTRASEN OS v4.2.1 — BOOT SEQUENCE INITIATED</div>
+    <div class="boot-line" id="bl1">[ <span class="ok">OK</span> ]  Загрузка ядра системы...</div>
+    <div class="boot-line" id="bl2">[ <span class="ok">OK</span> ]  Инициализация сетевого стека...</div>
+    <div class="boot-line" id="bl3">[ <span class="warn">!!</span> ]  <span class="warn">Обнаружено несанкционированное подключение</span></div>
+    <div class="boot-line" id="bl4">[ <span class="ok">OK</span> ]  Протокол безопасности активирован...</div>
+    <div class="boot-line" id="bl5">[ <span class="ok">OK</span> ]  Идентификация пользователя...</div>
+    <div class="boot-line" id="bl6">[ <span class="err">--</span> ]  <span class="err">Доступ не подтверждён. Продолжение...</span></div>
+    <div class="progress-bar-wrap" id="pbar-wrap">
+      <div class="progress-bar-track" id="pbar">[                    ] 0%</div>
+    </div>
+    <div class="boot-line" id="bl7" style="opacity:0">Загрузка интерфейса...</div>
+  </div>
+
+  <div id="main-content">
+    <div class="pixel-row" id="pr0">███░███░░░░██░░░░</div>
+    <div class="pixel-row" id="pr1">░██░████░░░██░░░░</div>
+    <div class="pixel-row" id="pr2">░░█░██░██░░██░█░░</div>
+    <div class="pixel-row" id="pr3">░░░░██░░██░██░██░</div>
+    <div class="pixel-row" id="pr4">░░░░██░░░████░███</div>
+    <div class="divider" id="div1">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+    <div class="label" id="lbl">NANOTRASEN CORPORATION</div>
+    <div class="welcome" id="welc">
+      Поздравляем и добро пожаловать.<br>
+      Пожалуйста, входите осторожно —<br>
+      <span class="unwelcome">здесь вам не рады.</span>
+    </div>
+    <div class="divider2" id="div2">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+    <div class="prompt" id="prmt">Для продолжения введите команду <span class="cmd" id="start-btn" onclick="window.open('https://docs.google.com/document/d/1XYInCOuC3-f0p1YlD7ZQySCcFEJRqMvKwi2Yw7GC8SM/edit?tab=t.0','_blank')">[/Start]</span><span class="cursor"></span></div>
+  </div>
+</div>
+
+<script>
+  var d = function(ms){ return new Promise(function(r){ setTimeout(r, ms); }); };
+
+  async function animateProgress() {
+    var pbar = document.getElementById('pbar');
+    document.getElementById('pbar-wrap').style.opacity = '1';
+    var total = 20;
+    var steps = [
+      {p:15,t:60},{p:30,t:80},{p:47,t:120},{p:48,t:400},
+      {p:60,t:70},{p:75,t:90},{p:88,t:110},{p:95,t:180},{p:100,t:80}
+    ];
+    for (var i = 0; i < steps.length; i++) {
+      await d(steps[i].t);
+      var filled = Math.round(steps[i].p / 100 * total);
+      var bar = '\u2588'.repeat(filled) + ' '.repeat(total - filled);
+      pbar.textContent = '[' + bar + '] ' + steps[i].p + '%';
+    }
+  }
+
+  async function runBoot() {
+    await d(400);
+    document.getElementById('bl1').style.opacity = '1';
+    await d(280);
+    document.getElementById('bl2').style.opacity = '1';
+    await d(220);
+    document.getElementById('bl3').style.opacity = '1';
+    await d(350);
+    document.getElementById('bl4').style.opacity = '1';
+    await d(250);
+    document.getElementById('bl5').style.opacity = '1';
+    await d(400);
+    document.getElementById('bl6').style.opacity = '1';
+    await d(200);
+    await animateProgress();
+    await d(150);
+    document.getElementById('bl7').style.opacity = '0.45';
+    await d(600);
+
+    var boot = document.getElementById('boot-screen');
+    boot.style.transition = 'opacity 0.3s ease';
+    boot.style.opacity = '0';
+    await d(320);
+    boot.style.display = 'none';
+
+    var main = document.getElementById('main-content');
+    main.style.display = 'block';
+    await d(50);
+    main.style.opacity = '1';
+
+    for (var i = 0; i < 5; i++) {
+      await d(100 + i * 40);
+      document.getElementById('pr' + i).classList.add('show');
+    }
+    await d(200); document.getElementById('div1').classList.add('show');
+    await d(200); document.getElementById('lbl').classList.add('show');
+    await d(300); document.getElementById('welc').classList.add('show');
+    await d(300); document.getElementById('div2').classList.add('show');
+    await d(200); document.getElementById('prmt').classList.add('show');
+  }
+
+  function restart() {
+    var boot = document.getElementById('boot-screen');
+    var main = document.getElementById('main-content');
+
+    main.style.opacity = '0';
+    main.style.transition = 'opacity 0.2s ease';
+
+    setTimeout(function() {
+      main.style.display = 'none';
+
+      ['pr0','pr1','pr2','pr3','pr4'].forEach(function(id){
+        document.getElementById(id).classList.remove('show');
+      });
+      ['div1','lbl','welc','div2','prmt'].forEach(function(id){
+        document.getElementById(id).classList.remove('show');
+      });
+
+      ['bl1','bl2','bl3','bl4','bl5','bl6','bl7'].forEach(function(id){
+        document.getElementById(id).style.opacity = '0';
+      });
+      document.getElementById('pbar-wrap').style.opacity = '0';
+      document.getElementById('pbar').textContent = '[                    ] 0%';
+
+      boot.style.transition = 'none';
+      boot.style.opacity = '1';
+      boot.style.display = 'block';
+
+      runBoot();
+    }, 220);
+  }
+
+  runBoot();
+</script>
