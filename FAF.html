@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NANOTRASEN OS</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d0d0d; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Courier New', monospace; }
+  .terminal {
+    background: #0d0d0d; border: 1px solid #00FF41; border-radius: 8px;
+    padding: 24px 30px; box-shadow: 0 0 20px rgba(0,255,65,0.15), inset 0 0 30px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden; width: 620px; max-width: 98vw;
+  }
+  .terminal::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.13) 3px, rgba(0,0,0,0.13) 4px);
+    pointer-events: none; z-index: 5;
+  }
+  .scanline {
+    position: absolute; left: 0; width: 100%; height: 60px;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,255,65,0.06) 40%, rgba(0,255,65,0.10) 50%, rgba(0,255,65,0.06) 60%, transparent 100%);
+    animation: scanmove 4s linear infinite; pointer-events: none; z-index: 6;
+  }
+  @keyframes scanmove { 0% { top: -80px; } 100% { top: calc(100% + 80px); } }
+
+  /* BOOT */
+  #boot-screen { font-size: 12px; color: #00FF41; text-align: left; position: relative; z-index: 2; }
+  .boot-line { opacity: 0; line-height: 1.8; letter-spacing: 1px; }
+  .ok { color: #00FF41; } .warn { color: #62F1F5; } .err { color: #ff4444; }
+  .progress-bar-wrap { margin: 8px 0 4px; opacity: 0; }
+  .progress-bar-track { display: inline-block; font-size: 12px; color: #00FF41; letter-spacing: 1px; }
+
+  /* NICK SCREEN */
+  #nick-screen { display: none; opacity: 0; position: relative; z-index: 2; text-align: center; transition: opacity 0.4s ease; }
+  #nick-screen.show { opacity: 1; }
+  .nick-title { font-size: 12px; color: #00FF41; opacity: 0.6; letter-spacing: 2px; margin-bottom: 20px; }
+  .nick-label { font-size: 11px; color: #00FF41; opacity: 0.45; letter-spacing: 1px; margin-bottom: 8px; }
+  #nick-setup-input {
+    background: transparent; border: none; border-bottom: 1px solid rgba(0,255,65,0.5);
+    color: #62F1F5; font-family: 'Courier New', monospace; font-size: 18px;
+    padding: 6px 4px; width: 220px; outline: none; letter-spacing: 3px; text-align: center;
+    caret-color: #00FF41;
+  }
+  #nick-setup-input:focus { border-bottom-color: #62F1F5; }
+
+  /* Палитра цветов */
+  .color-label { font-size: 11px; color: #00FF41; opacity: 0.45; letter-spacing: 1px; margin: 18px 0 10px; }
+  .color-palette { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .color-swatch {
+    width: 22px; height: 22px; border-radius: 3px; cursor: pointer;
+    border: 2px solid transparent; transition: border-color 0.15s, transform 0.15s;
+  }
+  .color-swatch:hover { transform: scale(1.2); }
+  .color-swatch.selected { border-color: #ffffff; transform: scale(1.2); }
+
+  #nick-confirm-btn {
+    margin-top: 22px; background: transparent; border: 1px solid rgba(0,255,65,0.4);
+    border-radius: 4px; color: #00FF41; font-family: 'Courier New', monospace;
+    font-size: 12px; padding: 8px 24px; cursor: pointer; letter-spacing: 2px;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  #nick-confirm-btn:hover { background: rgba(0,255,65,0.1); box-shadow: 0 0 8px rgba(0,255,65,0.3); }
+
+  /* MAIN */
+  #main-content { display: none; opacity: 0; }
+  .logo-wrap { text-align: center; margin-bottom: 16px; }
+  .pixel-row {
+    font-size: 22px; line-height: 1.3; color: #00FF41;
+    text-shadow: 0 0 8px rgba(0,255,65,0.8); letter-spacing: 2px; white-space: pre;
+    opacity: 0; transform: translateY(-4px); transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  .pixel-row.show { opacity: 1; transform: translateY(0); }
+  .divider { color: #00FF41; opacity: 0; font-size: 13px; margin: 10px 0 8px; letter-spacing: 1px; transition: opacity 0.3s ease; }
+  .divider.show { opacity: 0.3; }
+  .label { color: #00FF41; font-size: 13px; opacity: 0; letter-spacing: 2px; text-shadow: 0 0 6px rgba(0,255,65,0.5); transition: opacity 0.4s ease; }
+  .label.show { opacity: 0.7; }
+
+  /* CHAT */
+  #chat-area { margin-top: 16px; position: relative; z-index: 2; opacity: 0; transition: opacity 0.4s ease; }
+  #chat-area.show { opacity: 1; }
+  #messages {
+    height: 220px; overflow-y: auto; border: 1px solid rgba(0,255,65,0.2);
+    border-radius: 4px; padding: 10px; margin-bottom: 10px;
+    scrollbar-width: thin; scrollbar-color: #00FF41 #0d0d0d;
+  }
+  #messages::-webkit-scrollbar { width: 4px; }
+  #messages::-webkit-scrollbar-track { background: #0d0d0d; }
+  #messages::-webkit-scrollbar-thumb { background: #00FF41; }
+  .msg { font-size: 12px; line-height: 1.9; letter-spacing: 0.5px; }
+  .msg .ts { color: #00FF41; opacity: 0.35; margin-right: 6px; }
+  .msg .text { color: #00FF41; }
+  .msg-system { font-size: 11px; color: #00FF41; opacity: 0.35; letter-spacing: 1px; line-height: 2; }
+
+  .input-row { display: flex; gap: 8px; align-items: center; }
+  #msg-input {
+    background: transparent; border: 1px solid rgba(0,255,65,0.3); border-radius: 4px;
+    color: #00FF41; font-family: 'Courier New', monospace; font-size: 12px;
+    padding: 6px 8px; flex: 1; outline: none; letter-spacing: 1px;
+  }
+  #msg-input:focus { border-color: rgba(0,255,65,0.7); box-shadow: 0 0 6px rgba(0,255,65,0.15); }
+  #send-btn {
+    background: transparent; border: 1px solid rgba(0,255,65,0.4); border-radius: 4px;
+    color: #00FF41; font-family: 'Courier New', monospace; font-size: 12px;
+    padding: 6px 12px; cursor: pointer; letter-spacing: 1px; white-space: nowrap;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  #send-btn:hover { background: rgba(0,255,65,0.1); box-shadow: 0 0 8px rgba(0,255,65,0.3); }
+  #status-bar { font-size: 10px; color: #00FF41; opacity: 0.35; margin-top: 6px; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+  #change-nick-btn { cursor: pointer; opacity: 0.4; letter-spacing: 1px; font-size: 10px; color: #00FF41; background: none; border: none; font-family: 'Courier New', monospace; transition: opacity 0.2s; }
+  #change-nick-btn:hover { opacity: 0.8; }
+
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+<div class="terminal">
+  <div class="scanline"></div>
+
+  <!-- BOOT -->
+  <div id="boot-screen">
+    <div class="boot-line" style="opacity:0.45">NANOTRASEN OS v4.2.1 — BOOT SEQUENCE INITIATED</div>
+    <div class="boot-line" id="bl1">[ <span class="ok">OK</span> ]  Загрузка ядра системы...</div>
+    <div class="boot-line" id="bl2">[ <span class="ok">OK</span> ]  Инициализация сетевого стека...</div>
+    <div class="boot-line" id="bl3">[ <span class="warn">!!</span> ]  <span class="warn">Обнаружено несанкционированное подключение</span></div>
+    <div class="boot-line" id="bl4">[ <span class="ok">OK</span> ]  Протокол безопасности активирован...</div>
+    <div class="boot-line" id="bl5">[ <span class="ok">OK</span> ]  Подключение к базе данных...</div>
+    <div class="boot-line" id="bl6">[ <span class="err">--</span> ]  <span class="err">Доступ не подтверждён. Продолжение...</span></div>
+    <div class="progress-bar-wrap" id="pbar-wrap">
+      <div class="progress-bar-track" id="pbar">[                    ] 0%</div>
+    </div>
+    <div class="boot-line" id="bl7" style="opacity:0">Идентификация пользователя...</div>
+  </div>
+
+  <!-- НИК ЭКРАН -->
+  <div id="nick-screen">
+    <div class="nick-title">ИДЕНТИФИКАЦИЯ ПОЛЬЗОВАТЕЛЯ</div>
+    <div class="nick-label">ВВЕДИТЕ ПОЗЫВНОЙ</div>
+    <input id="nick-setup-input" type="text" maxlength="16" spellcheck="false" autocomplete="off" />
+    <div class="color-label">ЦВЕТ ПОЗЫВНОГО</div>
+    <div class="color-palette" id="color-palette"></div>
+    <br>
+    <button id="nick-confirm-btn">[ПОДТВЕРДИТЬ]</button>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main-content">
+    <div class="logo-wrap">
+      <div class="pixel-row" id="pr0">███░███░░░░██░░░░</div>
+      <div class="pixel-row" id="pr1">░██░████░░░██░░░░</div>
+      <div class="pixel-row" id="pr2">░░█░██░██░░██░█░░</div>
+      <div class="pixel-row" id="pr3">░░░░██░░██░██░██░</div>
+      <div class="pixel-row" id="pr4">░░░░██░░░████░███</div>
+      <div class="divider" id="div1">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+      <div class="label" id="lbl">NANOTRASEN CORPORATION — TERMINAL</div>
+    </div>
+    <div id="chat-area">
+      <div id="messages"></div>
+      <div class="input-row">
+        <input id="msg-input" type="text" maxlength="200" placeholder="введите сообщение..." spellcheck="false" />
+        <button id="send-btn">[SEND]</button>
+      </div>
+      <div id="status-bar">
+        <span>CONNECTED — NANOTRASEN SECURE CHANNEL</span>
+        <button id="change-nick-btn">[сменить позывной]</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBGh46wWig5a14tIG79aMC2fvy9KkBwlrM",
+    authDomain: "farid-9ae00.firebaseapp.com",
+    projectId: "farid-9ae00",
+    storageBucket: "farid-9ae00.firebasestorage.app",
+    messagingSenderId: "660872956739",
+    appId: "1:660872956739:web:a082bc97ed2a2469b43df6",
+    databaseURL: "https://farid-9ae00-default-rtdb.europe-west1.firebasedatabase.app"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const msgsRef = ref(db, 'terminal/messages');
+
+  const COLORS = [
+    '#00FF41','#62F1F5','#ff4444','#ffaa00','#ff69b4',
+    '#bb86fc','#00cfff','#ffffff','#aaffaa','#ffd700'
+  ];
+
+  let currentNick = '';
+  let currentColor = '#62F1F5';
+
+  function d(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // Строим палитру
+  const palette = document.getElementById('color-palette');
+  COLORS.forEach(c => {
+    const sw = document.createElement('div');
+    sw.className = 'color-swatch' + (c === currentColor ? ' selected' : '');
+    sw.style.background = c;
+    sw.style.boxShadow = '0 0 6px ' + c + '88';
+    sw.addEventListener('click', () => {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      sw.classList.add('selected');
+      currentColor = c;
+    });
+    palette.appendChild(sw);
+  });
+
+  async function animateProgress() {
+    const pbar = document.getElementById('pbar');
+    document.getElementById('pbar-wrap').style.opacity = '1';
+    const steps = [{p:15,t:60},{p:30,t:80},{p:47,t:120},{p:48,t:400},{p:60,t:70},{p:75,t:90},{p:88,t:110},{p:95,t:180},{p:100,t:80}];
+    for (const s of steps) {
+      await d(s.t);
+      const filled = Math.round(s.p / 100 * 20);
+      pbar.textContent = '[' + '█'.repeat(filled) + ' '.repeat(20 - filled) + '] ' + s.p + '%';
+    }
+  }
+
+  async function runBoot() {
+    await d(400);
+    document.getElementById('bl1').style.opacity = '1'; await d(280);
+    document.getElementById('bl2').style.opacity = '1'; await d(220);
+    document.getElementById('bl3').style.opacity = '1'; await d(350);
+    document.getElementById('bl4').style.opacity = '1'; await d(250);
+    document.getElementById('bl5').style.opacity = '1'; await d(400);
+    document.getElementById('bl6').style.opacity = '1'; await d(200);
+    await animateProgress();
+    await d(150);
+    document.getElementById('bl7').style.opacity = '0.45';
+    await d(600);
+
+    const boot = document.getElementById('boot-screen');
+    boot.style.transition = 'opacity 0.3s ease';
+    boot.style.opacity = '0';
+    await d(320);
+    boot.style.display = 'none';
+
+    // Проверяем сохранённый ник
+    const savedNick = localStorage.getItem('nt_nick');
+    const savedColor = localStorage.getItem('nt_color');
+    if (savedNick) {
+      currentNick = savedNick;
+      if (savedColor) {
+        currentColor = savedColor;
+        document.querySelectorAll('.color-swatch').forEach(sw => {
+          sw.classList.toggle('selected', sw.style.background === savedColor || sw.style.background === hexToRgb(savedColor));
+        });
+      }
+      await showMain();
+    } else {
+      await showNickScreen();
+    }
+  }
+
+  function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return 'rgb(' + r + ', ' + g + ', ' + b + ')';
+  }
+
+  async function showNickScreen() {
+    const ns = document.getElementById('nick-screen');
+    ns.style.display = 'block';
+    await d(50);
+    ns.classList.add('show');
+    document.getElementById('nick-setup-input').focus();
+
+    function confirm() {
+      const val = document.getElementById('nick-setup-input').value.trim();
+      if (!val) { document.getElementById('nick-setup-input').style.borderBottomColor = '#ff4444'; return; }
+      currentNick = val;
+      localStorage.setItem('nt_nick', val);
+      localStorage.setItem('nt_color', currentColor);
+      ns.style.transition = 'opacity 0.3s ease';
+      ns.style.opacity = '0';
+      setTimeout(async () => { ns.style.display = 'none'; await showMain(); }, 320);
+    }
+
+    document.getElementById('nick-confirm-btn').addEventListener('click', confirm);
+    document.getElementById('nick-setup-input').addEventListener('keydown', e => { if (e.key === 'Enter') confirm(); });
+  }
+
+  async function showMain() {
+    const main = document.getElementById('main-content');
+    main.style.display = 'block';
+    await d(50);
+    main.style.opacity = '1';
+    for (let i = 0; i < 5; i++) {
+      await d(100 + i * 40);
+      document.getElementById('pr' + i).classList.add('show');
+    }
+    await d(200); document.getElementById('div1').classList.add('show');
+    await d(200); document.getElementById('lbl').classList.add('show');
+    await d(400); document.getElementById('chat-area').classList.add('show');
+    initChat();
+  }
+
+  function initChat() {
+    const messages = document.getElementById('messages');
+    const msgInput = document.getElementById('msg-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    function escapeHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function addSystemMsg(text) {
+      const div = document.createElement('div');
+      div.className = 'msg-system';
+      div.textContent = '> ' + text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function addMsg(nick, text, ts, color) {
+      const time = ts ? new Date(ts).toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'}) : '--:--';
+      const nickColor = color || '#62F1F5';
+      const div = document.createElement('div');
+      div.className = 'msg';
+      div.innerHTML =
+        '<span class="ts">[' + time + ']</span>' +
+        '<span class="nick" style="color:' + nickColor + ';text-shadow:0 0 6px ' + nickColor + '88;margin-right:6px">' + escapeHtml(nick) + ':</span>' +
+        '<span class="text">' + escapeHtml(text) + '</span>';
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    addSystemMsg('NANOTRASEN SECURE CHANNEL ONLINE');
+    addSystemMsg('Добро пожаловать, ' + currentNick + '.');
+
+    onChildAdded(msgsRef, snap => {
+      const data = snap.val();
+      if (data && data.nick && data.text) {
+        addMsg(data.nick, data.text, data.ts, data.color);
+      }
+    });
+
+    function send() {
+      const text = msgInput.value.trim();
+      if (!text) return;
+      push(msgsRef, { nick: currentNick, text, ts: Date.now(), color: currentColor });
+      msgInput.value = '';
+      msgInput.focus();
+    }
+
+    sendBtn.addEventListener('click', send);
+    msgInput.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+
+    document.getElementById('change-nick-btn').addEventListener('click', () => {
+      localStorage.removeItem('nt_nick');
+      localStorage.removeItem('nt_color');
+      const main = document.getElementById('main-content');
+      main.style.transition = 'opacity 0.3s ease';
+      main.style.opacity = '0';
+      setTimeout(async () => {
+        main.style.display = 'none';
+        main.style.opacity = '1';
+        main.style.transition = '';
+
+        const ns = document.getElementById('nick-screen');
+        ns.style.transition = '';
+        ns.style.opacity = '0';
+        ns.style.display = 'block';
+        ns.classList.remove('show');
+        document.getElementById('nick-setup-input').value = '';
+        document.getElementById('nick-setup-input').style.borderBottomColor = '';
+
+        // Сбрасываем обработчики — пересоздаём кнопку
+        const oldBtn = document.getElementById('nick-confirm-btn');
+        const newBtn = oldBtn.cloneNode(true);
+        oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+
+        await d(50);
+        ns.classList.add('show');
+        document.getElementById('nick-setup-input').focus();
+
+        function confirm() {
+          const val = document.getElementById('nick-setup-input').value.trim();
+          if (!val) { document.getElementById('nick-setup-input').style.borderBottomColor = '#ff4444'; return; }
+          currentNick = val;
+          currentColor = document.querySelector('.color-swatch.selected')?.style.background || '#62F1F5';
+          localStorage.setItem('nt_nick', val);
+          localStorage.setItem('nt_color', currentColor);
+          ns.style.transition = 'opacity 0.3s ease';
+          ns.style.opacity = '0';
+          setTimeout(async () => {
+            ns.style.display = 'none';
+            const m = document.getElementById('main-content');
+            m.style.display = 'block';
+            await d(50);
+            m.style.opacity = '1';
+          }, 320);
+        }
+
+        document.getElementById('nick-confirm-btn').addEventListener('click', confirm);
+        document.getElementById('nick-setup-input').addEventListener('keydown', e => { if (e.key === 'Enter') confirm(); });
+      }, 320);
+    });
+  }
+
+  runBoot();
+</script>
+</body>
+</html>
