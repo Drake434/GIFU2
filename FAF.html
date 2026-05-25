@@ -170,9 +170,42 @@
   .win-color-swatch:hover { transform: scale(1.2); }
   .win-color-swatch.selected { border-color: #fff; transform: scale(1.2); }
 
-  @keyframes blink { 50% { opacity: 0; } }
+/* DESKTOP LOGO */
+#desktop-logo {
+  position: fixed; top: 18px; right: 24px; z-index: 1;
+  font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.35;
+  white-space: pre; letter-spacing: 2px; pointer-events: none;
+  color: var(--desktop-logo-color, #00FF41);
+  text-shadow: 0 0 8px var(--desktop-logo-color, #00FF41);
+  opacity: 0.18;
+}
 
-  /* ADMIN WINDOW */
+/* OPERATORS WINDOW */
+#window4 { display: none; --win-color: #62F1F5; border-color: #62F1F5; }
+#window4 .win-titlebar { border-bottom-color: rgba(98,241,245,0.3); }
+.ops-body { padding: 16px 20px; flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+#ops-messages {
+  flex: 1; min-height: 0; overflow-y: auto; border: 1px solid rgba(98,241,245,0.2);
+  border-radius: 4px; padding: 10px; margin-bottom: 10px;
+  font-size: 12px; color: #62F1F5; line-height: 1.8;
+  scrollbar-width: thin; scrollbar-color: #62F1F5 #0d0d0d;
+}
+#ops-messages::-webkit-scrollbar { width: 4px; }
+#ops-messages::-webkit-scrollbar-thumb { background: #62F1F5; }
+.ops-input-row { display: flex; gap: 8px; flex-shrink: 0; }
+#ops-input {
+  background: transparent; border: 1px solid rgba(98,241,245,0.3); border-radius: 4px;
+  color: #62F1F5; font-family: 'Courier New', monospace; font-size: 12px;
+  padding: 6px 8px; flex: 1; outline: none; letter-spacing: 1px;
+}
+#ops-input:focus { border-color: rgba(98,241,245,0.7); }
+#ops-send-btn {
+  background: transparent; border: 1px solid rgba(98,241,245,0.4); border-radius: 4px;
+  color: #62F1F5; font-family: 'Courier New', monospace; font-size: 12px;
+  padding: 6px 12px; cursor: pointer; letter-spacing: 1px;
+  transition: background 0.2s;
+}
+#ops-send-btn:hover { background: rgba(98,241,245,0.1); }
   #window3 { display: none; --win-color: #ff4444; border-color: #ff4444; }
   #window3 .win-titlebar { border-bottom-color: rgba(255,68,68,0.3); }
   .admin-btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
@@ -187,6 +220,13 @@
 </style>
 </head>
 <body>
+
+<!-- DESKTOP LOGO -->
+<div id="desktop-logo">███░███░░░░██░░░░
+░██░████░░░██░░░░
+░░█░██░██░░██░█░░
+░░░░██░░██░██░██░
+░░░░██░░░████░███</div>
 
 <!-- WINDOW 1: CHAT -->
 <div class="window active" id="window1" style="top:40px; left:40px; width:620px; height:560px;">
@@ -354,7 +394,44 @@
   buildWinPalette('win1-palette', 'window1');
   buildWinPalette('win2-palette', 'window2');
 
-  // Settings toggle
+  // Синхронизируем цвет логотипа на рабочем столе с цветом window1
+  function syncDesktopLogo() {
+    const color = getComputedStyle(document.getElementById('window1')).getPropertyValue('--win-color').trim() || '#00FF41';
+    document.getElementById('desktop-logo').style.color = color;
+    document.getElementById('desktop-logo').style.textShadow = '0 0 8px ' + color;
+  }
+  // Патчим setWindowColor чтобы обновлял логотип
+  const _origSetWindowColor = setWindowColor;
+  window._setWindowColor = function(win, color) {
+    _origSetWindowColor(win, color);
+    if (win.id === 'window1') syncDesktopLogo();
+  };
+  // Перестраиваем палитры с патченным setWindowColor
+  function buildWinPalette2(containerId, windowId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    const win = document.getElementById(windowId);
+    const savedColor = localStorage.getItem('wincolor_' + windowId) || '#00FF41';
+    window._setWindowColor(win, savedColor);
+    COLORS.forEach(c => {
+      const sw = document.createElement('div');
+      sw.className = 'win-color-swatch' + (c === savedColor ? ' selected' : '');
+      sw.style.background = c;
+      sw.style.boxShadow = '0 0 4px ' + c + '88';
+      sw.addEventListener('click', () => {
+        container.querySelectorAll('.win-color-swatch').forEach(s => s.classList.remove('selected'));
+        sw.classList.add('selected');
+        window._setWindowColor(win, c);
+        localStorage.setItem('wincolor_' + windowId, c);
+      });
+      container.appendChild(sw);
+    });
+  }
+  buildWinPalette2('win1-palette', 'window1');
+  buildWinPalette2('win2-palette', 'window2');
+  syncDesktopLogo();
+
+  // Settings toggle — открывается справа от window1
   const settingsBtn = document.getElementById('settings-btn');
   const win2 = document.getElementById('window2');
   settingsBtn.addEventListener('click', () => {
@@ -364,6 +441,10 @@
       win2.style.display = 'none';
       settingsBtn.classList.remove('active-btn');
     } else {
+      const w1 = document.getElementById('window1');
+      const r = w1.getBoundingClientRect();
+      win2.style.left = (r.right + 10) + 'px';
+      win2.style.top = r.top + 'px';
       win2.classList.add('visible');
       win2.style.display = 'flex';
       settingsBtn.classList.add('active-btn');
@@ -583,19 +664,31 @@
         addSystemMsg('/login             — список пользователей онлайн');
         addSystemMsg('/msg <ник> <текст> — личное сообщение');
         addSystemMsg('/admin <пароль>    — доступ к панели администратора');
+        addSystemMsg('/operators         — канал операторов');
         addSystemMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
       } else if (cmd === '/login') {
         const onlineRef = ref(db, 'terminal/online');
         addSystemMsg('Запрос списка пользователей...');
         onValue(onlineRef, snap => {
+          // Remove previous login output
+          const prev = messages.querySelectorAll('[data-login-line]');
+          prev.forEach(el => el.remove());
           const data = snap.val();
-          if (!data) { addSystemMsg('Онлайн: никого нет.'); return; }
+          function addLoginLine(text) {
+            const div = document.createElement('div');
+            div.className = 'msg-system';
+            div.dataset.loginLine = '1';
+            div.textContent = '> ' + text;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+          }
+          if (!data) { addLoginLine('Онлайн: никого нет.'); return; }
           const users = Object.values(data);
-          addSystemMsg('━━ ОНЛАЙН [' + users.length + '] ━━━━━━━━━━━━━━━━━━━━━━━');
-          users.forEach(u => addSystemMsg('  • ' + u.nick));
-          addSystemMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        }, { onlyOnce: true });
+          addLoginLine('━━ ОНЛАЙН [' + users.length + '] ━━━━━━━━━━━━━━━━━━━━━━━');
+          users.forEach(u => addLoginLine('  • ' + u.nick));
+          addLoginLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        });
 
       } else if (cmd === '/msg') {
         const target = parts[1];
@@ -628,8 +721,11 @@
         if (pass === 'TEST') {
           addSystemMsg('Пароль принят. Открываю панель администратора...');
           const win3 = document.getElementById('window3');
+          const w1 = document.getElementById('window1');
+          const r = w1.getBoundingClientRect();
+          win3.style.left = (r.right + 10) + 'px';
+          win3.style.top = r.top + 'px';
           win3.style.display = 'flex';
-          // apply drag/resize to window3 dynamically
           if (!win3._dragInit) {
             win3._dragInit = true;
             initWindowDrag(win3);
@@ -637,6 +733,17 @@
         } else {
           addSystemMsg('ДОСТУП ЗАПРЕЩЁН. Неверный пароль.');
         }
+
+      } else if (cmd === '/operators') {
+        const win4 = document.getElementById('window4');
+        const w1 = document.getElementById('window1');
+        const r = w1.getBoundingClientRect();
+        win4.style.left = (r.right + 10) + 'px';
+        win4.style.top = r.top + 'px';
+        win4.style.display = 'flex';
+        if (!win4._dragInit) { win4._dragInit = true; initWindowDrag(win4); }
+        if (!win4._opsInited) { win4._opsInited = true; initOpsWindow(); }
+        addSystemMsg('Открываю канал операторов...');
 
       } else {
         addSystemMsg('Неизвестная команда. Введите /help для списка команд.');
@@ -704,10 +811,18 @@
 
         }, { onlyOnce: true });
 
+      } else if (cmd === '/linksp') {
+        try {
+          const links = JSON.parse(localStorage.getItem('ops_links') || '{}');
+          const keys = Object.keys(links);
+          if (!keys.length) { addAdminMsg('Нет сохранённых ссылок.'); return; }
+          addAdminMsg('━━ ВСЕ ССЫЛКИ (КОД / ПАРОЛЬ / URL) ━━━━');
+          keys.forEach(k => addAdminMsg('  ' + k + ' | ' + links[k].pass + ' | ' + links[k].url));
+          addAdminMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        } catch(e) { addAdminMsg('Ошибка чтения ссылок.'); }
+
       } else {
-
         addAdminMsg('Неизвестная admin-команда.');
-
       }
     }
 
@@ -810,9 +925,126 @@
     });
   }
 
+  function initOpsWindow() {
+    const opsMessages = document.getElementById('ops-messages');
+    const opsInput = document.getElementById('ops-input');
+    const opsSendBtn = document.getElementById('ops-send-btn');
+
+    // Хранилище ссылок — только в localStorage, logclear не трогает
+    function getLinks() {
+      try { return JSON.parse(localStorage.getItem('ops_links') || '{}'); } catch(e) { return {}; }
+    }
+    function saveLinks(obj) { localStorage.setItem('ops_links', JSON.stringify(obj)); }
+
+    function addOpsMsg(text, color) {
+      const div = document.createElement('div');
+      div.style.color = color || '#62F1F5';
+      div.style.lineHeight = '1.8';
+      div.style.letterSpacing = '1px';
+      div.style.fontSize = '12px';
+      div.textContent = '> ' + text;
+      opsMessages.appendChild(div);
+      opsMessages.scrollTop = opsMessages.scrollHeight;
+    }
+
+    addOpsMsg('OPERATORS SECURE CHANNEL — ACTIVE');
+    addOpsMsg('Команды: /addlink <код> <пароль> <url>');
+    addOpsMsg('         /rmlink <код>');
+    addOpsMsg('         /links');
+    addOpsMsg('         <код> <пароль>  — открыть ссылку');
+    addOpsMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+    function handleOpsCmd(raw) {
+      const parts = raw.trim().split(' ');
+      const cmd = parts[0].toLowerCase();
+
+      if (cmd === '/addlink') {
+        const code = parts[1], pass = parts[2], url = parts[3];
+        if (!code || !pass || !url) { addOpsMsg('Использование: /addlink <код> <пароль> <url>', '#ff4444'); return; }
+        const links = getLinks();
+        links[code] = { pass, url };
+        saveLinks(links);
+        addOpsMsg('Ссылка "' + code + '" сохранена.', '#aaffaa');
+
+      } else if (cmd === '/rmlink') {
+        const code = parts[1], pass = parts[2];
+        if (!code || !pass) { addOpsMsg('Использование: /rmlink <код> <пароль>', '#ff4444'); return; }
+        const links = getLinks();
+        if (!links[code]) { addOpsMsg('Код "' + code + '" не найден.', '#ff4444'); return; }
+        if (links[code].pass !== pass) { addOpsMsg('НЕВЕРНЫЙ ПАРОЛЬ.', '#ff4444'); return; }
+        delete links[code];
+        saveLinks(links);
+        addOpsMsg('Ссылка "' + code + '" удалена.', '#aaffaa');
+
+      } else if (cmd === '/links') {
+        const links = getLinks();
+        const keys = Object.keys(links);
+        if (!keys.length) { addOpsMsg('Нет сохранённых ссылок.'); return; }
+        addOpsMsg('━━ СОХРАНЁННЫЕ ССЫЛКИ ━━━━━━━━━━━━━━━━━━');
+        keys.forEach(k => addOpsMsg('  • ' + k));
+        addOpsMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+      } else {
+        // Попытка открыть по коду и паролю
+        const code = parts[0], pass = parts[1];
+        if (code && pass) {
+          const links = getLinks();
+          if (links[code]) {
+            if (links[code].pass === pass) {
+              addOpsMsg('Авторизация принята. Открываю...', '#aaffaa');
+              window.open(links[code].url, '_blank');
+            } else {
+              addOpsMsg('НЕВЕРНЫЙ ПАРОЛЬ.', '#ff4444');
+            }
+          } else {
+            addOpsMsg('Код "' + code + '" не найден.', '#ff4444');
+          }
+        } else {
+          addOpsMsg('Неизвестная команда.', '#ff4444');
+        }
+      }
+    }
+
+    opsSendBtn.addEventListener('click', () => {
+      const text = opsInput.value.trim();
+      if (!text) return;
+      opsInput.value = '';
+      opsInput.focus();
+      handleOpsCmd(text);
+    });
+    opsInput.addEventListener('keydown', e => { if (e.key === 'Enter') opsSendBtn.click(); });
+
+    // Кнопка назад
+    document.getElementById('ops-back-btn').addEventListener('click', () => {
+      document.getElementById('window4').style.display = 'none';
+    });
+  }
+
   runBoot();
 </script>
 
+
+<!-- WINDOW 4: OPERATORS -->
+<div class="window" id="window4" style="top:60px; left:700px; width:420px; height:500px;">
+  <div class="scanline"></div>
+  <div class="win-titlebar" id="titlebar4">
+    <span class="win-title">⬡ OPERATORS — SECURE CHANNEL</span>
+    <div class="win-controls">
+      <button class="win-btn" id="ops-back-btn" style="--win-color:#62F1F5; border-color:rgba(98,241,245,0.4); color:#62F1F5">[← НАЗАД]</button>
+    </div>
+  </div>
+  <div class="win-body">
+    <div class="crt-overlay"></div>
+    <div class="ops-body">
+      <div id="ops-messages"></div>
+      <div class="ops-input-row">
+        <input id="ops-input" type="text" maxlength="200" placeholder="команда или <код> <пароль>..." spellcheck="false" />
+        <button id="ops-send-btn">[EXEC]</button>
+      </div>
+    </div>
+  </div>
+  <div class="win-resize" id="resize4"></div>
+</div>
 
 <!-- WINDOW 3: ADMIN -->
 <div class="window" id="window3" style="top:120px; left:400px; width:340px; height:320px;">
@@ -820,16 +1052,17 @@
   <div class="win-titlebar" id="titlebar3">
     <span class="win-title">⚠ ADMIN PANEL — NANOTRASEN</span>
   </div>
-  <div class="win-body">
+  <div class="win-body" style="display:flex; flex-direction:column; overflow:hidden;">
     <div class="crt-overlay"></div>
 
-    <div class="settings-body" id="admin-body">
-      <div class="settings-title">> ADMIN TERMINAL</div>
+    <div id="admin-body" style="padding:16px 20px; flex:1; display:flex; flex-direction:column; min-height:0; overflow:hidden;">
+      <div class="settings-title" style="flex-shrink:0; margin-bottom:10px;">> ADMIN TERMINAL</div>
 
       <div id="admin-messages" style="
         flex:1;
-        height:180px;
-        overflow-y:hidden;
+        min-height:0;
+        overflow-y:auto;
+        overflow-x:hidden;
         border:1px solid rgba(255,68,68,0.2);
         border-radius:4px;
         padding:10px;
@@ -837,9 +1070,11 @@
         font-size:11px;
         color:#ff4444;
         line-height:1.8;
+        scrollbar-width:thin;
+        scrollbar-color: #ff4444 #0d0d0d;
       "></div>
 
-      <div class="input-row">
+      <div class="input-row" style="flex-shrink:0;">
         <input
           id="admin-input"
           type="text"
@@ -857,7 +1092,6 @@
             outline:none;
           "
         />
-
         <button id="admin-send" class="admin-btn">[EXEC]</button>
       </div>
     </div>
@@ -867,34 +1101,30 @@
 
 <script>
   // Drag & Resize
-  (function() {
-    const wins = document.querySelectorAll('.window');
-    let zTop = 100;
+  let _zTop = 100;
 
-    function bringToFront(win) {
-      wins.forEach(w => w.classList.remove('active'));
-      win.classList.add('active');
-      zTop++;
-      win.style.zIndex = zTop;
-    }
+  function bringToFront(win) {
+    document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+    win.classList.add('active');
+    _zTop++;
+    win.style.zIndex = _zTop;
+  }
 
-    wins.forEach(win => {
-      win.addEventListener('mousedown', () => bringToFront(win));
-
-      const titlebar = win.querySelector('.win-titlebar');
-      const resizeHandle = win.querySelector('.win-resize');
-
-      let dragging = false, dx = 0, dy = 0;
-      titlebar.addEventListener('mousedown', e => {
-        if (e.target.classList.contains('win-btn')) return;
-        dragging = true;
-        dx = e.clientX - win.offsetLeft;
-        dy = e.clientY - win.offsetTop;
-        bringToFront(win);
-        e.preventDefault();
-      });
-
-      let resizing = false, startX, startY, startW, startH;
+  function initWindowDrag(win) {
+    win.addEventListener('mousedown', () => bringToFront(win));
+    const titlebar = win.querySelector('.win-titlebar');
+    const resizeHandle = win.querySelector('.win-resize');
+    let dragging = false, dx = 0, dy = 0;
+    titlebar.addEventListener('mousedown', e => {
+      if (e.target.classList.contains('win-btn')) return;
+      dragging = true;
+      dx = e.clientX - win.offsetLeft;
+      dy = e.clientY - win.offsetTop;
+      bringToFront(win);
+      e.preventDefault();
+    });
+    let resizing = false, startX, startY, startW, startH;
+    if (resizeHandle) {
       resizeHandle.addEventListener('mousedown', e => {
         resizing = true;
         startX = e.clientX; startY = e.clientY;
@@ -903,23 +1133,24 @@
         e.preventDefault();
         e.stopPropagation();
       });
-
-      document.addEventListener('mousemove', e => {
-        if (dragging) {
-          let nx = Math.max(0, Math.min(window.innerWidth - win.offsetWidth, e.clientX - dx));
-          let ny = Math.max(0, Math.min(window.innerHeight - win.offsetHeight, e.clientY - dy));
-          win.style.left = nx + 'px';
-          win.style.top = ny + 'px';
-        }
-        if (resizing) {
-          win.style.width = Math.max(220, startW + (e.clientX - startX)) + 'px';
-          win.style.height = Math.max(140, startH + (e.clientY - startY)) + 'px';
-        }
-      });
-
-      document.addEventListener('mouseup', () => { dragging = false; resizing = false; });
+    }
+    document.addEventListener('mousemove', e => {
+      if (dragging) {
+        let nx = Math.max(0, Math.min(window.innerWidth - win.offsetWidth, e.clientX - dx));
+        let ny = Math.max(0, Math.min(window.innerHeight - win.offsetHeight, e.clientY - dy));
+        win.style.left = nx + 'px';
+        win.style.top = ny + 'px';
+      }
+      if (resizing) {
+        win.style.width = Math.max(220, startW + (e.clientX - startX)) + 'px';
+        win.style.height = Math.max(140, startH + (e.clientY - startY)) + 'px';
+      }
     });
-  })();
+    document.addEventListener('mouseup', () => { dragging = false; resizing = false; });
+  }
+
+  // Init drag for all static windows
+  document.querySelectorAll('.window').forEach(win => initWindowDrag(win));
 </script>
 </body>
 </html>
