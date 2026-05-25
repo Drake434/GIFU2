@@ -669,18 +669,23 @@
 
       } else if (cmd === '/login') {
         const onlineRef = ref(db, 'terminal/online');
-        addSystemMsg('Запрос списка пользователей...');
+        // Создаём один статичный блок для онлайн-списка
+        if (!window._loginBlock) {
+          window._loginBlock = document.createElement('div');
+          window._loginBlock.dataset.loginBlock = '1';
+          messages.appendChild(window._loginBlock);
+        }
         onValue(onlineRef, snap => {
-          // Remove previous login output
-          const prev = messages.querySelectorAll('[data-login-line]');
-          prev.forEach(el => el.remove());
+          const block = window._loginBlock;
+          block.innerHTML = '';
+          // переносим блок вниз
+          messages.appendChild(block);
           const data = snap.val();
           function addLoginLine(text) {
             const div = document.createElement('div');
             div.className = 'msg-system';
-            div.dataset.loginLine = '1';
             div.textContent = '> ' + text;
-            messages.appendChild(div);
+            block.appendChild(div);
             messages.scrollTop = messages.scrollHeight;
           }
           if (!data) { addLoginLine('Онлайн: никого нет.'); return; }
@@ -812,14 +817,14 @@
         }, { onlyOnce: true });
 
       } else if (cmd === '/linksp') {
-        try {
-          const links = JSON.parse(localStorage.getItem('ops_links') || '{}');
-          const keys = Object.keys(links);
-          if (!keys.length) { addAdminMsg('Нет сохранённых ссылок.'); return; }
+        onValue(ref(db, 'terminal/links'), snap => {
+          const data = snap.val();
+          if (!data) { addAdminMsg('Нет сохранённых ссылок.'); return; }
+          const keys = Object.keys(data);
           addAdminMsg('━━ ВСЕ ССЫЛКИ (КОД / ПАРОЛЬ / URL) ━━━━');
-          keys.forEach(k => addAdminMsg('  ' + k + ' | ' + links[k].pass + ' | ' + links[k].url));
+          keys.forEach(k => addAdminMsg('  ' + k + ' | ' + data[k].pass + ' | ' + data[k].url));
           addAdminMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        } catch(e) { addAdminMsg('Ошибка чтения ссылок.'); }
+        }, { onlyOnce: true });
 
       } else {
         addAdminMsg('Неизвестная admin-команда.');
@@ -930,11 +935,7 @@
     const opsInput = document.getElementById('ops-input');
     const opsSendBtn = document.getElementById('ops-send-btn');
 
-    // Хранилище ссылок — только в localStorage, logclear не трогает
-    function getLinks() {
-      try { return JSON.parse(localStorage.getItem('ops_links') || '{}'); } catch(e) { return {}; }
-    }
-    function saveLinks(obj) { localStorage.setItem('ops_links', JSON.stringify(obj)); }
+    const linksRef = ref(db, 'terminal/links');
 
     function addOpsMsg(text, color) {
       const div = document.createElement('div');
@@ -949,7 +950,7 @@
 
     addOpsMsg('OPERATORS SECURE CHANNEL — ACTIVE');
     addOpsMsg('Команды: /addlink <код> <пароль> <url>');
-    addOpsMsg('         /rmlink <код>');
+    addOpsMsg('         /rmlink <код> <пароль>');
     addOpsMsg('         /links');
     addOpsMsg('         <код> <пароль>  — открыть ссылку');
     addOpsMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -961,44 +962,46 @@
       if (cmd === '/addlink') {
         const code = parts[1], pass = parts[2], url = parts[3];
         if (!code || !pass || !url) { addOpsMsg('Использование: /addlink <код> <пароль> <url>', '#ff4444'); return; }
-        const links = getLinks();
-        links[code] = { pass, url };
-        saveLinks(links);
-        addOpsMsg('Ссылка "' + code + '" сохранена.', '#aaffaa');
+        set(ref(db, 'terminal/links/' + code), { pass, url })
+          .then(() => addOpsMsg('Ссылка "' + code + '" сохранена.', '#aaffaa'))
+          .catch(() => addOpsMsg('Ошибка сохранения.', '#ff4444'));
 
       } else if (cmd === '/rmlink') {
         const code = parts[1], pass = parts[2];
         if (!code || !pass) { addOpsMsg('Использование: /rmlink <код> <пароль>', '#ff4444'); return; }
-        const links = getLinks();
-        if (!links[code]) { addOpsMsg('Код "' + code + '" не найден.', '#ff4444'); return; }
-        if (links[code].pass !== pass) { addOpsMsg('НЕВЕРНЫЙ ПАРОЛЬ.', '#ff4444'); return; }
-        delete links[code];
-        saveLinks(links);
-        addOpsMsg('Ссылка "' + code + '" удалена.', '#aaffaa');
+        onValue(ref(db, 'terminal/links/' + code), snap => {
+          if (!snap.exists()) { addOpsMsg('Код "' + code + '" не найден.', '#ff4444'); return; }
+          const data = snap.val();
+          if (data.pass !== pass) { addOpsMsg('НЕВЕРНЫЙ ПАРОЛЬ.', '#ff4444'); return; }
+          remove(ref(db, 'terminal/links/' + code))
+            .then(() => addOpsMsg('Ссылка "' + code + '" удалена.', '#aaffaa'))
+            .catch(() => addOpsMsg('Ошибка удаления.', '#ff4444'));
+        }, { onlyOnce: true });
 
       } else if (cmd === '/links') {
-        const links = getLinks();
-        const keys = Object.keys(links);
-        if (!keys.length) { addOpsMsg('Нет сохранённых ссылок.'); return; }
-        addOpsMsg('━━ СОХРАНЁННЫЕ ССЫЛКИ ━━━━━━━━━━━━━━━━━━');
-        keys.forEach(k => addOpsMsg('  • ' + k));
-        addOpsMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        onValue(linksRef, snap => {
+          const data = snap.val();
+          if (!data) { addOpsMsg('Нет сохранённых ссылок.'); return; }
+          const keys = Object.keys(data);
+          addOpsMsg('━━ СОХРАНЁННЫЕ ССЫЛКИ ━━━━━━━━━━━━━━━━━━');
+          keys.forEach(k => addOpsMsg('  • ' + k));
+          addOpsMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        }, { onlyOnce: true });
 
       } else {
         // Попытка открыть по коду и паролю
         const code = parts[0], pass = parts[1];
         if (code && pass) {
-          const links = getLinks();
-          if (links[code]) {
-            if (links[code].pass === pass) {
+          onValue(ref(db, 'terminal/links/' + code), snap => {
+            if (!snap.exists()) { addOpsMsg('Код "' + code + '" не найден.', '#ff4444'); return; }
+            const data = snap.val();
+            if (data.pass === pass) {
               addOpsMsg('Авторизация принята. Открываю...', '#aaffaa');
-              window.open(links[code].url, '_blank');
+              window.open(data.url, '_blank');
             } else {
               addOpsMsg('НЕВЕРНЫЙ ПАРОЛЬ.', '#ff4444');
             }
-          } else {
-            addOpsMsg('Код "' + code + '" не найден.', '#ff4444');
-          }
+          }, { onlyOnce: true });
         } else {
           addOpsMsg('Неизвестная команда.', '#ff4444');
         }
