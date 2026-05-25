@@ -551,10 +551,19 @@
     const adminMessages = document.getElementById('admin-messages');
 
     // --- PRESENCE ---
-    const presenceRef = ref(db, 'terminal/online/' + currentNick);
-    set(presenceRef, { nick: currentNick, color: currentColor, ts: Date.now() });
+    // Уникальный ID сессии — не меняется при смене ника
+    if (!window._sessionId) {
+      window._sessionId = 'sess_' + Math.random().toString(36).slice(2) + Date.now();
+    }
+    const presenceRef = ref(db, 'terminal/online/' + window._sessionId);
+    function updatePresence() {
+      set(presenceRef, { nick: currentNick, color: currentColor, ts: Date.now() });
+    }
+    updatePresence();
     onDisconnect(presenceRef).remove();
     window.addEventListener('beforeunload', () => remove(presenceRef));
+    // Делаем updatePresence глобальной чтобы вызывать при смене ника
+    window._updatePresence = updatePresence;
 
     // --- PM listener ---
     const pmRef = ref(db, 'terminal/pm/' + currentNick);
@@ -907,6 +916,8 @@
           currentColor = document.querySelector('.color-swatch.selected')?.style.background || '#62F1F5';
           localStorage.setItem('nt_nick', currentNick);
           localStorage.setItem('nt_color', currentColor);
+          // Обновляем presence с новым ником
+          if (window._updatePresence) window._updatePresence();
           ns.style.transition = 'opacity 0.3s ease';
           ns.style.opacity = '0';
           setTimeout(async () => {
