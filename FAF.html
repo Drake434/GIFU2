@@ -669,31 +669,31 @@
 
       } else if (cmd === '/login') {
         const onlineRef = ref(db, 'terminal/online');
-        // Создаём один статичный блок для онлайн-списка
+        // Создаём блок один раз, он остаётся на месте
         if (!window._loginBlock) {
           window._loginBlock = document.createElement('div');
           window._loginBlock.dataset.loginBlock = '1';
           messages.appendChild(window._loginBlock);
+          onValue(onlineRef, snap => {
+            const block = window._loginBlock;
+            block.innerHTML = '';
+            const data = snap.val();
+            function addLoginLine(text) {
+              const div = document.createElement('div');
+              div.className = 'msg-system';
+              div.textContent = '> ' + text;
+              block.appendChild(div);
+              messages.scrollTop = messages.scrollHeight;
+            }
+            if (!data) { addLoginLine('Онлайн: никого нет.'); return; }
+            const users = Object.values(data);
+            addLoginLine('━━ ОНЛАЙН [' + users.length + '] ━━━━━━━━━━━━━━━━━━━━━━━');
+            users.forEach(u => addLoginLine('  • ' + u.nick));
+            addLoginLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+          });
+        } else {
+          addSystemMsg('Список онлайн уже отслеживается выше.');
         }
-        onValue(onlineRef, snap => {
-          const block = window._loginBlock;
-          block.innerHTML = '';
-          // переносим блок вниз
-          messages.appendChild(block);
-          const data = snap.val();
-          function addLoginLine(text) {
-            const div = document.createElement('div');
-            div.className = 'msg-system';
-            div.textContent = '> ' + text;
-            block.appendChild(div);
-            messages.scrollTop = messages.scrollHeight;
-          }
-          if (!data) { addLoginLine('Онлайн: никого нет.'); return; }
-          const users = Object.values(data);
-          addLoginLine('━━ ОНЛАЙН [' + users.length + '] ━━━━━━━━━━━━━━━━━━━━━━━');
-          users.forEach(u => addLoginLine('  • ' + u.nick));
-          addLoginLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        });
 
       } else if (cmd === '/msg') {
         const target = parts[1];
