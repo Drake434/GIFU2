@@ -68,52 +68,12 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 }
 #boot-window {
   background: #0d0d0d; border: 1px solid #00FF41; border-radius: 8px;
-  padding: 32px 40px; width: 520px; max-width: 96vw;
+  width: 600px; height: 500px; max-width: 96vw; max-height: 96vh;
   box-shadow: 0 0 30px rgba(0,255,65,0.2); position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
 }
-#boot-window .s { position: absolute; left: 0; width: 100%; height: 60px; pointer-events: none; z-index: 6;
-  background: linear-gradient(to bottom, transparent 0%, rgba(0,255,65,0.06) 40%, rgba(0,255,65,0.10) 50%, rgba(0,255,65,0.06) 60%, transparent 100%);
-  animation: scanmove 4s linear infinite; }
-#boot-window .c { position: absolute; top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;
-  background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.13) 3px, rgba(0,0,0,0.13) 4px); }
-#boot-lines { position: relative; z-index: 2; font-size: 12px; color: #00FF41; letter-spacing: 1px; }
-.bl { opacity: 0; line-height: 1.8; }
-.ok { color: #00FF41; } .warn { color: #62F1F5; }
-.pbar-wrap { margin: 8px 0 4px; opacity: 0; }
 
-/* MAIN WINDOW */
-#window-main {
-  --wc: #00FF41; --wc-rgb: 0,255,65;
-  top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 560px; height: 600px;
-}
-#main-content {
-  display: none; flex-direction: column; align-items: center;
-  padding: 30px 40px 16px; flex: 1; overflow-y: auto;
-}
-.nt-logo { font-size: 18px; line-height: 1.3; color: #00FF41; text-shadow: 0 0 8px rgba(0,255,65,0.8); letter-spacing: 2px; white-space: pre; text-align: center; margin-bottom: 14px; }
-.nt-divider { color: #00FF41; opacity: 0.3; font-size: 12px; letter-spacing: 1px; margin: 8px 0; width: 100%; text-align: center; }
-.nt-corp { color: #00FF41; font-size: 13px; opacity: 0.7; letter-spacing: 3px; margin-bottom: 14px; }
-.nt-welcome { color: #00FF41; font-size: 12px; line-height: 2; opacity: 0.75; text-align: center; margin-bottom: 6px; letter-spacing: 1px; }
-.nt-prompt { color: #00FF41; font-size: 11px; opacity: 0.45; letter-spacing: 1px; margin: 8px 0 14px; }
 
-#dialog-box { width: 100%; margin: 10px 0 0; font-size: 11px; line-height: 1.9; }
-.dline { opacity: 0; transition: opacity 0.3s ease; color: #00FF41; }
-.dline.show { opacity: 1; }
-.src-nt { color: #00FF41; }
-.src-adm { color: #62F1F5; }
-.src-user { color: #ff4444; }
-.src-core { color: #ffd700; }
-.d-sep { opacity: 0.4; }
-
-#cmd-area { width: 100%; flex-shrink: 0; padding: 0 40px 16px; display: none; }
-#cmd-area .prompt-row { display: flex; align-items: center; gap: 6px; border-top: 1px solid rgba(0,255,65,0.15); padding-top: 10px; }
-#cmd-area .prompt-label { font-size: 11px; color: #00FF41; opacity: 0.5; white-space: nowrap; }
-#cmd-input {
-  background: transparent; border: none; outline: none;
-  color: #00FF41; font-family: 'Courier New', monospace; font-size: 11px;
-  flex: 1; caret-color: #00FF41; letter-spacing: 1px;
-}
 
 /* PAGE WINDOWS */
 .page-window { --wc: #00FF41; --wc-rgb: 0,255,65; display: none; width: 420px; height: 460px; }
@@ -545,52 +505,31 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
   <!-- BOOT -->
   <div id="boot-overlay">
     <div id="boot-window">
-      <div class="s"></div><div class="c"></div>
-      <div id="boot-lines">
-        <div class="bl" style="opacity:0.45">NANOTRASEN OS v4.2.1 — ИНИЦИАЛИЗАЦИЯ</div>
-        <div class="bl" id="b1">[ <span class="ok">OK</span> ]  Инициализация NT-OS v4.2.1...</div>
-        <div class="bl" id="b2">[ <span class="ok">OK</span> ]  Монтирование системных разделов...</div>
-        <div class="bl" id="b3">[ <span class="warn">!!</span> ]  <span class="warn">Обнаружены изменения в системных файлах</span></div>
-        <div class="bl" id="b4">[ <span class="warn">!!</span> ]  <span class="warn">Запуск проверки целостности ядра...</span></div>
-        <div class="bl" id="b5">[ <span class="ok">OK</span> ]  Сигнатура ядра верифицирована</div>
-        <div class="bl" id="b6">[ <span class="ok">OK</span> ]  Проверка списка исключений...</div>
-        <div class="bl" id="b7">[ <span class="ok">OK</span> ]  Ядро найдено в реестре допустимых сборок</div>
-        <div class="bl" id="b8">[ <span class="ok">OK</span> ]  Подключение к NT-NET...</div>
-        <div class="bl" id="b9">[ <span class="ok">OK</span> ]  Продолжение в режиме Синдикат...</div>
-        <div class="pbar-wrap" id="pb-wrap"><div id="pb" style="font-family:'Courier New',monospace;font-size:12px;color:#00FF41;letter-spacing:1px;">[                    ] 0%</div></div>
-        <div class="bl" id="b10" style="opacity:0">Загрузка терминала...</div>
-      </div>
+      <canvas id="c" width="600" height="500"></canvas>
+      <div id="start-btn" style="
+        display:none;
+        position:absolute;
+        left:50%;
+        top:50%;
+        transform:translate(-50%, 110px);
+        font-family:'Courier New',monospace;
+        font-size:13px;
+        letter-spacing:3px;
+        color:#00FF41;
+        border:1px solid rgba(0,255,65,0.6);
+        padding:8px 32px;
+        background:rgba(0,255,65,0.06);
+        cursor:pointer;
+        text-shadow:0 0 10px rgba(0,255,65,0.8);
+        box-shadow:0 0 18px rgba(0,255,65,0.15);
+        transition:background 0.2s,box-shadow 0.2s;
+        user-select:none;
+        z-index:10;
+      " onmouseover="this.style.background='rgba(0,255,65,0.13)';this.style.boxShadow='0 0 28px rgba(0,255,65,0.35)'"
+         onmouseout="this.style.background='rgba(0,255,65,0.06)';this.style.boxShadow='0 0 18px rgba(0,255,65,0.15)'"
+         onclick="startApp()"
+      >[ START ]</div>
     </div>
-  </div>
-
-  <!-- MAIN WINDOW -->
-  <div class="window" id="window-main">
-    <div class="win-scanline"></div><div class="win-crt"></div>
-    <div class="win-titlebar" id="tb-main">
-      <span class="win-title">NT — ЛИЧНОЕ ДЕЛО</span>
-    </div>
-    <div class="win-body">
-      <div id="main-content" class="win-scroll">
-        <div class="nt-logo">███░███░░░░██░░░░
-░██░████░░░██░░░░
-░░█░██░██░░██░█░░
-░░░░██░░██░██░██░
-░░░░██░░░████░███</div>
-        <div class="nt-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-        <div class="nt-corp">NANOTRASEN CORPORATION</div>
-        <div class="nt-welcome">Поздравляем и добро пожаловать.<br>Пожалуйста, входите осторожно —<br><span style="color:#62F1F5;text-shadow:0 0 8px rgba(98,241,245,0.7)">здесь вам не рады.</span></div>
-        <div class="nt-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
-        <div class="nt-prompt" id="start-prompt">Для продолжения введите команду [/Start]<span style="display:inline-block;width:6px;height:11px;background:#00FF41;animation:blink 0.8s step-end infinite;vertical-align:middle;margin-left:2px"></span></div>
-        <div id="dialog-box"></div>
-      </div>
-      <div id="cmd-area">
-        <div class="prompt-row">
-          <span class="prompt-label">[ UserSС ] ></span>
-          <input id="cmd-input" type="text" maxlength="80" spellcheck="false" autocomplete="off" />
-        </div>
-      </div>
-    </div>
-    <div class="win-resize"></div>
   </div>
 
   <!-- PAGE WINDOWS -->
@@ -908,7 +847,7 @@ function subscribePages() {
 
 let _savingPages = new Set(); // страницы, которые мы сами сейчас сохраняем
 
-function savePage(num) {
+function savePage(num, skipRender) {
   if (!fbApi) { consoleLog('ERR: Firebase не готов.'); return Promise.reject(); }
   const blocks = pageData[num] || DEFAULT_PAGES[num] || [];
   const links = pageLinks[num] || [];
@@ -917,6 +856,12 @@ function savePage(num) {
     fbApi.set(fbApi.ref(fbApi.db, 'anketa2/extra_pages/' + num), { ...extraPages[num], blocks }).catch(()=>{});
   }
   return fbApi.set(fbApi.ref(fbApi.db, 'anketa2/pages/' + num), { blocks, links, updatedAt: Date.now() })
+    .then(() => {
+      if (!skipRender) {
+        const pw = document.getElementById('pw' + num);
+        if (pw && pw.style.display === 'flex') renderPage(num);
+      }
+    })
     .finally(() => { setTimeout(() => _savingPages.delete(num), 300); });
 }
 
@@ -998,15 +943,26 @@ function refreshDividers(num) {
 
 async function renderPage(num) {
   const pm = document.getElementById('pm' + num);
+  if (!pm) return;
+
+  // Создаем или увеличиваем идентификатор рендеринга для данной страницы
+  const renderId = (pm._renderId || 0) + 1;
+  pm._renderId = renderId;
+
   pm.innerHTML = '';
   const blocks = getPageBlocks(num);
 
   await d(80);
+  if (pm._renderId !== renderId) return; // Отмена рендеринга, если запущен более новый
   addDivider(pm, num);
+  
   await d(120);
+  if (pm._renderId !== renderId) return;
 
   for (const block of blocks) {
     await d(90);
+    if (pm._renderId !== renderId) return;
+
     if (block.type === 'card') {
       renderCard(pm, block);
     } else if (block.type === 'divider') {
@@ -1030,6 +986,7 @@ async function renderPage(num) {
   }
 
   await d(120);
+  if (pm._renderId !== renderId) return;
   addDivider(pm, num);
 
   const pw = document.getElementById('pw' + num);
@@ -1049,7 +1006,7 @@ function applyLinksToPage(pm, num) {
     links.forEach(({ word, url }) => {
       if (!word || !url) return;
       const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      html = html.replace(new RegExp('(' + escaped + ')', 'g'),
+      html = html.replace(new RegExp('(?<![\\p{L}\\p{N}_])(' + escaped + ')(?![\\p{L}\\p{N}_])', 'gu'),
         `<span class="img-trigger" data-img-url="${url}"><span class="img-trigger-label">img</span><span class="img-trigger-text">$1</span></span>`);
     });
     el.innerHTML = html;
@@ -1128,7 +1085,7 @@ function renderStat(container, block, pageNum) {
     const idx = blocks.indexOf(block);
     if (idx !== -1) {
       blocks[idx].value = clamped;
-      savePage(pageNum).catch(() => {});
+      savePage(pageNum, true).catch(() => {});
     }
   }
 
@@ -1243,13 +1200,11 @@ function openPage(num) {
     document.getElementById('desktop').appendChild(pw);
     initDrag(pw);
   }
-  const main = document.getElementById('window-main');
-  const mr = main.getBoundingClientRect();
-  let left = mr.right + 16;
-  if (left + 440 > window.innerWidth) left = mr.left - 456;
   const offset = ((num - 1) % 5) * 28;
+  let left = Math.max(12, Math.round((window.innerWidth - 420) / 2) - 150 + offset);
+  let top = Math.max(12, Math.round((window.innerHeight - 460) / 2) - 50 + offset);
   pw.style.left = left + 'px';
-  pw.style.top = Math.min(window.innerHeight - 480, mr.top + offset) + 'px';
+  pw.style.top = top + 'px';
   pw.style.display = 'flex';
   zTop++; pw.style.zIndex = zTop;
   renderPage(num);
@@ -1307,9 +1262,9 @@ function createDesktopIcons() {
 
 function activateDesktopMode() {
   const main = document.getElementById('window-main');
+  if (main) main.style.display = 'none';
   const icons = document.getElementById('desktop-icons');
 
-  main.style.display = 'none';
   icons.style.display = 'grid';
 
   createDesktopIcons();
@@ -1361,40 +1316,291 @@ async function playDialog() {
   for (const [src, cls, text] of lines) { await d(200); addDialogLine(src, cls, text); }
 }
 
-document.getElementById('cmd-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    const val = document.getElementById('cmd-input').value.trim();
-    if (!val) return;
-    document.getElementById('cmd-input').value = '';
-    handleCmd(val);
-  }
-});
-document.getElementById('window-main').addEventListener('click', () => document.getElementById('cmd-input').focus());
+
 
 // ─── BOOT ────────────────────────────────────────────────────────────────────
-async function runBoot() {
-  const blines = ['b1','b2','b3','b4','b5','b6','b7','b8','b9'];
-  const delays = [220,260,300,340,280,220,260,200,280];
-  await d(400);
-  for (let i=0;i<blines.length;i++) { await d(delays[i]); document.getElementById(blines[i]).style.opacity='1'; }
-  await d(200);
-  const pb = document.getElementById('pb');
-  document.getElementById('pb-wrap').style.opacity='1';
-  const steps=[{p:15,t:60},{p:30,t:80},{p:47,t:120},{p:48,t:400},{p:60,t:70},{p:75,t:90},{p:88,t:110},{p:95,t:180},{p:100,t:80}];
-  for (const s of steps) { await d(s.t); const f=Math.round(s.p/100*20); pb.textContent='['+'█'.repeat(f)+' '.repeat(20-f)+'] '+s.p+'%'; }
-  await d(150);
-  document.getElementById('b10').style.opacity='0.45';
-  await d(700);
+async function startApp() {
+  const btn = document.getElementById('start-btn');
+  btn.style.pointerEvents = 'none';
+  
   const ov = document.getElementById('boot-overlay');
-  ov.style.transition='opacity 0.5s ease';
-  ov.style.opacity='0';
+  ov.style.transition = 'opacity 0.5s ease';
+  ov.style.opacity = '0';
   await d(500);
-  ov.style.display='none';
-  document.getElementById('main-content').style.display='flex';
-  document.getElementById('cmd-area').style.display='block';
-  document.getElementById('cmd-input').focus();
+  ov.style.display = 'none';
+  
+  // Автоматический переход в десктоп
+  started = true;
+  activateDesktopMode();
 }
-runBoot();
+
+function initBootAnimation() {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  const W = 600, H = 500;
+  let startTime = null;
+
+  // Случайная длительность орбиты: 5–15 секунд
+  const ORBIT_DURATION = 5000 + Math.random() * 10000;
+  // Случайная длительность прогресс-бара: 5–15 секунд
+  const PBAR_DURATION  = 5000 + Math.random() * 10000;
+
+  // Временные точки
+  const PHASE_HLINE_START  = 200;
+  const PHASE_HLINE_END    = 600;
+  const PHASE_VLINE_START  = 600;
+  const PHASE_VLINE_END    = 1000;
+  const PHASE_ORBIT_START  = 1000;
+  const PHASE_ORBIT_END    = 1000 + ORBIT_DURATION;
+  const PHASE_GATHER_END   = PHASE_ORBIT_END + 3000;
+  const PHASE_SUBS_START   = PHASE_GATHER_END;
+  const PHASE_PBAR_START   = PHASE_GATHER_END + 600;
+
+  const LOGO = [
+    "███░███░░░░██░░░░",
+    "░██░████░░░██░░░░",
+    "░░█░██░██░░██░█░░",
+    "░░░░██░░██░██░██░",
+    "░░░░██░░░████░███"
+  ];
+
+  const FONT_SIZE = 17, CW = 11, CH = 21;
+  const COLS = 17, ROWS = 5;
+  const TOTAL_W = COLS * CW, TOTAL_H = ROWS * CH;
+  const CX = W/2, CY = H/2 - 30;
+  const OX = CX - TOTAL_W/2, OY = CY - TOTAL_H/2;
+
+  const chars = [];
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const ch = LOGO[r][c] || '░';
+      chars.push({
+        ch,
+        targetX: OX + c * CW + CW/2,
+        targetY: OY + r * CH + CH/2,
+        x: 0, y: 0, angle: 0, radius: 0, speed: 0, phase: 0,
+        color: ch === '░' ? 'rgba(0,255,65,0.18)' : '#00FF41'
+      });
+    }
+  }
+
+  const N = chars.length;
+  const BASE_R = 150;
+  chars.forEach((c, i) => {
+    c.angle  = (i / N) * Math.PI * 2 + Math.random() * 0.5;
+    c.radius = BASE_R + (Math.random() - 0.5) * 40;
+    c.x      = CX + Math.cos(c.angle) * c.radius;
+    c.y      = CY + Math.sin(c.angle) * c.radius;
+    c.speed  = 0.007 + Math.random() * 0.005;
+    c.phase  = Math.random() * Math.PI * 2;
+  });
+
+  function buildProgressSteps(duration) {
+    const steps = [];
+    const count = 8 + Math.floor(Math.random() * 7);
+    let progress = 0;
+    let time = 0;
+
+    for (let i = 0; i < count; i++) {
+      const isLast = (i === count - 1);
+      const remaining = 100 - progress;
+      const jump = isLast ? remaining : Math.min(remaining - (count - i - 1) * 3, Math.max(3, Math.floor(Math.random() * Math.min(35, remaining - (count - i - 1) * 3))));
+      const timeSlice = duration / count;
+      const pause = timeSlice * (0.4 + Math.random() * 0.9);
+      time += pause;
+      progress += jump;
+      steps.push({ t: Math.min(time, duration * 0.98), p: Math.min(progress, 100) });
+      if (progress >= 100) break;
+    }
+    if (steps[steps.length - 1].p < 100) {
+      steps.push({ t: duration, p: 100 });
+    }
+    return steps;
+  }
+
+  const progressSteps = buildProgressSteps(PBAR_DURATION);
+  let pbarDone = false;
+  let startBtnShown = false;
+
+  function getProgressAt(elapsed) {
+    if (elapsed <= 0) return 0;
+    const steps = progressSteps;
+    if (elapsed >= steps[steps.length - 1].t) return 100;
+    for (let i = 0; i < steps.length; i++) {
+      if (elapsed < steps[i].t) {
+        const prev = i === 0 ? { t: 0, p: 0 } : steps[i - 1];
+        return prev.p;
+      }
+    }
+    return 100;
+  }
+
+  function easeOut(t)   { return 1 - Math.pow(1 - t, 3); }
+  function easeInOut(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+
+  function drawScanlines(alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.18;
+    for (let y = 0; y < H; y += 4) {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, y, W, 2);
+    }
+    ctx.restore();
+  }
+
+  function drawSubtitles(alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.font = '11px Courier New, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(0,255,65,0.55)';
+    ctx.fillText('NANOTRASEN CORPORATION', CX, CY + TOTAL_H/2 + 28);
+    ctx.fillStyle = 'rgba(0,255,65,0.35)';
+    ctx.fillText('NT-OS v4.2.1  —  ИНИЦИАЛИЗАЦИЯ...', CX, CY + TOTAL_H/2 + 48);
+    ctx.restore();
+  }
+
+  function drawProgressBar(alpha, progress) {
+    const barW   = 260;
+    const barH   = 12;
+    const barX   = CX - barW / 2;
+    const barY   = CY + TOTAL_H / 2 + 70;
+    const chars  = 26;
+    const filledChars = Math.round(chars * progress / 100);
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.font = '11px Courier New, monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const bar = '[' + '█'.repeat(filledChars) + '░'.repeat(chars - filledChars) + ']';
+    ctx.fillStyle = 'rgba(0,255,65,0.9)';
+    ctx.shadowColor = '#00FF41';
+    ctx.shadowBlur  = filledChars > 0 ? 8 : 0;
+    ctx.fillText(bar, CX, barY + barH / 2);
+
+    ctx.shadowBlur = 0;
+    ctx.font = '10px Courier New, monospace';
+    ctx.fillStyle = 'rgba(0,255,65,0.55)';
+    ctx.fillText(Math.round(progress) + '%', CX + barW / 2 + 22, barY + barH / 2);
+
+    ctx.restore();
+  }
+
+  function render(ts) {
+    if (!startTime) startTime = ts;
+    const t = ts - startTime;
+
+    ctx.fillStyle = '#0d0d0d';
+    ctx.fillRect(0, 0, W, H);
+    drawScanlines(1);
+
+    if (t >= PHASE_HLINE_START && t < PHASE_HLINE_END) {
+      const p = easeOut((t - PHASE_HLINE_START) / 400);
+      const sw = W * p, sh = 3 + p * 2;
+      ctx.save();
+      ctx.fillStyle = `rgba(0,255,65,${0.6 + p*0.4})`;
+      ctx.shadowColor = '#00FF41'; ctx.shadowBlur = 20;
+      ctx.fillRect((W-sw)/2, H/2-sh/2, sw, sh);
+      ctx.restore();
+    }
+
+    else if (t >= PHASE_VLINE_START && t < PHASE_VLINE_END) {
+      const p = easeOut((t - PHASE_VLINE_START) / 400);
+      const sh = p * H;
+      ctx.save();
+      ctx.fillStyle = 'rgba(0,255,65,0.07)';
+      ctx.fillRect(0, H/2 - sh/2, W, sh);
+      ctx.fillStyle = `rgba(0,255,65,${1 - p*0.85})`;
+      ctx.shadowColor = '#00FF41'; ctx.shadowBlur = 14;
+      ctx.fillRect(0, H/2-2, W, 4);
+      ctx.restore();
+    }
+
+    if (t >= PHASE_ORBIT_START) {
+      const screenAlpha = Math.min(1, (t - PHASE_ORBIT_START) / 400);
+
+      ctx.font = `bold ${FONT_SIZE}px 'Courier New', monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      chars.forEach(c => {
+        let px, py, alpha;
+
+        if (t < PHASE_ORBIT_END) {
+          c.angle += c.speed;
+          c.x = CX + Math.cos(c.angle) * c.radius;
+          c.y = CY + Math.sin(c.angle) * c.radius;
+          px = c.x; py = c.y;
+          alpha = screenAlpha * (0.55 + 0.45 * Math.sin(t * 0.003 + c.phase));
+        } else if (t < PHASE_GATHER_END) {
+          const p = Math.min(1, (t - PHASE_ORBIT_END) / 3000);
+          const e = easeInOut(p);
+          c.angle += c.speed * (1 - e) * 0.5;
+          c.x = CX + Math.cos(c.angle) * c.radius;
+          c.y = CY + Math.sin(c.angle) * c.radius;
+          px = c.x + (c.targetX - c.x) * e;
+          py = c.y + (c.targetY - c.y) * e;
+          alpha = 0.55 + 0.45 * e;
+        } else {
+          px = c.targetX; py = c.targetY; alpha = 1;
+          const t2 = Math.min(1, (t - PHASE_GATHER_END) / 600);
+          ctx.shadowColor = '#00FF41';
+          ctx.shadowBlur  = 12 * t2;
+        }
+
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle   = c.color;
+        ctx.fillText(c.ch, px, py);
+      });
+
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur  = 0;
+
+      if (t > PHASE_SUBS_START) {
+        const subAlpha = Math.min(1, (t - PHASE_SUBS_START - 100) / 600);
+        if (subAlpha > 0) drawSubtitles(subAlpha);
+      }
+
+      if (t > PHASE_PBAR_START && !pbarDone) {
+        const pbarElapsed = t - PHASE_PBAR_START;
+        const pbarAlpha   = Math.min(1, pbarElapsed / 400);
+        const progress    = getProgressAt(pbarElapsed);
+        drawProgressBar(pbarAlpha, progress);
+
+        if (progress >= 100 && pbarElapsed >= PBAR_DURATION && !startBtnShown) {
+          startBtnShown = true;
+          pbarDone = true;
+          showStartButton();
+        }
+      }
+
+      if (t > 1400) {
+        const scanY = ((t - 1400) / 25 % (H + 80)) - 80;
+        const grad  = ctx.createLinearGradient(0, scanY, 0, scanY + 80);
+        grad.addColorStop(0,   'transparent');
+        grad.addColorStop(0.5, 'rgba(0,255,65,0.07)');
+        grad.addColorStop(1,   'transparent');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, scanY, W, 80);
+      }
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  function showStartButton() {
+    const btn = document.getElementById('start-btn');
+    btn.style.display = 'block';
+    btn.style.opacity = '0';
+    btn.style.transition = 'opacity 0.8s ease';
+    setTimeout(() => { btn.style.opacity = '1'; }, 30);
+  }
+
+  requestAnimationFrame(render);
+}
+initBootAnimation();
 
 // ─── IMAGE POPUP ─────────────────────────────────────────────────────────────
 function showPopup(e) {
@@ -1417,14 +1623,12 @@ function openEditor(pageNum) {
   currentEditorPage = pageNum || 1;
   editingBlockIdx = null;
   const editor = document.getElementById('editor-window');
-  const main = document.getElementById('window-main');
-  const mr = main.getBoundingClientRect();
   const w = Math.min(820, window.innerWidth - 24);
   editor.style.width = w + 'px';
-  let left = mr.left - w - 16;
-  if (left < 12) left = Math.min(window.innerWidth - w - 12, mr.right + 16);
+  let left = Math.max(12, Math.round((window.innerWidth - w) / 2));
+  let top = Math.max(12, Math.round((window.innerHeight - 580) / 2));
   editor.style.left = Math.max(12, left) + 'px';
-  editor.style.top = Math.max(12, mr.top) + 'px';
+  editor.style.top = Math.max(12, top) + 'px';
   editor.style.display = 'flex';
   zTop++; editor.style.zIndex = zTop;
   setActiveTab(currentEditorPage);
