@@ -1116,14 +1116,29 @@ function addDivider(container, num) {
   setTimeout(() => div.classList.add('show'), 30);
 }
 
+function measureCharWidth(el) {
+  const ref = el.closest('.page-messages') || el;
+  const fs = getComputedStyle(ref).fontSize || '13px';
+  const probe = document.createElement('span');
+  probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;font-family:"Courier New",monospace;font-size:' + fs + ';letter-spacing:0';
+  probe.textContent = '═'.repeat(40);
+  document.body.appendChild(probe);
+  const w = probe.getBoundingClientRect().width / 40;
+  probe.remove();
+  return w || 8;
+}
+
 function updateDividerText(div) {
   const pm = div.closest('.page-messages');
   if (!pm) return;
   const w = pm.clientWidth;
-  const charW = 7.2;
-  const fixed = '|[ > ]  [ < ]|'.length;
-  const available = Math.max(4, Math.floor((w - fixed * charW) / charW));
-  div.textContent = '|[ > ] ' + '\u2550'.repeat(available) + ' [ < ]|';
+  if (!w) return;
+  const charW = measureCharWidth(div);
+  const prefix = '|[ > ] ';
+  const suffix = ' [ < ]|';
+  const fixed = (prefix.length + suffix.length) * charW;
+  const available = Math.max(2, Math.floor((w - fixed) / charW));
+  div.textContent = prefix + '\u2550'.repeat(available) + suffix;
 }
 
 function refreshDividers(num) {
@@ -1486,42 +1501,49 @@ async function startApp() {
   const rect = bootWin.getBoundingClientRect();
   const vw = window.innerWidth, vh = window.innerHeight;
 
-  // Считаем масштаб чтобы окно заняло весь экран
-  const scaleX = vw / rect.width;
-  const scaleY = vh / rect.height;
+  // Создаём expanding-рамку отдельно от окна — она масштабируется через scale
+  // а само окно просто fade-out, без искажений текста
+  const expander = document.createElement('div');
+  const cx = rect.left + rect.width  / 2;
+  const cy = rect.top  + rect.height / 2;
+  const scaleX = (vw * 1.05) / rect.width;
+  const scaleY = (vh * 1.05) / rect.height;
+  expander.style.cssText = [
+    'position:fixed',
+    'left:'   + rect.left + 'px',
+    'top:'    + rect.top  + 'px',
+    'width:'  + rect.width  + 'px',
+    'height:' + rect.height + 'px',
+    'background:#0d0d0d',
+    'border:1px solid #00FF41',
+    'border-radius:8px',
+    'box-shadow:0 0 30px rgba(0,255,65,0.2)',
+    'z-index:9999',
+    'transform-origin:' + (cx - rect.left) + 'px ' + (cy - rect.top) + 'px',
+    'transition:none',
+    'pointer-events:none',
+  ].join(';');
+  document.body.appendChild(expander);
 
-  // Переводим в fixed по текущим координатам
-  bootWin.style.position   = 'fixed';
-  bootWin.style.left       = rect.left + 'px';
-  bootWin.style.top        = rect.top  + 'px';
-  bootWin.style.width      = rect.width  + 'px';
-  bootWin.style.height     = rect.height + 'px';
-  bootWin.style.margin     = '0';
-  bootWin.style.zIndex     = '10000';
-  bootWin.style.transformOrigin = 'center center';
-  bootWin.style.transition = 'none';
-  bootWin.style.overflow   = 'hidden';
-  document.body.appendChild(bootWin);
-
+  // fade-out само окно
+  bootWin.style.transition = 'opacity 0.18s ease';
+  bootWin.style.opacity = '0';
   bootOver.style.display = 'none';
 
   await d(30);
 
-  // Расширяем через left/top/width/height — символы внутри не искажаются
-  bootWin.style.transition = 'left 0.55s cubic-bezier(.4,0,.2,1), top 0.55s cubic-bezier(.4,0,.2,1), width 0.55s cubic-bezier(.4,0,.2,1), height 0.55s cubic-bezier(.4,0,.2,1), border-radius 0.45s ease';
-  bootWin.style.left        = '0px';
-  bootWin.style.top         = '0px';
-  bootWin.style.width       = vw + 'px';
-  bootWin.style.height      = vh + 'px';
-  bootWin.style.borderRadius = '0px';
+  // scale expander до полного экрана
+  expander.style.transition = 'transform 0.52s cubic-bezier(.4,0,.2,1), border-radius 0.42s ease, opacity 0.22s ease 0.38s';
+  expander.style.transform     = 'scale(' + scaleX + ',' + scaleY + ')';
+  expander.style.borderRadius  = '0px';
 
-  await d(580);
+  await d(560);
 
-  bootWin.style.transition = 'opacity 0.35s ease';
-  bootWin.style.opacity    = '0';
-
-  await d(360);
+  expander.style.opacity = '0';
   bootWin.remove();
+
+  await d(240);
+  expander.remove();
 
   started = true;
   const icons = document.getElementById('desktop-icons');
