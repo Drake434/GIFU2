@@ -1034,9 +1034,11 @@ function subscribePages() {
       });
     });
   });
+  setTimeout(cleanupAllAutoSaves, 1500);
 }
 
 let _savingPages = new Set(); // страницы, которые мы сами сейчас сохраняем
+const AUTO_SAVE_TTL_MS = 30 * 60 * 1000;
 
 function savePage(num, skipRender) {
   if (!fbApi) { consoleLog('ERR: Firebase не готов.'); return Promise.reject(); }
@@ -2169,6 +2171,7 @@ document.getElementById('btn-save-stat').addEventListener('click', () => {
   block.value = Math.max(1, Math.min(30, parseInt(document.getElementById('stat-value').value) || 20));
   renderBlockList();
   autoSave();
+  logHistory(currentEditorPage, 'ручное сохранение стата');
   setEditorStatus('СОХРАНЕНО');
 });
 
@@ -2325,6 +2328,7 @@ document.getElementById('btn-save-card').addEventListener('click', () => {
   blocks[editingBlockIdx].color = normalizeColor(document.getElementById('card-color').value) || '#00FF41';
   renderBlockList();
   autoSave();
+  logHistory(currentEditorPage, 'ручное сохранение карточки');
   setEditorStatus('СОХРАНЕНО');
 });
 
@@ -2357,6 +2361,7 @@ document.getElementById('btn-save-text').addEventListener('click', () => {
   blocks[editingBlockIdx].color = normalizeColor(document.getElementById('text-color').value) || '#00FF41';
   renderBlockList();
   autoSave();
+  logHistory(currentEditorPage, 'ручное сохранение текста');
   setEditorStatus('СОХРАНЕНО');
 });
 
@@ -2406,7 +2411,7 @@ function autoSave() {
     savePage(num)
       .then(() => {
         setEditorStatus('СОХРАНЕНО');
-        logHistory(num, 'сохранено');
+        recordAutoSave(num);
         // обновляем открытое окно сразу локально, не ждём Firebase
         const pw = document.getElementById('pw' + num);
         if (pw && pw.style.display === 'flex') renderPage(num);
@@ -2494,6 +2499,45 @@ function logHistory(pageNum, action) {
   fbApi.set(fbApi.ref(fbApi.db, 'anketa2/history/' + now), entry).catch(() => {});
 }
 
+function recordAutoSave(pageNum) {
+  if (!fbApi) return;
+  const now = Date.now();
+  const marker = {
+    ts: now,
+    page: pageNum,
+    kind: 'auto',
+    expiresAt: now + AUTO_SAVE_TTL_MS
+  };
+  fbApi.set(fbApi.ref(fbApi.db, 'anketa2/autosaves/' + pageNum + '/' + now), marker)
+    .then(() => cleanupAutoSaves(pageNum))
+    .catch(() => {});
+}
+
+function cleanupAutoSaves(pageNum) {
+  if (!fbApi || !fbApi.remove) return;
+  fbApi.onValue(fbApi.ref(fbApi.db, 'anketa2/autosaves/' + pageNum), snap => {
+    const data = snap.val();
+    if (!data) return;
+    const now = Date.now();
+    const entries = Object.entries(data)
+      .map(([key, val]) => ({ key, ts: Number(val && val.ts) || Number(key) || 0 }))
+      .sort((a, b) => b.ts - a.ts);
+    const latestKey = entries[0] && entries[0].key;
+    entries.forEach(entry => {
+      if (entry.key === latestKey) return;
+      if (now - entry.ts > AUTO_SAVE_TTL_MS) {
+        fbApi.remove(fbApi.ref(fbApi.db, 'anketa2/autosaves/' + pageNum + '/' + entry.key)).catch(() => {});
+      }
+    });
+  }, { onlyOnce: true });
+}
+
+function cleanupAllAutoSaves() {
+  if (!fbApi) return;
+  const nums = Object.keys({ ...DEFAULT_PAGES, ...extraPages }).map(Number);
+  nums.forEach(cleanupAutoSaves);
+}
+
 function openHistory() {
   const win = document.getElementById('history-window');
   win.style.left = '50%'; win.style.top = '50%';
@@ -2531,6 +2575,7 @@ function subscribeExtraPages() {
     const val = snap.val();
     extraPages = val || {};
     updateEditorTabs();
+    cleanupAllAutoSaves();
   });
 }
 window.addEventListener('nt-anketa-firebase-ready', subscribeExtraPages);
@@ -2591,6 +2636,7 @@ function createExtraPage(title) {
       pageData[newNum] = [];
       extraPages[newNum] = newPage;
       updateEditorTabs();
+      logHistory(newNum, 'ручное создание страницы "' + title + '"');
       consoleLog('OK: Page ' + newNum + ' "' + title + '" создана.');
       currentEditorPage = newNum;
       updateEditorTabs();
@@ -2631,6 +2677,7 @@ function handleConsole(raw) {
     consoleLog('create P <название> — новая страница');
     consoleLog('del P <номер>       — удалить страницу (только 6+)');
     consoleLog('stat <номер>        — вкл/выкл кнопку "+ СТАТ" для страницы');
+    consoleLog('autos clean         — очистить старые автосейвы');
     return;
   }
   if (cmd === 'c') { document.getElementById('console-log').innerHTML = ''; return; }
@@ -2683,13 +2730,21 @@ function handleConsole(raw) {
     }
     return;
   }
+  if (cmd === 'autos' && rest[0] && rest[0].toLowerCase() === 'clean') {
+    cleanupAllAutoSaves();
+    consoleLog('OK: старые автосейвы очищаются. Последний автосейв каждой страницы сохранится.');
+    return;
+  }
   // любая другая команда сбрасывает ожидание удаления
   if (_deletePagePending) { _deletePagePending = null; consoleLog('-- отмена удаления страницы'); }
   if (cmd === 'b') {
     if (name !== 'yes') { consoleLog('ERR: напиши b yes для подтверждения сброса.'); return; }
     pageData[currentEditorPage] = JSON.parse(JSON.stringify(DEFAULT_PAGES[currentEditorPage]));
     renderBlockList(); showPanel(null); editingBlockIdx = null;
-    savePage(currentEditorPage).then(() => consoleLog('OK: Page ' + currentEditorPage + ' сброшена к дефолту.'));
+    savePage(currentEditorPage).then(() => {
+      logHistory(currentEditorPage, 'ручной сброс к дефолту');
+      consoleLog('OK: Page ' + currentEditorPage + ' сброшена к дефолту.');
+    });
     return;
   }
   if (cmd === 'p') { listSaves(); return; }
@@ -2720,6 +2775,7 @@ function deleteExtraPage(num) {
       setEditorStatus('—');
     }
     updateEditorTabs();
+    logHistory(num, 'ручное удаление страницы "' + title + '"');
     consoleLog('OK: страница ' + num + ' "' + title + '" удалена.');
     if (document.getElementById('desktop-icons').style.display !== 'none') createDesktopIcons();
   }).catch(() => consoleLog('ERR: не удалось удалить страницу.'));
@@ -2732,7 +2788,10 @@ function saveNamedCopy(name) {
   if (!fbApi) { consoleLog('ERR: Firebase не готов.'); return; }
   const payload = { name, blocks: getPageBlocks(currentEditorPage), updatedAt: Date.now() };
   fbApi.set(namedRef(name), payload)
-    .then(() => consoleLog('OK: "' + name + '" сохранён — ' + fmtTime(payload.updatedAt)))
+    .then(() => {
+      logHistory(currentEditorPage, 'ручной сейв "' + name + '"');
+      consoleLog('OK: "' + name + '" сохранён — ' + fmtTime(payload.updatedAt));
+    })
     .catch(() => consoleLog('ERR: не удалось сохранить.'));
 }
 
@@ -2745,14 +2804,20 @@ function loadNamedCopy(name) {
     renderBlockList();
     showPanel(null);
     editingBlockIdx = null;
-    savePage(currentEditorPage).then(() => consoleLog('OK: "' + name + '" загружен и сохранён.'));
+    savePage(currentEditorPage).then(() => {
+      logHistory(currentEditorPage, 'ручная загрузка сейва "' + name + '"');
+      consoleLog('OK: "' + name + '" загружен и сохранён.');
+    });
   }, { onlyOnce: true });
 }
 
 function deleteNamedCopy(name) {
   if (!fbApi || !fbApi.remove) { consoleLog('ERR: удаление недоступно.'); return; }
   fbApi.remove(namedRef(name))
-    .then(() => consoleLog('OK: "' + name + '" удалён.'))
+    .then(() => {
+      logHistory(currentEditorPage, 'ручное удаление сейва "' + name + '"');
+      consoleLog('OK: "' + name + '" удалён.');
+    })
     .catch(() => consoleLog('ERR: не удалось удалить.'));
 }
 
