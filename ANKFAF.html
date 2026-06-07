@@ -666,7 +666,59 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 #pw5.p5-cyan-theme .p5-idle-text   { color: rgba(98,241,245,0.18); }
 #pw5.p5-cyan-theme .p5-launcher { scrollbar-color: #62F1F5 #0d0d0d; }
 
-/* SAVE CONSOLE */
+/* WIDGET BLOCK — стиль как у nt-card */
+.nt-widget {
+  --wc: #00FF41;
+  border: 1px solid color-mix(in srgb, var(--wc) 35%, transparent);
+  background: color-mix(in srgb, var(--wc) 5%, black);
+  border-radius: 3px; margin: 4px 0;
+  opacity: 0; transition: opacity 0.3s;
+}
+.nt-widget.show { opacity: 1; }
+.nt-widget-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; cursor: pointer; user-select: none;
+}
+.nt-widget-toggle {
+  width: 18px; height: 18px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid color-mix(in srgb, var(--wc) 55%, transparent);
+  color: var(--wc); font-size: 15px; line-height: 1;
+  border-radius: 2px;
+}
+.nt-widget-name { color: var(--wc); font-size: 14px; flex: 1; }
+.nt-widget-reload {
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--wc) 30%, transparent);
+  color: color-mix(in srgb, var(--wc) 55%, transparent);
+  font-family: 'Courier New', monospace;
+  font-size: 12px; width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border-radius: 2px; flex-shrink: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+.nt-widget-reload:hover {
+  color: var(--wc);
+  border-color: color-mix(in srgb, var(--wc) 60%, transparent);
+}
+.nt-widget-body {
+  display: none;
+  background: #0d0d0d;
+  border-top: 1px solid color-mix(in srgb, var(--wc) 15%, transparent);
+  padding: 10px 12px;
+  min-height: 32px;
+  font-size: 11px;
+}
+.nt-widget.open .nt-widget-body { display: block; }
+.nt-widget-status {
+  display: none;
+  font-size: 9px; letter-spacing: 1px;
+  color: color-mix(in srgb, var(--wc) 30%, transparent);
+  padding: 3px 12px 5px;
+  background: #0d0d0d;
+}
+.nt-widget.open .nt-widget-status { display: block; }
 .console-log {
   height: 90px; overflow-y: auto; color: #62F1F5; font-size: 12px; line-height: 1.6;
   margin-bottom: 6px; scrollbar-width: thin; scrollbar-color: #62F1F5 #0d0d0d;
@@ -824,18 +876,27 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
               </div>
               <button class="e-btn primary" id="btn-save-stat" style="margin-top:4px">СОХРАНИТЬ СТАТ</button>
             </div>
-            <!-- Widget panel -->
+            <!-- Widget editor -->
             <div class="editor-panel" id="panel-widget" style="display:none">
               <div class="editor-panel-title">РЕДАКТОР ВИДЖЕТА</div>
               <div class="e-field">
-                <div class="e-label">ФАЙЛ МЕХАНИКИ</div>
-                <input class="e-input" id="widget-src" type="text" spellcheck="false" placeholder="staff.js" />
+                <div class="e-label">НАЗВАНИЕ</div>
+                <input class="e-input" id="widget-title" type="text" spellcheck="false" placeholder="Персонал" />
               </div>
               <div class="e-field">
-                <div class="e-label">НАЗВАНИЕ (для блока)</div>
-                <input class="e-input" id="widget-name" type="text" spellcheck="false" placeholder="Посох" />
+                <div class="e-label">ЦВЕТ</div>
+                <div class="e-color-row">
+                  <div class="e-swatch" id="widget-color-swatch"></div>
+                  <input class="e-input" id="widget-color" type="text" spellcheck="false" placeholder="#00FF41" />
+                </div>
               </div>
-              <button class="e-btn primary" id="btn-save-widget" style="margin-top:4px;border-color:rgba(255,215,0,0.4);color:#ffd700">СОХРАНИТЬ ВИДЖЕТ</button>
+              <div class="e-field">
+                <div class="e-label">ФАЙЛ ВИДЖЕТА</div>
+                <div id="widget-file-list" style="font-size:9px;color:rgba(0,255,65,0.45);margin-bottom:6px;min-height:14px">загрузка...</div>
+                <select class="e-input" id="widget-src" style="background:#0d0d0d;color:#ffd700;border-color:rgba(255,215,0,0.3)"></select>
+              </div>
+              <button class="e-btn" id="btn-widget-refresh-list" style="border-color:rgba(255,215,0,0.3);color:#ffd700;margin-bottom:4px">↻ ОБНОВИТЬ СПИСОК</button>
+              <button class="e-btn primary" id="btn-save-widget" style="margin-top:4px">СОХРАНИТЬ ВИДЖЕТ</button>
             </div>
             <!-- Links panel -->
             <div class="editor-panel">
@@ -1048,11 +1109,9 @@ function subscribePages() {
       });
     });
   });
-  setTimeout(cleanupAllAutoSaves, 1500);
 }
 
 let _savingPages = new Set(); // страницы, которые мы сами сейчас сохраняем
-const AUTO_SAVE_TTL_MS = 30 * 60 * 1000;
 
 function savePage(num, skipRender) {
   if (!fbApi) { consoleLog('ERR: Firebase не готов.'); return Promise.reject(); }
@@ -1341,49 +1400,17 @@ function renderStat(container, block, pageNum) {
   setTimeout(() => wrap.classList.add('show'), 30);
 }
 
-function renderWidget(container, block) {
-  const wrap = document.createElement('div');
-  wrap.className = 'nt-widget';
-  wrap.style.cssText = 'border:1px solid rgba(255,215,0,0.3);background:rgba(255,215,0,0.04);border-radius:3px;margin:4px 0;padding:10px;opacity:0;transition:opacity 0.3s;';
-
-  const title = document.createElement('div');
-  title.style.cssText = 'font-size:11px;color:#ffd700;letter-spacing:2px;opacity:0.7;margin-bottom:8px;';
-  title.textContent = '|[ > ] ' + (block.name || 'ВИДЖЕТ');
-  wrap.appendChild(title);
-
-  const content = document.createElement('div');
-  content.className = 'nt-widget-body';
-  content.style.cssText = 'min-height:40px;';
-  content.innerHTML = '<span style="color:rgba(255,215,0,0.3);font-size:11px;letter-spacing:1px;">ЗАГРУЗКА...</span>';
-  wrap.appendChild(content);
-
-  container.appendChild(wrap);
-  container.scrollTop = container.scrollHeight;
-  setTimeout(() => wrap.style.opacity = '1', 30);
-
-  // загружаем механику
-  const src = block.src || '';
-  if (!src) { content.innerHTML = '<span style="color:rgba(255,68,68,0.5);font-size:11px;">ERR: файл не указан</span>'; return; }
-
-  fetch(MECHANICS_BASE + src + '?t=' + Date.now())
-    .then(r => { if (!r.ok) throw new Error('404'); return r.text(); })
-    .then(code => {
-      content.innerHTML = '';
-      try {
-        const fn = new Function('container', 'block', 'anketa', '"use strict";\n(function(){\n' + code + '\n})();');
-        fn(content, block, { pageData, extraPages, openPage, consoleLog });
-      } catch(e) {
-        content.innerHTML = '<span style="color:#ff4444;font-size:11px;">ERR: ' + e.message + '</span>';
-      }
-    })
-    .catch(() => {
-      content.innerHTML = '<span style="color:rgba(255,68,68,0.5);font-size:11px;">ERR: ' + src + ' не найден</span>';
-    });
-}
-
-
 function addMsg(container, text, color, sep) {
   const div = document.createElement('div');
+  div.className = 'pmsg' + (sep ? ' sep' : ' content');
+  div.style.color = color || '#00FF41';
+  div.textContent = text;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  setTimeout(() => div.classList.add('show'), 30);
+}
+
+function renderCard(container, block) {
   const card = document.createElement('div');
   card.className = 'nt-card';
   card.style.setProperty('--cc', block.color || '#00FF41');
@@ -2010,28 +2037,26 @@ initDesktopOrbit();
 const MECHANICS_BASE = 'https://raw.githubusercontent.com/Drake434/GIFU2/main/mechanics/';
 const MECHANICS_LIST = [
   'staff.js',
-  // добавляй сюда новые файлы механик
 ];
 
 function loadMechanics() {
   MECHANICS_LIST.forEach(file => {
     fetch(MECHANICS_BASE + file + '?t=' + Date.now())
-      .then(r => {
-        if (!r.ok) throw new Error('404');
-        return r.text();
-      })
+      .then(r => { if (!r.ok) throw new Error('404'); return r.text(); })
       .then(code => {
-        const fn = new Function('anketa', code);
-        fn({ pageData, extraPages, openPage, consoleLog });
-        console.log('[mechanics] загружен: ' + file);
+        try {
+          const fn = new Function('anketa', '(function(){\n' + code + '\n})();');
+          fn({ pageData, extraPages, openPage, consoleLog });
+          console.log('[mechanics] загружен: ' + file);
+        } catch(e) {
+          console.warn('[mechanics] ошибка в ' + file + ':', e.message);
+        }
       })
       .catch(e => console.warn('[mechanics] не удалось загрузить ' + file + ':', e.message));
   });
 }
 
 loadMechanics();
-
-
 
 // ─── IMAGE POPUP ─────────────────────────────────────────────────────────────
 function showPopup(e) {
@@ -2096,9 +2121,9 @@ document.querySelectorAll('.editor-tab').forEach(tab => {
 function setEditorStatus(text) { document.getElementById('editor-status').textContent = text; }
 
 function showPanel(type) {
-  document.getElementById('panel-card').style.display = type === 'card' ? '' : 'none';
-  document.getElementById('panel-text').style.display = type === 'text' ? '' : 'none';
-  document.getElementById('panel-stat').style.display = type === 'stat' ? '' : 'none';
+  document.getElementById('panel-card').style.display   = type === 'card'   ? '' : 'none';
+  document.getElementById('panel-text').style.display   = type === 'text'   ? '' : 'none';
+  document.getElementById('panel-stat').style.display   = type === 'stat'   ? '' : 'none';
   document.getElementById('panel-widget').style.display = type === 'widget' ? '' : 'none';
 }
 
@@ -2121,7 +2146,7 @@ function renderBlockList() {
     const preview = document.createElement('span');
     preview.className = 'bl-item-preview' + (block.type === 'text' ? ' text-preview' : '');
     preview.style.color = block.color || '#00FF41';
-    preview.textContent = block.type === 'card' ? (block.name || '—') : block.type === 'divider' ? '════ [ < ]|' : block.type === 'stat' ? (block.name || '—') + '  [' + (block.value ?? 20) + ']' : block.type === 'widget' ? (block.name || '—') + ' → ' + (block.src || '?') : (block.text || '—');
+    preview.textContent = block.type === 'card' ? (block.name || '—') : block.type === 'divider' ? '════ [ < ]|' : block.type === 'stat' ? (block.name || '—') + '  [' + (block.value ?? 20) + ']' : block.type === 'widget' ? (block.title || '—') + '  [' + (block.src || '?') + ']' : (block.text || '—');
 
     const btns = document.createElement('div');
     btns.className = 'bl-item-btns';
@@ -2215,15 +2240,10 @@ document.getElementById('btn-add-divider').addEventListener('click', () => {
   autoSave();
 });
 
-// ─── STAT BUTTON ──────────────────────────────────────────────────────────────
-const statPages = new Set();
-
-function updateStatBtn() {
-  const btn = document.getElementById('btn-add-stat');
-  btn.style.display = statPages.has(currentEditorPage) ? '' : 'none';
-}
-
 // ─── WIDGET BUTTON ────────────────────────────────────────────────────────────
+const WIDGET_REPO_API  = 'https://api.github.com/repos/Drake434/GIFU2/contents/mechanics';
+const WIDGET_RAW_BASE  = 'https://raw.githubusercontent.com/Drake434/GIFU2/main/mechanics/';
+
 const widgetPages = new Set();
 
 function updateWidgetBtn() {
@@ -2233,7 +2253,7 @@ function updateWidgetBtn() {
 
 document.getElementById('btn-add-widget').addEventListener('click', () => {
   const blocks = [...getPageBlocks(currentEditorPage)];
-  const newBlock = { type: 'widget', src: 'staff.js', name: 'Виджет' };
+  const newBlock = { type: 'widget', title: 'Виджет', src: '' };
   blocks.push(newBlock);
   pageData[currentEditorPage] = blocks;
   editingBlockIdx = blocks.length - 1;
@@ -2242,21 +2262,166 @@ document.getElementById('btn-add-widget').addEventListener('click', () => {
   autoSave();
 });
 
+// ─── WIDGET PANEL ─────────────────────────────────────────────────────────────
+function fetchWidgetFileList(selectEl, statusEl, currentSrc) {
+  if (statusEl) statusEl.textContent = 'загрузка списка...';
+  fetch(WIDGET_REPO_API + '?t=' + Date.now())
+    .then(r => { if (!r.ok) throw new Error('GitHub API: ' + r.status); return r.json(); })
+    .then(files => {
+      const jsFiles = files.filter(f => f.type === 'file' && f.name.endsWith('.js'));
+      selectEl.innerHTML = '';
+      if (!jsFiles.length) {
+        const opt = document.createElement('option');
+        opt.textContent = '— нет файлов —';
+        opt.value = '';
+        selectEl.appendChild(opt);
+        if (statusEl) statusEl.textContent = 'файлы не найдены';
+        return;
+      }
+      jsFiles.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.name;
+        opt.textContent = f.name;
+        if (f.name === currentSrc) opt.selected = true;
+        selectEl.appendChild(opt);
+      });
+      if (statusEl) statusEl.textContent = jsFiles.length + ' файл(ов) найдено';
+    })
+    .catch(e => {
+      if (statusEl) statusEl.textContent = 'ERR: ' + e.message;
+    });
+}
+
 function loadWidgetPanel(block) {
   showPanel('widget');
-  document.getElementById('widget-src').value = block.src || 'staff.js';
-  document.getElementById('widget-name').value = block.name || 'Виджет';
+  document.getElementById('widget-title').value = block.title || '';
+  const colorInput = document.getElementById('widget-color');
+  const colorSwatch = document.getElementById('widget-color-swatch');
+  colorInput.value = block.color || '#00FF41';
+  colorSwatch.style.background = block.color || '#00FF41';
+  colorInput.addEventListener('input', () => {
+    colorSwatch.style.background = colorInput.value;
+  });
+  const selectEl = document.getElementById('widget-src');
+  const statusEl = document.getElementById('widget-file-list');
+  if (block.src) {
+    selectEl.innerHTML = '';
+    const opt = document.createElement('option');
+    opt.value = block.src; opt.textContent = block.src; opt.selected = true;
+    selectEl.appendChild(opt);
+  }
+  fetchWidgetFileList(selectEl, statusEl, block.src || '');
 }
+
+document.getElementById('btn-widget-refresh-list').addEventListener('click', () => {
+  const selectEl = document.getElementById('widget-src');
+  const statusEl = document.getElementById('widget-file-list');
+  fetchWidgetFileList(selectEl, statusEl, selectEl.value);
+});
 
 document.getElementById('btn-save-widget').addEventListener('click', () => {
   if (editingBlockIdx === null) return;
   const blocks = getPageBlocks(currentEditorPage);
-  blocks[editingBlockIdx].src  = document.getElementById('widget-src').value.trim() || 'staff.js';
-  blocks[editingBlockIdx].name = document.getElementById('widget-name').value.trim() || 'Виджет';
+  const block = blocks[editingBlockIdx];
+  block.title = document.getElementById('widget-title').value.trim() || 'Виджет';
+  block.color = document.getElementById('widget-color').value.trim() || '#00FF41';
+  block.src   = document.getElementById('widget-src').value || '';
   renderBlockList();
   autoSave();
   setEditorStatus('СОХРАНЕНО');
 });
+
+// ─── WIDGET RENDERER ──────────────────────────────────────────────────────────
+function renderWidget(container, block) {
+  const card = document.createElement('div');
+  card.className = 'nt-widget';
+  card.style.setProperty('--wc', block.color || '#00FF41');
+
+  // Заголовок
+  const head = document.createElement('div');
+  head.className = 'nt-widget-head';
+
+  const toggle = document.createElement('div');
+  toggle.className = 'nt-widget-toggle';
+  toggle.textContent = '+';
+
+  const name = document.createElement('div');
+  name.className = 'nt-widget-name';
+  name.textContent = block.title || 'ВИДЖЕТ';
+
+  const reloadBtn = document.createElement('button');
+  reloadBtn.className = 'nt-widget-reload';
+  reloadBtn.textContent = '↻';
+  reloadBtn.title = 'Перезагрузить виджет';
+
+  head.append(toggle, name, reloadBtn);
+  card.appendChild(head);
+
+  // Тело (скрыто по умолчанию)
+  const body = document.createElement('div');
+  body.className = 'nt-widget-body';
+
+  const status = document.createElement('div');
+  status.className = 'nt-widget-status';
+
+  card.appendChild(body);
+  card.appendChild(status);
+  container.appendChild(card);
+
+  // Открытие/закрытие по клику на head
+  head.addEventListener('click', e => {
+    if (e.target === reloadBtn) return;
+    const isOpen = card.classList.toggle('open');
+    toggle.textContent = isOpen ? '−' : '+';
+    if (isOpen && !body._loaded) loadWidget();
+  });
+
+  // Перезагрузка
+  reloadBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (!card.classList.contains('open')) {
+      card.classList.add('open');
+      toggle.textContent = '−';
+    }
+    loadWidget();
+  });
+
+  function loadWidget() {
+    body._loaded = true;
+    body.textContent = '';
+    document.querySelectorAll('style[data-widget-src]').forEach(s => {
+      if (s.dataset.widgetSrc === block.src) s.remove();
+    });
+    status.textContent = '// загрузка ' + (block.src || '?') + '...';
+    if (!block.src) { status.textContent = '// ERR: файл не указан'; return; }
+    fetch(WIDGET_RAW_BASE + block.src + '?t=' + Date.now())
+      .then(r => { if (!r.ok) throw new Error('404: ' + block.src); return r.text(); })
+      .then(code => {
+        try {
+          const fn = new Function('container', code);
+          fn(body);
+          body.querySelectorAll('style').forEach(s => {
+            s.dataset.widgetSrc = block.src;
+            document.head.appendChild(s);
+          });
+          status.textContent = '// ' + block.src + ' загружен';
+        } catch(e) {
+          status.textContent = '// ERR: ' + e.message;
+        }
+      })
+      .catch(e => { status.textContent = '// ERR: ' + e.message; });
+  }
+
+  setTimeout(() => card.classList.add('show'), 30);
+}
+
+
+const statPages = new Set(); // страницы где включён режим добавления стата
+
+function updateStatBtn() {
+  const btn = document.getElementById('btn-add-stat');
+  btn.style.display = statPages.has(currentEditorPage) ? '' : 'none';
+}
 
 document.getElementById('btn-add-stat').addEventListener('click', () => {
   const blocks = [...getPageBlocks(currentEditorPage)];
@@ -2283,7 +2448,6 @@ document.getElementById('btn-save-stat').addEventListener('click', () => {
   block.value = Math.max(1, Math.min(30, parseInt(document.getElementById('stat-value').value) || 20));
   renderBlockList();
   autoSave();
-  logHistory(currentEditorPage, 'ручное сохранение стата');
   setEditorStatus('СОХРАНЕНО');
 });
 
@@ -2440,7 +2604,6 @@ document.getElementById('btn-save-card').addEventListener('click', () => {
   blocks[editingBlockIdx].color = normalizeColor(document.getElementById('card-color').value) || '#00FF41';
   renderBlockList();
   autoSave();
-  logHistory(currentEditorPage, 'ручное сохранение карточки');
   setEditorStatus('СОХРАНЕНО');
 });
 
@@ -2473,7 +2636,6 @@ document.getElementById('btn-save-text').addEventListener('click', () => {
   blocks[editingBlockIdx].color = normalizeColor(document.getElementById('text-color').value) || '#00FF41';
   renderBlockList();
   autoSave();
-  logHistory(currentEditorPage, 'ручное сохранение текста');
   setEditorStatus('СОХРАНЕНО');
 });
 
@@ -2523,7 +2685,7 @@ function autoSave() {
     savePage(num)
       .then(() => {
         setEditorStatus('СОХРАНЕНО');
-        recordAutoSave(num);
+        logHistory(num, 'сохранено');
         // обновляем открытое окно сразу локально, не ждём Firebase
         const pw = document.getElementById('pw' + num);
         if (pw && pw.style.display === 'flex') renderPage(num);
@@ -2611,45 +2773,6 @@ function logHistory(pageNum, action) {
   fbApi.set(fbApi.ref(fbApi.db, 'anketa2/history/' + now), entry).catch(() => {});
 }
 
-function recordAutoSave(pageNum) {
-  if (!fbApi) return;
-  const now = Date.now();
-  const marker = {
-    ts: now,
-    page: pageNum,
-    kind: 'auto',
-    expiresAt: now + AUTO_SAVE_TTL_MS
-  };
-  fbApi.set(fbApi.ref(fbApi.db, 'anketa2/autosaves/' + pageNum + '/' + now), marker)
-    .then(() => cleanupAutoSaves(pageNum))
-    .catch(() => {});
-}
-
-function cleanupAutoSaves(pageNum) {
-  if (!fbApi || !fbApi.remove) return;
-  fbApi.onValue(fbApi.ref(fbApi.db, 'anketa2/autosaves/' + pageNum), snap => {
-    const data = snap.val();
-    if (!data) return;
-    const now = Date.now();
-    const entries = Object.entries(data)
-      .map(([key, val]) => ({ key, ts: Number(val && val.ts) || Number(key) || 0 }))
-      .sort((a, b) => b.ts - a.ts);
-    const latestKey = entries[0] && entries[0].key;
-    entries.forEach(entry => {
-      if (entry.key === latestKey) return;
-      if (now - entry.ts > AUTO_SAVE_TTL_MS) {
-        fbApi.remove(fbApi.ref(fbApi.db, 'anketa2/autosaves/' + pageNum + '/' + entry.key)).catch(() => {});
-      }
-    });
-  }, { onlyOnce: true });
-}
-
-function cleanupAllAutoSaves() {
-  if (!fbApi) return;
-  const nums = Object.keys({ ...DEFAULT_PAGES, ...extraPages }).map(Number);
-  nums.forEach(cleanupAutoSaves);
-}
-
 function openHistory() {
   const win = document.getElementById('history-window');
   win.style.left = '50%'; win.style.top = '50%';
@@ -2687,7 +2810,6 @@ function subscribeExtraPages() {
     const val = snap.val();
     extraPages = val || {};
     updateEditorTabs();
-    cleanupAllAutoSaves();
   });
 }
 window.addEventListener('nt-anketa-firebase-ready', subscribeExtraPages);
@@ -2750,7 +2872,6 @@ function createExtraPage(title) {
       pageData[newNum] = [];
       extraPages[newNum] = newPage;
       updateEditorTabs();
-      logHistory(newNum, 'ручное создание страницы "' + title + '"');
       consoleLog('OK: Page ' + newNum + ' "' + title + '" создана.');
       currentEditorPage = newNum;
       updateEditorTabs();
@@ -2791,7 +2912,7 @@ function handleConsole(raw) {
     consoleLog('create P <название> — новая страница');
     consoleLog('del P <номер>       — удалить страницу (только 6+)');
     consoleLog('stat <номер>        — вкл/выкл кнопку "+ СТАТ" для страницы');
-    consoleLog('autos clean         — очистить старые автосейвы');
+    consoleLog('widget <номер>      — вкл/выкл кнопку "+ ВИДЖЕТ" для страницы');
     return;
   }
   if (cmd === 'c') { document.getElementById('console-log').innerHTML = ''; return; }
@@ -2822,28 +2943,7 @@ function handleConsole(raw) {
     }
     return;
   }
-  if (cmd === 'widget') {
-    const pg = parseInt(rest[0]);
-    const targetPage = (!isNaN(pg) && pg > 0) ? pg : currentEditorPage;
-    if (widgetPages.has(targetPage)) {
-      widgetPages.delete(targetPage);
-      updateWidgetBtn();
-      consoleLog('OK: виджеты выключены для Page ' + targetPage + '.');
-    } else {
-      widgetPages.add(targetPage);
-      if (currentEditorPage !== targetPage) {
-        currentEditorPage = targetPage;
-        updateEditorTabs();
-        renderBlockList();
-        renderLinksList();
-        showPanel(null);
-        setEditorStatus('—');
-      }
-      updateWidgetBtn();
-      consoleLog('OK: кнопка "+ ВИДЖЕТ" включена для Page ' + targetPage + '. Повтори widget ' + targetPage + ' чтобы выключить.');
-    }
-    return;
-  }
+  if (cmd === 'stat') {
     const pg = parseInt(rest[0]);
     const targetPage = (!isNaN(pg) && pg > 0) ? pg : currentEditorPage;
     if (statPages.has(targetPage)) {
@@ -2865,21 +2965,35 @@ function handleConsole(raw) {
     }
     return;
   }
-  if (cmd === 'autos' && rest[0] && rest[0].toLowerCase() === 'clean') {
-    cleanupAllAutoSaves();
-    consoleLog('OK: старые автосейвы очищаются. Последний автосейв каждой страницы сохранится.');
+  if (cmd === 'widget') {
+    const pg = parseInt(rest[0]);
+    const targetPage = (!isNaN(pg) && pg > 0) ? pg : currentEditorPage;
+    if (targetPage === 5) { consoleLog('ERR: Page 5 защищена от редактирования.'); return; }
+    if (widgetPages.has(targetPage)) {
+      widgetPages.delete(targetPage);
+      updateWidgetBtn();
+      consoleLog('OK: режим виджета выключен для Page ' + targetPage + '.');
+    } else {
+      widgetPages.add(targetPage);
+      if (currentEditorPage !== targetPage) {
+        currentEditorPage = targetPage;
+        updateEditorTabs();
+        renderBlockList();
+        renderLinksList();
+        showPanel(null);
+        setEditorStatus('—');
+      }
+      updateWidgetBtn();
+      consoleLog('OK: кнопка "+ ВИДЖЕТ" включена для Page ' + targetPage + '. Повтори widget ' + targetPage + ' чтобы выключить.');
+    }
     return;
   }
-  // любая другая команда сбрасывает ожидание удаления
   if (_deletePagePending) { _deletePagePending = null; consoleLog('-- отмена удаления страницы'); }
   if (cmd === 'b') {
     if (name !== 'yes') { consoleLog('ERR: напиши b yes для подтверждения сброса.'); return; }
     pageData[currentEditorPage] = JSON.parse(JSON.stringify(DEFAULT_PAGES[currentEditorPage]));
     renderBlockList(); showPanel(null); editingBlockIdx = null;
-    savePage(currentEditorPage).then(() => {
-      logHistory(currentEditorPage, 'ручной сброс к дефолту');
-      consoleLog('OK: Page ' + currentEditorPage + ' сброшена к дефолту.');
-    });
+    savePage(currentEditorPage).then(() => consoleLog('OK: Page ' + currentEditorPage + ' сброшена к дефолту.'));
     return;
   }
   if (cmd === 'p') { listSaves(); return; }
@@ -2910,7 +3024,6 @@ function deleteExtraPage(num) {
       setEditorStatus('—');
     }
     updateEditorTabs();
-    logHistory(num, 'ручное удаление страницы "' + title + '"');
     consoleLog('OK: страница ' + num + ' "' + title + '" удалена.');
     if (document.getElementById('desktop-icons').style.display !== 'none') createDesktopIcons();
   }).catch(() => consoleLog('ERR: не удалось удалить страницу.'));
@@ -2923,10 +3036,7 @@ function saveNamedCopy(name) {
   if (!fbApi) { consoleLog('ERR: Firebase не готов.'); return; }
   const payload = { name, blocks: getPageBlocks(currentEditorPage), updatedAt: Date.now() };
   fbApi.set(namedRef(name), payload)
-    .then(() => {
-      logHistory(currentEditorPage, 'ручной сейв "' + name + '"');
-      consoleLog('OK: "' + name + '" сохранён — ' + fmtTime(payload.updatedAt));
-    })
+    .then(() => consoleLog('OK: "' + name + '" сохранён — ' + fmtTime(payload.updatedAt)))
     .catch(() => consoleLog('ERR: не удалось сохранить.'));
 }
 
@@ -2939,20 +3049,14 @@ function loadNamedCopy(name) {
     renderBlockList();
     showPanel(null);
     editingBlockIdx = null;
-    savePage(currentEditorPage).then(() => {
-      logHistory(currentEditorPage, 'ручная загрузка сейва "' + name + '"');
-      consoleLog('OK: "' + name + '" загружен и сохранён.');
-    });
+    savePage(currentEditorPage).then(() => consoleLog('OK: "' + name + '" загружен и сохранён.'));
   }, { onlyOnce: true });
 }
 
 function deleteNamedCopy(name) {
   if (!fbApi || !fbApi.remove) { consoleLog('ERR: удаление недоступно.'); return; }
   fbApi.remove(namedRef(name))
-    .then(() => {
-      logHistory(currentEditorPage, 'ручное удаление сейва "' + name + '"');
-      consoleLog('OK: "' + name + '" удалён.');
-    })
+    .then(() => consoleLog('OK: "' + name + '" удалён.'))
     .catch(() => consoleLog('ERR: не удалось удалить.'));
 }
 
