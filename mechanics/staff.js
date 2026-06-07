@@ -126,9 +126,6 @@ style.textContent = `
     .nt-ascii .active-segment {
         color: #62F1F5;
     }
-    .nt-ascii .hand-marker {
-        color: #ffd700;
-    }
     .nt-badge {
         font-size: 9px;
         letter-spacing: 1px;
@@ -176,14 +173,14 @@ const commentLine = (text) => {
     return div;
 };
 
-// Создание ASCII-схемы посоха для разных хватов
+// Создание ASCII-схемы посоха
 const createAscii = (gripId) => {
     const configs = {
-        center:   { left: false, mid: true, right: false, hands: 'mid' },
-        end:      { left: true,  mid: false, right: false, hands: 'left' },
-        midend:   { left: false, mid: true, right: true, hands: 'mid_right' },
-        twoends:  { left: true,  mid: false, right: true, hands: 'left_right' },
-        electric: { left: false, mid: false, right: false, hands: 'none' }
+        center:   { left: false, mid: true, right: false },
+        end:      { left: true,  mid: false, right: false },
+        midend:   { left: false, mid: true, right: true },
+        twoends:  { left: true,  mid: false, right: true },
+        electric: { left: false, mid: false, right: false }
     };
     const cfg = configs[gripId] || configs.center;
 
@@ -197,32 +194,8 @@ const createAscii = (gripId) => {
     line1 += seg('[===]', cfg.mid) + '<span>~</span>';
     line1 += seg('[===]', cfg.right);
 
-    // Фиксированная ширина схемы: 5 + 1 + 5 + 1 + 5 = 17 символов
-    const width = 17;
-    const line2arr = new Array(width).fill(' ');
-
-    // Индексы центров секций: left 2, middle 7, right 12
-    if (cfg.hands === 'mid') {
-        line2arr[6] = '<span class="hand-marker">H</span>';
-        line2arr[8] = '<span class="hand-marker">H</span>';
-    } else if (cfg.hands === 'left') {
-        line2arr[1] = '<span class="hand-marker">H</span>';
-        line2arr[3] = '<span class="hand-marker">H</span>';
-    } else if (cfg.hands === 'mid_right') {
-        line2arr[7] = '<span class="hand-marker">H</span>';
-        line2arr[12] = '<span class="hand-marker">H</span>';
-    } else if (cfg.hands === 'left_right') {
-        line2arr[2] = '<span class="hand-marker">H</span>';
-        line2arr[12] = '<span class="hand-marker">H</span>';
-    }
-
-    let line2 = '';
-    if (cfg.hands !== 'none') {
-        line2 = line2arr.join('');
-    }
-
     const ascii = h('div', 'nt-ascii');
-    ascii.innerHTML = line1 + (line2 ? '\n' + line2 : '');
+    ascii.innerHTML = line1;
     return ascii;
 };
 
