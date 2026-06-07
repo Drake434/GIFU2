@@ -758,6 +758,7 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
               <button class="e-btn" id="btn-add-text">+ ТЕКСТ</button>
               <button class="e-btn" id="btn-add-divider">+ РАЗДЕЛИТЕЛЬ</button>
               <button class="e-btn" id="btn-add-stat" style="display:none;border-color:rgba(98,241,245,0.4);color:#62F1F5">+ СТАТ</button>
+              <button class="e-btn" id="btn-add-widget" style="display:none;border-color:rgba(255,215,0,0.4);color:#ffd700">+ ВИДЖЕТ</button>
             </div>
           </div>
           <!-- RIGHT: panels -->
@@ -822,6 +823,19 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
                 <input class="e-input" id="stat-value" type="number" min="1" max="30" value="20" />
               </div>
               <button class="e-btn primary" id="btn-save-stat" style="margin-top:4px">СОХРАНИТЬ СТАТ</button>
+            </div>
+            <!-- Widget panel -->
+            <div class="editor-panel" id="panel-widget" style="display:none">
+              <div class="editor-panel-title">РЕДАКТОР ВИДЖЕТА</div>
+              <div class="e-field">
+                <div class="e-label">ФАЙЛ МЕХАНИКИ</div>
+                <input class="e-input" id="widget-src" type="text" spellcheck="false" placeholder="staff.js" />
+              </div>
+              <div class="e-field">
+                <div class="e-label">НАЗВАНИЕ (для блока)</div>
+                <input class="e-input" id="widget-name" type="text" spellcheck="false" placeholder="Посох" />
+              </div>
+              <button class="e-btn primary" id="btn-save-widget" style="margin-top:4px;border-color:rgba(255,215,0,0.4);color:#ffd700">СОХРАНИТЬ ВИДЖЕТ</button>
             </div>
             <!-- Links panel -->
             <div class="editor-panel">
@@ -1177,6 +1191,8 @@ async function renderPage(num) {
       addDivider(pm, num);
     } else if (block.type === 'stat') {
       renderStat(pm, block, num);
+    } else if (block.type === 'widget') {
+      renderWidget(pm, block);
     } else {
       let text = block.text || '';
       if (text.includes('__NAME__')) {
@@ -1325,17 +1341,49 @@ function renderStat(container, block, pageNum) {
   setTimeout(() => wrap.classList.add('show'), 30);
 }
 
-function addMsg(container, text, color, sep) {
-  const div = document.createElement('div');
-  div.className = 'pmsg' + (sep ? ' sep' : ' content');
-  div.style.color = color || '#00FF41';
-  div.textContent = text;
-  container.appendChild(div);
+function renderWidget(container, block) {
+  const wrap = document.createElement('div');
+  wrap.className = 'nt-widget';
+  wrap.style.cssText = 'border:1px solid rgba(255,215,0,0.3);background:rgba(255,215,0,0.04);border-radius:3px;margin:4px 0;padding:10px;opacity:0;transition:opacity 0.3s;';
+
+  const title = document.createElement('div');
+  title.style.cssText = 'font-size:11px;color:#ffd700;letter-spacing:2px;opacity:0.7;margin-bottom:8px;';
+  title.textContent = '|[ > ] ' + (block.name || 'ВИДЖЕТ');
+  wrap.appendChild(title);
+
+  const content = document.createElement('div');
+  content.className = 'nt-widget-body';
+  content.style.cssText = 'min-height:40px;';
+  content.innerHTML = '<span style="color:rgba(255,215,0,0.3);font-size:11px;letter-spacing:1px;">ЗАГРУЗКА...</span>';
+  wrap.appendChild(content);
+
+  container.appendChild(wrap);
   container.scrollTop = container.scrollHeight;
-  setTimeout(() => div.classList.add('show'), 30);
+  setTimeout(() => wrap.style.opacity = '1', 30);
+
+  // загружаем механику
+  const src = block.src || '';
+  if (!src) { content.innerHTML = '<span style="color:rgba(255,68,68,0.5);font-size:11px;">ERR: файл не указан</span>'; return; }
+
+  fetch(MECHANICS_BASE + src + '?t=' + Date.now())
+    .then(r => { if (!r.ok) throw new Error('404'); return r.text(); })
+    .then(code => {
+      content.innerHTML = '';
+      try {
+        const fn = new Function('container', 'block', 'anketa', '"use strict";\n(function(){\n' + code + '\n})();');
+        fn(content, block, { pageData, extraPages, openPage, consoleLog });
+      } catch(e) {
+        content.innerHTML = '<span style="color:#ff4444;font-size:11px;">ERR: ' + e.message + '</span>';
+      }
+    })
+    .catch(() => {
+      content.innerHTML = '<span style="color:rgba(255,68,68,0.5);font-size:11px;">ERR: ' + src + ' не найден</span>';
+    });
 }
 
-function renderCard(container, block) {
+
+function addMsg(container, text, color, sep) {
+  const div = document.createElement('div');
   const card = document.createElement('div');
   card.className = 'nt-card';
   card.style.setProperty('--cc', block.color || '#00FF41');
@@ -1958,6 +2006,33 @@ function initDesktopOrbit() {
 }
 initDesktopOrbit();
 
+// ─── MECHANICS LOADER ────────────────────────────────────────────────────────
+const MECHANICS_BASE = 'https://raw.githubusercontent.com/Drake434/GIFU2/main/mechanics/';
+const MECHANICS_LIST = [
+  'staff.js',
+  // добавляй сюда новые файлы механик
+];
+
+function loadMechanics() {
+  MECHANICS_LIST.forEach(file => {
+    fetch(MECHANICS_BASE + file + '?t=' + Date.now())
+      .then(r => {
+        if (!r.ok) throw new Error('404');
+        return r.text();
+      })
+      .then(code => {
+        const fn = new Function('anketa', code);
+        fn({ pageData, extraPages, openPage, consoleLog });
+        console.log('[mechanics] загружен: ' + file);
+      })
+      .catch(e => console.warn('[mechanics] не удалось загрузить ' + file + ':', e.message));
+  });
+}
+
+loadMechanics();
+
+
+
 // ─── IMAGE POPUP ─────────────────────────────────────────────────────────────
 function showPopup(e) {
   showPopupUrl(e, '', 'ЛИЧНОЕ ДЕЛО — DEVAIT LITE NR 13');
@@ -2024,6 +2099,7 @@ function showPanel(type) {
   document.getElementById('panel-card').style.display = type === 'card' ? '' : 'none';
   document.getElementById('panel-text').style.display = type === 'text' ? '' : 'none';
   document.getElementById('panel-stat').style.display = type === 'stat' ? '' : 'none';
+  document.getElementById('panel-widget').style.display = type === 'widget' ? '' : 'none';
 }
 
 // ─── BLOCK LIST ───────────────────────────────────────────────────────────────
@@ -2040,12 +2116,12 @@ function renderBlockList() {
 
     const typeLabel = document.createElement('span');
     typeLabel.className = 'bl-item-type';
-    typeLabel.textContent = block.type === 'card' ? 'КАРТА' : block.type === 'divider' ? 'РАЗДЕЛИТЕЛЬ' : block.type === 'stat' ? 'СТАТ' : 'ТЕКСТ';
+    typeLabel.textContent = block.type === 'card' ? 'КАРТА' : block.type === 'divider' ? 'РАЗДЕЛИТЕЛЬ' : block.type === 'stat' ? 'СТАТ' : block.type === 'widget' ? 'ВИДЖЕТ' : 'ТЕКСТ';
 
     const preview = document.createElement('span');
     preview.className = 'bl-item-preview' + (block.type === 'text' ? ' text-preview' : '');
     preview.style.color = block.color || '#00FF41';
-    preview.textContent = block.type === 'card' ? (block.name || '—') : block.type === 'divider' ? '════ [ < ]|' : block.type === 'stat' ? (block.name || '—') + '  [' + (block.value ?? 20) + ']' : (block.text || '—');
+    preview.textContent = block.type === 'card' ? (block.name || '—') : block.type === 'divider' ? '════ [ < ]|' : block.type === 'stat' ? (block.name || '—') + '  [' + (block.value ?? 20) + ']' : block.type === 'widget' ? (block.name || '—') + ' → ' + (block.src || '?') : (block.text || '—');
 
     const btns = document.createElement('div');
     btns.className = 'bl-item-btns';
@@ -2102,6 +2178,7 @@ function editBlock(idx) {
   if (block.type === 'card') loadCardPanel(block);
   else if (block.type === 'text') loadTextPanel(block);
   else if (block.type === 'stat') loadStatPanel(block);
+  else if (block.type === 'widget') loadWidgetPanel(block);
   else showPanel(null);
 }
 
@@ -2139,12 +2216,47 @@ document.getElementById('btn-add-divider').addEventListener('click', () => {
 });
 
 // ─── STAT BUTTON ──────────────────────────────────────────────────────────────
-const statPages = new Set(); // страницы где включён режим добавления стата
+const statPages = new Set();
 
 function updateStatBtn() {
   const btn = document.getElementById('btn-add-stat');
   btn.style.display = statPages.has(currentEditorPage) ? '' : 'none';
 }
+
+// ─── WIDGET BUTTON ────────────────────────────────────────────────────────────
+const widgetPages = new Set();
+
+function updateWidgetBtn() {
+  const btn = document.getElementById('btn-add-widget');
+  btn.style.display = widgetPages.has(currentEditorPage) ? '' : 'none';
+}
+
+document.getElementById('btn-add-widget').addEventListener('click', () => {
+  const blocks = [...getPageBlocks(currentEditorPage)];
+  const newBlock = { type: 'widget', src: 'staff.js', name: 'Виджет' };
+  blocks.push(newBlock);
+  pageData[currentEditorPage] = blocks;
+  editingBlockIdx = blocks.length - 1;
+  renderBlockList();
+  loadWidgetPanel(newBlock);
+  autoSave();
+});
+
+function loadWidgetPanel(block) {
+  showPanel('widget');
+  document.getElementById('widget-src').value = block.src || 'staff.js';
+  document.getElementById('widget-name').value = block.name || 'Виджет';
+}
+
+document.getElementById('btn-save-widget').addEventListener('click', () => {
+  if (editingBlockIdx === null) return;
+  const blocks = getPageBlocks(currentEditorPage);
+  blocks[editingBlockIdx].src  = document.getElementById('widget-src').value.trim() || 'staff.js';
+  blocks[editingBlockIdx].name = document.getElementById('widget-name').value.trim() || 'Виджет';
+  renderBlockList();
+  autoSave();
+  setEditorStatus('СОХРАНЕНО');
+});
 
 document.getElementById('btn-add-stat').addEventListener('click', () => {
   const blocks = [...getPageBlocks(currentEditorPage)];
@@ -2619,11 +2731,13 @@ function updateEditorTabs() {
         showPanel(null);
         setEditorStatus('—');
         updateStatBtn();
+        updateWidgetBtn();
       });
     }
     tabs.appendChild(tab);
   });
   updateStatBtn();
+  updateWidgetBtn();
 }
 
 function createExtraPage(title) {
@@ -2708,7 +2822,28 @@ function handleConsole(raw) {
     }
     return;
   }
-  if (cmd === 'stat') {
+  if (cmd === 'widget') {
+    const pg = parseInt(rest[0]);
+    const targetPage = (!isNaN(pg) && pg > 0) ? pg : currentEditorPage;
+    if (widgetPages.has(targetPage)) {
+      widgetPages.delete(targetPage);
+      updateWidgetBtn();
+      consoleLog('OK: виджеты выключены для Page ' + targetPage + '.');
+    } else {
+      widgetPages.add(targetPage);
+      if (currentEditorPage !== targetPage) {
+        currentEditorPage = targetPage;
+        updateEditorTabs();
+        renderBlockList();
+        renderLinksList();
+        showPanel(null);
+        setEditorStatus('—');
+      }
+      updateWidgetBtn();
+      consoleLog('OK: кнопка "+ ВИДЖЕТ" включена для Page ' + targetPage + '. Повтори widget ' + targetPage + ' чтобы выключить.');
+    }
+    return;
+  }
     const pg = parseInt(rest[0]);
     const targetPage = (!isNaN(pg) && pg > 0) ? pg : currentEditorPage;
     if (statPages.has(targetPage)) {
