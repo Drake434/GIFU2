@@ -192,28 +192,37 @@ const createAscii = (gripId) => {
         return `<span>${content}</span>`;
     };
 
-    const hand = (pos) => `<span class="hand-marker">${pos}</span>`;
-
     let line1 = '';
     line1 += seg('[===]', cfg.left) + '<span>~</span>';
     line1 += seg('[===]', cfg.mid) + '<span>~</span>';
     line1 += seg('[===]', cfg.right);
 
-    let line2 = '';
+    // Фиксированная ширина схемы: 5 + 1 + 5 + 1 + 5 = 17 символов
+    const width = 17;
+    const line2arr = new Array(width).fill(' ');
+
+    // Индексы центров секций: left 2, middle 7, right 12
     if (cfg.hands === 'mid') {
-        line2 = '     ' + hand('H') + '        ' + hand('H');
+        line2arr[6] = '<span class="hand-marker">H</span>';
+        line2arr[8] = '<span class="hand-marker">H</span>';
     } else if (cfg.hands === 'left') {
-        line2 = hand('H') + '   ' + hand('H');
+        line2arr[1] = '<span class="hand-marker">H</span>';
+        line2arr[3] = '<span class="hand-marker">H</span>';
     } else if (cfg.hands === 'mid_right') {
-        line2 = '          ' + hand('H') + '   ' + hand('H');
+        line2arr[7] = '<span class="hand-marker">H</span>';
+        line2arr[12] = '<span class="hand-marker">H</span>';
     } else if (cfg.hands === 'left_right') {
-        line2 = hand('H') + '   ' + hand('H') + '            ';
-    } else {
-        line2 = '';
+        line2arr[2] = '<span class="hand-marker">H</span>';
+        line2arr[12] = '<span class="hand-marker">H</span>';
+    }
+
+    let line2 = '';
+    if (cfg.hands !== 'none') {
+        line2 = line2arr.join('');
     }
 
     const ascii = h('div', 'nt-ascii');
-    ascii.innerHTML = line1 + '\n' + line2;
+    ascii.innerHTML = line1 + (line2 ? '\n' + line2 : '');
     return ascii;
 };
 
