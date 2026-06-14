@@ -54,7 +54,7 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
   padding: 2px 7px; cursor: pointer; letter-spacing: 1px; opacity: 0.6;
   transition: opacity 0.2s, background 0.2s;
 }
-.win-close:hover { opacity: 1; background: rgba(0,255,65,0.1); }
+.win-close:hover { opacity: 1; background: color-mix(in srgb, var(--wc, #00FF41) 15%, transparent); }
 .win-scroll { scrollbar-width: thin; scrollbar-color: var(--wc, #00FF41) #0d0d0d; }
 .win-scroll::-webkit-scrollbar { width: 4px; }
 .win-scroll::-webkit-scrollbar-track { background: #0d0d0d; }
@@ -1915,7 +1915,21 @@ function initDesktopOrbit() {
 
   function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
   resize();
-  window.addEventListener('resize', resize);
+window.addEventListener('resize', () => {
+    resize();
+    if (chars) {
+      cx = canvas.width / 2;
+      cy = canvas.height / 2;
+      const totalW = COLS * CW, totalH = ROWS * CH;
+      const ox = cx - totalW / 2, oy = cy - totalH / 2;
+      chars.forEach((c, i) => {
+        const col = i % COLS;
+        const row = Math.floor(i / COLS);
+        c.tx = ox + col * CW + CW / 2;
+        c.ty = oy + row * CH + CH / 2;
+      });
+    }
+  });
 
   const LOGO = [
     "███░███░░░░██░░░░",
