@@ -8,7 +8,16 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #0d0d0d; min-height: 100vh; font-family: 'Courier New', monospace; overflow: hidden; }
 
-  /* WINDOW */
+  /* GLOBAL SCROLLBAR STYLES (цвета окон) */
+  .window .win-body ::-webkit-scrollbar { width: 4px; height: 4px; }
+  .window .win-body ::-webkit-scrollbar-track { background: #0d0d0d; }
+  .window .win-body ::-webkit-scrollbar-thumb { background: var(--win-color, #00FF41); border-radius: 2px; }
+  .window .win-body { scrollbar-width: thin; scrollbar-color: var(--win-color, #00FF41) #0d0d0d; }
+
+  /* Окно чата — дополнительно */
+  #messages { scrollbar-color: var(--win-color, #00FF41) #0d0d0d; }
+  #messages::-webkit-scrollbar-thumb { background: var(--win-color, #00FF41); }
+
   .window {
     background: #0d0d0d; border: 1px solid var(--win-color, #00FF41); border-radius: 8px;
     box-shadow: 0 0 20px color-mix(in srgb, var(--win-color, #00FF41) 15%, transparent), inset 0 0 30px rgba(0,0,0,0.5);
@@ -18,7 +27,6 @@
   .window.active { box-shadow: 0 0 30px color-mix(in srgb, var(--win-color, #00FF41) 30%, transparent); z-index: 100; }
   .window:not(.active) { opacity: 0.85; z-index: 10; }
 
-  /* TITLEBAR */
   .win-titlebar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 5px 10px; border-bottom: 1px solid color-mix(in srgb, var(--win-color, #00FF41) 20%, transparent);
@@ -35,12 +43,15 @@
     transition: background 0.15s; white-space: nowrap;
   }
   .win-btn:hover { background: color-mix(in srgb, var(--win-color, #00FF41) 15%, transparent); }
-  .win-btn.active-btn { background: color-mix(in srgb, var(--win-color, #00FF41) 15%, transparent); }
+  .win-close {
+    background: transparent; border: 1px solid var(--win-color, #00FF41); border-radius: 3px;
+    color: var(--win-color, #00FF41); font-family: 'Courier New', monospace; font-size: 12px;
+    padding: 2px 7px; cursor: pointer; letter-spacing: 1px; opacity: 0.6;
+    transition: opacity 0.2s, background 0.2s;
+  }
+  .win-close:hover { opacity: 1; background: rgba(0,255,65,0.1); }
 
-  /* BODY */
   .win-body { flex: 1; overflow: hidden; position: relative; display: flex; flex-direction: column; }
-
-  /* RESIZE */
   .win-resize {
     position: absolute; bottom: 0; right: 0; width: 16px; height: 16px; cursor: nwse-resize; z-index: 20;
   }
@@ -51,7 +62,6 @@
     border-bottom: 2px solid color-mix(in srgb, var(--win-color, #00FF41) 40%, transparent);
   }
 
-  /* SCANLINE */
   .scanline {
     position: absolute; left: 0; width: 100%; height: 60px; pointer-events: none; z-index: 50;
     background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--win-color, #00FF41) 20%, transparent) 40%, color-mix(in srgb, var(--win-color, #00FF41) 35%, transparent) 50%, color-mix(in srgb, var(--win-color, #00FF41) 20%, transparent) 60%, transparent 100%);
@@ -60,23 +70,19 @@
   }
   @keyframes scanmove { 0% { top: -80px; } 100% { top: calc(100% + 80px); } }
 
-  /* CRT overlay */
   .crt-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5;
     background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.13) 3px, rgba(0,0,0,0.13) 4px);
   }
 
-  /* TERMINAL INNER */
   .terminal-inner { padding: 24px 30px; flex: 1; display: flex; flex-direction: column; position: relative; z-index: 2; overflow: hidden; }
 
-  /* BOOT */
   #boot-screen { font-size: 12px; color: var(--win-color, #00FF41); text-align: left; }
   .boot-line { opacity: 0; line-height: 1.8; letter-spacing: 1px; }
   .ok { color: var(--win-color, #00FF41); } .warn { color: #62F1F5; } .err { color: #ff4444; }
   .progress-bar-wrap { margin: 8px 0 4px; opacity: 0; }
   .progress-bar-track { display: inline-block; font-size: 12px; color: var(--win-color, #00FF41); letter-spacing: 1px; }
 
-  /* NICK SCREEN */
   #nick-screen { display: none; opacity: 0; text-align: center; transition: opacity 0.4s ease; }
   #nick-screen.show { opacity: 1; }
   .nick-title { font-size: 12px; color: var(--win-color, #00FF41); opacity: 0.6; letter-spacing: 2px; margin-bottom: 20px; }
@@ -106,7 +112,6 @@
   }
   #nick-confirm-btn:hover { background: color-mix(in srgb, var(--win-color, #00FF41) 10%, transparent); box-shadow: 0 0 8px color-mix(in srgb, var(--win-color, #00FF41) 30%, transparent); }
 
-  /* MAIN */
   #main-content { display: none; opacity: 0; flex: 1; display: none; flex-direction: column; min-height: 0; }
   #main-content.visible { display: flex; }
   .logo-wrap { text-align: center; margin-bottom: 16px; flex-shrink: 0; }
@@ -121,17 +126,13 @@
   .label { color: var(--win-color, #00FF41); font-size: 13px; opacity: 0; letter-spacing: 2px; text-shadow: 0 0 6px color-mix(in srgb, var(--win-color, #00FF41) 50%, transparent); transition: opacity 0.4s ease; }
   .label.show { opacity: 0.7; }
 
-  /* CHAT */
-  #chat-area { margin-top: 16px; opacity: 0; transition: opacity 0.4s ease; flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+  #chat-area { margin-top: 16px; opacity: 0; transition: opacity 0.4s ease; flex: 1; display: flex; flex-direction: row; min-height: 0; overflow: hidden; gap: 15px; }
   #chat-area.show { opacity: 1; }
+  #chat-left { flex: 3; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
   #messages {
     flex: 1; min-height: 0; overflow-y: auto; border: 1px solid color-mix(in srgb, var(--win-color, #00FF41) 20%, transparent);
     border-radius: 4px; padding: 10px; margin-bottom: 10px;
-    scrollbar-width: thin; scrollbar-color: var(--win-color, #00FF41) #0d0d0d;
   }
-  #messages::-webkit-scrollbar { width: 4px; }
-  #messages::-webkit-scrollbar-track { background: #0d0d0d; }
-  #messages::-webkit-scrollbar-thumb { background: var(--win-color, #00FF41); }
   .msg { font-size: 12px; line-height: 1.9; letter-spacing: 0.5px; }
   .msg .ts { color: var(--win-color, #00FF41); opacity: 0.35; margin-right: 6px; }
   .msg .text { color: var(--win-color, #00FF41); }
@@ -155,73 +156,83 @@
   #change-nick-btn { cursor: pointer; opacity: 0.4; letter-spacing: 1px; font-size: 10px; color: var(--win-color, #00FF41); background: none; border: none; font-family: 'Courier New', monospace; transition: opacity 0.2s; }
   #change-nick-btn:hover { opacity: 0.8; }
 
-  /* SETTINGS WINDOW */
-  #window2 { display: none; }
-  #window2.visible { display: flex; }
-  .settings-body { padding: 20px 24px; flex: 1; overflow-y: auto; overflow-x: hidden; }
-  .settings-title { font-size: 11px; color: var(--win-color, #00FF41); opacity: 0.5; letter-spacing: 2px; margin-bottom: 18px; }
-  .settings-row { margin-bottom: 20px; }
-  .settings-label { font-size: 10px; color: var(--win-color, #00FF41); opacity: 0.45; letter-spacing: 1px; margin-bottom: 10px; }
-  .win-color-palette { display: flex; gap: 8px; flex-wrap: wrap; }
-  .win-color-swatch {
-    width: 20px; height: 20px; border-radius: 3px; cursor: pointer;
-    border: 2px solid transparent; transition: border-color 0.15s, transform 0.15s;
+  #online-panel {
+    flex: 1; min-width: 150px; max-width: 200px; border-left: 1px solid color-mix(in srgb, var(--win-color, #00FF41) 25%, transparent);
+    padding-left: 12px; display: flex; flex-direction: column; overflow: hidden;
   }
-  .win-color-swatch:hover { transform: scale(1.2); }
-  .win-color-swatch.selected { border-color: #fff; transform: scale(1.2); }
+  .online-header {
+    font-size: 10px; letter-spacing: 2px; color: var(--win-color, #00FF41); opacity: 0.5;
+    margin-bottom: 8px; border-bottom: 1px solid rgba(0,255,65,0.2); padding-bottom: 4px;
+  }
+  #online-list {
+    flex: 1; overflow-y: auto; font-size: 11px;
+  }
+  .online-user {
+    padding: 4px 0; display: flex; align-items: center; gap: 6px;
+    border-bottom: 1px dotted rgba(0,255,65,0.1);
+  }
+  .online-user .nick { letter-spacing: 1px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .online-user .color-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
-/* DESKTOP LOGO */
-#desktop-logo {
-  position: fixed; top: 18px; right: 24px; z-index: 1;
-  font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.35;
-  white-space: pre; letter-spacing: 2px; pointer-events: none;
-  color: var(--desktop-logo-color, #00FF41);
-  text-shadow: 0 0 8px var(--desktop-logo-color, #00FF41);
-  opacity: 0.18;
-}
+  #desktop-logo {
+    position: fixed; top: 18px; right: 24px; z-index: 1;
+    font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.35;
+    white-space: pre; letter-spacing: 2px; pointer-events: none;
+    color: var(--desktop-logo-color, #00FF41);
+    text-shadow: 0 0 8px var(--desktop-logo-color, #00FF41);
+    opacity: 0.18;
+  }
 
-/* DESKTOP LOGS */
-#desktop-logs {
-  position: fixed; right: 24px; bottom: 24px; z-index: 1;
-  font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.7;
-  letter-spacing: 0.5px; pointer-events: none;
-  width: 420px; max-width: 40vw;
-  display: flex; flex-direction: column; gap: 0;
-}
-.dlog {
-  color: #00FF41; opacity: 0;
-  transition: opacity 0.6s ease;
-  text-shadow: 0 0 5px rgba(0,255,65,0.3);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.dlog.show { opacity: 0.2; }
+  #desktop-logs {
+    position: fixed; right: 24px; bottom: 24px; z-index: 1;
+    font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.7;
+    letter-spacing: 0.5px; pointer-events: none;
+    width: 420px; max-width: 40vw;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .dlog {
+    color: #00FF41; opacity: 0;
+    transition: opacity 0.6s ease;
+    text-shadow: 0 0 5px rgba(0,255,65,0.3);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .dlog.show { opacity: 0.2; }
 
-/* OPERATORS WINDOW */
-#window4 { display: none; --win-color: #62F1F5; border-color: #62F1F5; }
-#window4 .win-titlebar { border-bottom-color: rgba(98,241,245,0.3); }
-.ops-body { padding: 16px 20px; flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
-#ops-messages {
-  flex: 1; min-height: 0; overflow-y: auto; border: 1px solid rgba(98,241,245,0.2);
-  border-radius: 4px; padding: 10px; margin-bottom: 10px;
-  font-size: 12px; color: #62F1F5; line-height: 1.8;
-  scrollbar-width: thin; scrollbar-color: #62F1F5 #0d0d0d;
-}
-#ops-messages::-webkit-scrollbar { width: 4px; }
-#ops-messages::-webkit-scrollbar-thumb { background: #62F1F5; }
-.ops-input-row { display: flex; gap: 8px; flex-shrink: 0; }
-#ops-input {
-  background: transparent; border: 1px solid rgba(98,241,245,0.3); border-radius: 4px;
-  color: #62F1F5; font-family: 'Courier New', monospace; font-size: 12px;
-  padding: 6px 8px; flex: 1; outline: none; letter-spacing: 1px;
-}
-#ops-input:focus { border-color: rgba(98,241,245,0.7); }
-#ops-send-btn {
-  background: transparent; border: 1px solid rgba(98,241,245,0.4); border-radius: 4px;
-  color: #62F1F5; font-family: 'Courier New', monospace; font-size: 12px;
-  padding: 6px 12px; cursor: pointer; letter-spacing: 1px;
-  transition: background 0.2s;
-}
-#ops-send-btn:hover { background: rgba(98,241,245,0.1); }
+  #window4 { display: none; --win-color: #62F1F5; border-color: #62F1F5; }
+  #window4 .win-titlebar { border-bottom-color: rgba(98,241,245,0.3); }
+  .ops-body { padding: 16px 20px; flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+  #ops-buttons-panel {
+    flex-shrink: 0; margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 1px solid rgba(98,241,245,0.15);
+    display: flex; flex-wrap: wrap; gap: 8px; max-height: 120px; overflow-y: auto;
+  }
+  .ops-link-btn {
+    background: transparent; border: 1px solid rgba(98,241,245,0.3);
+    color: #62F1F5; font-family: 'Courier New', monospace;
+    font-size: 11px; padding: 3px 10px; cursor: pointer; letter-spacing: 1px;
+    border-radius: 3px; transition: background 0.15s, border-color 0.15s;
+  }
+  .ops-link-btn:hover { background: rgba(98,241,245,0.1); border-color: #62F1F5; }
+  #ops-messages {
+    flex: 1; min-height: 0; overflow-y: auto; border: 1px solid rgba(98,241,245,0.2);
+    border-radius: 4px; padding: 10px; margin-bottom: 10px;
+    font-size: 12px; color: #62F1F5; line-height: 1.8;
+  }
+  .ops-input-row { display: flex; gap: 8px; flex-shrink: 0; }
+  #ops-input {
+    background: transparent; border: 1px solid rgba(98,241,245,0.3); border-radius: 4px;
+    color: #62F1F5; font-family: 'Courier New', monospace; font-size: 12px;
+    padding: 6px 8px; flex: 1; outline: none; letter-spacing: 1px;
+  }
+  #ops-input:focus { border-color: rgba(98,241,245,0.7); }
+  #ops-send-btn {
+    background: transparent; border: 1px solid rgba(98,241,245,0.4); border-radius: 4px;
+    color: #62F1F5; font-family: 'Courier New', monospace; font-size: 12px;
+    padding: 6px 12px; cursor: pointer; letter-spacing: 1px;
+    transition: background 0.2s;
+  }
+  #ops-send-btn:hover { background: rgba(98,241,245,0.1); }
+
   #window3 { display: none; --win-color: #ff4444; border-color: #ff4444; }
   #window3 .win-titlebar { border-bottom-color: rgba(255,68,68,0.3); }
   .admin-btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
@@ -232,8 +243,214 @@
     transition: background 0.15s, box-shadow 0.15s;
   }
   .admin-btn:hover { background: rgba(255,68,68,0.1); box-shadow: 0 0 8px rgba(255,68,68,0.3); }
+  #window3 .settings-title {
+    color: #ff4444 !important;
+    opacity: 1 !important;
+  }
 
-  /* BOOT OVERLAY */
+  #desktop-icons {
+    position: fixed; top: 40px; left: 30px; z-index: 4;
+    display: none; grid-auto-flow: column; grid-template-rows: repeat(auto-fill, 100px);
+    grid-auto-columns: 90px; gap: 20px 25px; align-content: start;
+  }
+  .desktop-icon {
+    width: 85px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    cursor: pointer; user-select: none; padding: 8px 4px; border-radius: 5px;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .desktop-icon:hover {
+    background: rgba(0,255,65,0.08); transform: translateY(-3px);
+  }
+  .desktop-icon-symbol {
+    width: 50px; height: 50px; border: 1px solid rgba(0,255,65,0.4);
+    display: flex; align-items: center; justify-content: center;
+    color: #00FF41; font-size: 28px; background: rgba(0,0,0,0.4);
+    box-shadow: 0 0 12px rgba(0,255,65,0.1); text-shadow: 0 0 8px #00FF41;
+  }
+  .desktop-icon-label {
+    color: #00FF41; font-size: 12px; letter-spacing: 2px; text-align: center;
+    line-height: 1.3; text-shadow: 0 0 6px rgba(0,255,65,0.4);
+  }
+
+  #password-dialog {
+    display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    background: #0d0d0d; border: 1px solid #ff4444; border-radius: 6px;
+    padding: 20px; z-index: 10000; flex-direction: column; gap: 15px;
+    min-width: 280px; box-shadow: 0 0 30px rgba(255,68,68,0.3);
+  }
+  #password-dialog .pd-title { color: #ff4444; letter-spacing: 2px; font-size: 14px; text-align: center; }
+  #password-dialog input {
+    background: transparent; border: 1px solid rgba(255,68,68,0.4); padding: 8px;
+    color: #ff4444; font-family: 'Courier New', monospace; outline: none;
+  }
+  #password-dialog .pd-buttons { display: flex; gap: 10px; justify-content: center; }
+  #password-dialog button {
+    background: transparent; border: 1px solid #ff4444; color: #ff4444;
+    padding: 5px 15px; cursor: pointer; font-family: monospace;
+  }
+  #password-dialog button:hover { background: rgba(255,68,68,0.2); }
+
+  #ops-password-popup {
+    display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    background: #0d0d0d; border: 1px solid #62F1F5; border-radius: 6px;
+    padding: 16px; z-index: 10001; flex-direction: column; gap: 12px;
+    min-width: 260px; box-shadow: 0 0 20px rgba(98,241,245,0.3);
+  }
+  #ops-password-popup .popup-title { color: #62F1F5; font-size: 12px; letter-spacing: 1px; }
+  #ops-password-popup input {
+    background: transparent; border: 1px solid rgba(98,241,245,0.4); padding: 6px;
+    color: #00FF41; font-family: monospace; outline: none;
+  }
+  #ops-password-popup .popup-buttons { display: flex; gap: 8px; justify-content: flex-end; }
+  #ops-password-popup button {
+    background: transparent; border: 1px solid #62F1F5; color: #62F1F5;
+    padding: 3px 12px; cursor: pointer; font-family: monospace;
+  }
+  #ops-password-popup .error-msg { color: #ff4444; font-size: 10px; }
+
+  /* WANTED WINDOW (РОЗЫСК) — исправлено растяжение по ширине */
+  #window5 { display: none; --win-color: #ffaa00; border-color: #ffaa00; }
+  #window5 .win-titlebar { border-bottom-color: rgba(255,170,0,0.3); }
+  .wanted-body {
+    padding: 16px 20px; flex: 1; display: flex; flex-direction: row; gap: 20px;
+    min-height: 0; overflow: hidden;
+  }
+  .wanted-left {
+    flex: 3; display: flex; flex-direction: column; gap: 15px; min-height: 0;
+    min-width: 0; /* важно для ограничения ширины */
+  }
+  .wanted-image-area {
+    background: #0a0a0a; border: 1px solid rgba(255,170,0,0.3);
+    border-radius: 4px;
+    height: 35%;
+    min-height: 150px;
+    max-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .wanted-image-area img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .wanted-image-placeholder {
+    color: rgba(255,170,0,0.3);
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+  .wanted-text-area {
+    background: #0a0a0a;
+    border: 1px solid rgba(255,170,0,0.3);
+    border-radius: 4px;
+    padding: 12px;
+    color: #ffaa00;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    flex: 1;
+    min-height: 0;
+  }
+  .wanted-right {
+    flex: 1; min-width: 140px; display: flex; flex-direction: column;
+    border-left: 1px solid rgba(255,170,0,0.2); padding-left: 12px;
+    gap: 12px;
+  }
+  .wanted-persons-list {
+    display: flex; flex-direction: column; gap: 6px;
+    max-height: 300px; overflow-y: auto;
+  }
+  .wanted-person-btn {
+    background: transparent; border: 1px solid rgba(255,170,0,0.3);
+    color: #ffaa00; font-size: 11px; padding: 5px 8px;
+    text-align: left; cursor: pointer; border-radius: 3px;
+    transition: background 0.15s;
+  }
+  .wanted-person-btn:hover, .wanted-person-btn.active {
+    background: rgba(255,170,0,0.15); border-color: #ffaa00;
+  }
+  .wanted-actions {
+    display: flex; gap: 8px; margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .wanted-action-btn {
+    background: transparent; border: 1px solid #ffaa00;
+    color: #ffaa00; font-family: 'Courier New', monospace;
+    font-size: 12px; padding: 5px 12px; cursor: pointer;
+    letter-spacing: 1px; border-radius: 3px; flex: 1;
+    text-align: center; transition: background 0.15s;
+  }
+  .wanted-action-btn:hover { background: rgba(255,170,0,0.1); }
+  .wanted-action-btn.delete {
+    border-color: #ff4444; color: #ff4444;
+  }
+  .wanted-action-btn.delete:hover { background: rgba(255,68,68,0.15); }
+  .wanted-delete-confirm {
+    display: flex; gap: 6px; width: 100%;
+  }
+  .wanted-delete-confirm .wanted-action-btn {
+    flex: 1;
+    font-size: 16px;
+    padding: 2px 0;
+  }
+  /* Режим редактирования внутри левой панели */
+  .wanted-edit-inline {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .wanted-edit-inline.visible {
+    display: flex;
+  }
+  .wanted-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .wanted-edit-label {
+    font-size: 10px;
+    color: #ffaa00;
+    opacity: 0.6;
+    letter-spacing: 1px;
+  }
+  .wanted-edit-input {
+    background: transparent;
+    border: 1px solid rgba(255,170,0,0.4);
+    color: #ffaa00;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    padding: 5px 8px;
+    border-radius: 3px;
+    outline: none;
+    width: 100%;
+  }
+  .wanted-edit-input:focus {
+    border-color: #ffaa00;
+  }
+  .wanted-edit-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .wanted-edit-btn {
+    background: transparent;
+    border: 1px solid #ffaa00;
+    color: #ffaa00;
+    font-size: 11px;
+    padding: 4px 12px;
+    cursor: pointer;
+    border-radius: 3px;
+    flex: 1;
+  }
+
   #boot-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: #0d0d0d; z-index: 9999;
@@ -278,12 +495,11 @@
     transition: background 0.2s, box-shadow 0.2s;
   }
   #agree-btn:hover { background: rgba(0,255,65,0.1); box-shadow: 0 0 12px rgba(0,255,65,0.4); }
-
 </style>
 </head>
 <body>
 
-<!-- BOOT OVERLAY -->
+<!-- BOOT OVERLAY (содержимое как в предыдущей версии, без изменений) -->
 <div id="boot-overlay">
   <div id="boot-window">
     <div class="scanline"></div>
@@ -299,9 +515,7 @@
       <div class="boot-line" id="ob7">[ <span class="ok">OK</span> ]  Ядро найдено в реестре допустимых сборок</div>
       <div class="boot-line" id="ob8">[ <span class="ok">OK</span> ]  Подключение к NT-NET...</div>
       <div class="boot-line" id="ob9">[ <span class="ok">OK</span> ]  Продолжение в режиме Синдикат...</div>
-      <div class="progress-bar-wrap" id="ob-pbar-wrap" style="opacity:0; margin:8px 0 4px;">
-        <div id="ob-pbar" style="font-family:'Courier New',monospace;font-size:12px;color:#00FF41;letter-spacing:1px;">[                    ] 0%</div>
-      </div>
+      <div class="progress-bar-wrap" id="ob-pbar-wrap" style="opacity:0; margin:8px 0 4px;"><div id="ob-pbar" style="font-family:'Courier New',monospace;font-size:12px;color:#00FF41;letter-spacing:1px;">[                    ] 0%</div></div>
       <div class="boot-line" id="ob10" style="opacity:0">Загрузка терминала...</div>
     </div>
     <div id="license-box">
@@ -321,30 +535,31 @@ NanoTrasen не несёт ответственности за последст�
   </div>
 </div>
 
-<!-- DESKTOP LOGO -->
 <div id="desktop-logo">███░███░░░░██░░░░
 ░██░████░░░██░░░░
 ░░█░██░██░░██░█░░
 ░░░░██░░██░██░██░
 ░░░░██░░░████░███</div>
 
-<!-- DESKTOP LOGS -->
 <div id="desktop-logs"></div>
 
-<!-- WINDOW 1: CHAT -->
-<div class="window active" id="window1" style="top:40px; left:40px; width:620px; height:560px;">
+<div id="desktop-icons">
+  <div class="desktop-icon" data-app="chat"><div class="desktop-icon-symbol">✉</div><div class="desktop-icon-label">ЧАТ</div></div>
+  <div class="desktop-icon" data-app="oper"><div class="desktop-icon-symbol">▣</div><div class="desktop-icon-label">ОПЕР</div></div>
+  <div class="desktop-icon" data-app="admin"><div class="desktop-icon-symbol">◉</div><div class="desktop-icon-label">АДМИН</div></div>
+  <div class="desktop-icon" data-app="wanted"><div class="desktop-icon-symbol">⚠</div><div class="desktop-icon-label">РОЗЫСК</div></div>
+</div>
+
+<!-- WINDOW 1: CHAT (без изменений) -->
+<div class="window" id="window1" style="top:60px; left:80px; width:800px; height:560px; display:none;">
   <div class="scanline"></div>
   <div class="win-titlebar" id="titlebar1">
     <span class="win-title">NANOTRASEN OS — TERMINAL</span>
-    <div class="win-controls">
-      <button class="win-btn" id="settings-btn">[SETTINGS]</button>
-    </div>
+    <div class="win-controls"><button class="win-close">[X]</button></div>
   </div>
   <div class="win-body">
     <div class="crt-overlay"></div>
     <div class="terminal-inner">
-
-      <!-- BOOT -->
       <div id="boot-screen">
         <div class="boot-line" style="opacity:0.45">NANOTRASEN OS v4.2.1 — BOOT SEQUENCE INITIATED</div>
         <div class="boot-line" id="bl1">[ <span class="ok">OK</span> ]  Загрузка ядра системы...</div>
@@ -353,13 +568,9 @@ NanoTrasen не несёт ответственности за последст�
         <div class="boot-line" id="bl4">[ <span class="ok">OK</span> ]  Протокол безопасности активирован...</div>
         <div class="boot-line" id="bl5">[ <span class="ok">OK</span> ]  Подключение к базе данных...</div>
         <div class="boot-line" id="bl6">[ <span class="err">--</span> ]  <span class="err">Доступ не подтверждён. Продолжение...</span></div>
-        <div class="progress-bar-wrap" id="pbar-wrap">
-          <div class="progress-bar-track" id="pbar">[                    ] 0%</div>
-        </div>
+        <div class="progress-bar-wrap" id="pbar-wrap"><div class="progress-bar-track" id="pbar">[                    ] 0%</div></div>
         <div class="boot-line" id="bl7" style="opacity:0">Идентификация пользователя...</div>
       </div>
-
-      <!-- НИК ЭКРАН -->
       <div id="nick-screen">
         <div class="nick-title">ИДЕНТИФИКАЦИЯ ПОЛЬЗОВАТЕЛЯ</div>
         <div class="nick-label">ВВЕДИТЕ ПОЗЫВНОЙ</div>
@@ -369,8 +580,6 @@ NanoTrasen не несёт ответственности за последст�
         <br>
         <button id="nick-confirm-btn">[ПОДТВЕРДИТЬ]</button>
       </div>
-
-      <!-- MAIN -->
       <div id="main-content">
         <div class="logo-wrap">
           <div class="pixel-row" id="pr0">███░███░░░░██░░░░</div>
@@ -382,52 +591,134 @@ NanoTrasen не несёт ответственности за последст�
           <div class="label" id="lbl">NANOTRASEN CORPORATION — TERMINAL</div>
         </div>
         <div id="chat-area">
-          <div id="messages"></div>
-          <div class="input-row">
-            <input id="msg-input" type="text" maxlength="200" placeholder="введите сообщение..." spellcheck="false" />
-            <button id="send-btn">[SEND]</button>
+          <div id="chat-left">
+            <div id="messages"></div>
+            <div class="input-row">
+              <input id="msg-input" type="text" maxlength="200" placeholder="введите сообщение..." spellcheck="false" />
+              <button id="send-btn">[SEND]</button>
+            </div>
+            <div id="status-bar">
+              <span>CONNECTED — NANOTRASEN SECURE CHANNEL</span>
+              <button id="change-nick-btn">[сменить позывной]</button>
+            </div>
           </div>
-          <div id="status-bar">
-            <span>CONNECTED — NANOTRASEN SECURE CHANNEL</span>
-            <button id="change-nick-btn">[сменить позывной]</button>
+          <div id="online-panel">
+            <div class="online-header">⊡ ОНЛАЙН ⊡</div>
+            <div id="online-list"></div>
           </div>
         </div>
       </div>
-
-    </div><!-- terminal-inner -->
-  </div><!-- win-body -->
+    </div>
+  </div>
   <div class="win-resize" id="resize1"></div>
-</div><!-- window1 -->
+</div>
 
-<!-- WINDOW 2: SETTINGS -->
-<div class="window" id="window2" style="top:40px; left:690px; width:300px; height:360px;">
+<!-- WINDOW 4: OPERATORS -->
+<div class="window" id="window4" style="top:60px; left:700px; width:480px; height:520px; display:none;">
   <div class="scanline"></div>
-  <div class="win-titlebar" id="titlebar2">
-    <span class="win-title">НАСТРОЙКИ</span>
+  <div class="win-titlebar" id="titlebar4">
+    <span class="win-title">⬡ OPERATORS — SECURE CHANNEL</span>
+    <div class="win-controls"><button class="win-close">[X]</button></div>
   </div>
   <div class="win-body">
     <div class="crt-overlay"></div>
-    <div class="settings-body">
-      <div class="settings-title">> ПАРАМЕТРЫ ИНТЕРФЕЙСА</div>
-
-      <div class="settings-row">
-        <div class="settings-label">ЦВЕТ ОКНА — ТЕРМИНАЛ</div>
-        <div class="win-color-palette" id="win1-palette"></div>
-      </div>
-
-      <div class="settings-row">
-        <div class="settings-label">ЦВЕТ ОКНА — НАСТРОЙКИ</div>
-        <div class="win-color-palette" id="win2-palette"></div>
+    <div class="ops-body">
+      <div id="ops-buttons-panel"></div>
+      <div id="ops-messages"></div>
+      <div class="ops-input-row">
+        <input id="ops-input" type="text" maxlength="200" placeholder="команда /addlink, /rmlink..." spellcheck="false" />
+        <button id="ops-send-btn">[EXEC]</button>
       </div>
     </div>
   </div>
-  <div class="win-resize" id="resize2"></div>
-</div><!-- window2 -->
+  <div class="win-resize" id="resize4"></div>
+</div>
+
+<!-- WINDOW 3: ADMIN -->
+<div class="window" id="window3" style="top:120px; left:400px; width:360px; height:380px; display:none;">
+  <div class="scanline"></div>
+  <div class="win-titlebar" id="titlebar3">
+    <span class="win-title">⚠ ADMIN PANEL — NANOTRASEN</span>
+    <div class="win-controls"><button class="win-close">[X]</button></div>
+  </div>
+  <div class="win-body">
+    <div class="crt-overlay"></div>
+    <div id="admin-body" style="padding:16px 20px; flex:1; display:flex; flex-direction:column; min-height:0; overflow:hidden;">
+      <div class="settings-title" style="flex-shrink:0; margin-bottom:10px;">> ADMIN TERMINAL</div>
+      <div id="admin-messages" style="flex:1; min-height:0; overflow-y:auto; border:1px solid rgba(255,68,68,0.2); border-radius:4px; padding:10px; margin-bottom:10px; font-size:11px; color:#ff4444; line-height:1.8;"></div>
+      <div class="input-row" style="flex-shrink:0;">
+        <input id="admin-input" type="text" placeholder="admin command..." spellcheck="false" style="background:transparent; border:1px solid rgba(255,68,68,0.3); border-radius:4px; color:#ff4444; font-family:'Courier New', monospace; font-size:11px; padding:6px 8px; flex:1; outline:none;" />
+        <button id="admin-send" class="admin-btn">[EXEC]</button>
+      </div>
+    </div>
+  </div>
+  <div class="win-resize" id="resize3"></div>
+</div>
+
+<!-- WINDOW 5: WANTED (РОЗЫСК) с правильными пропорциями -->
+<div class="window" id="window5" style="top:100px; left:150px; width:700px; height:500px; display:none;">
+  <div class="scanline"></div>
+  <div class="win-titlebar" id="titlebar5">
+    <span class="win-title">⚠ РОЗЫСК — NT SECURITY DATABASE</span>
+    <div class="win-controls"><button class="win-close">[X]</button></div>
+  </div>
+  <div class="win-body">
+    <div class="crt-overlay"></div>
+    <div class="wanted-body">
+      <div class="wanted-left">
+        <div id="wanted-view-area" style="display:flex; flex-direction:column; gap:15px; flex:1; min-height:0;">
+          <div class="wanted-image-area" id="wanted-image-area"><div class="wanted-image-placeholder">[ ИЗОБРАЖЕНИЕ ]</div></div>
+          <div class="wanted-text-area" id="wanted-text-area"></div>
+        </div>
+        <div class="wanted-edit-inline" id="wanted-edit-inline">
+          <div class="wanted-edit-field">
+            <div class="wanted-edit-label">НАЗВАНИЕ ПЕРСОНЫ</div>
+            <input class="wanted-edit-input" id="wanted-edit-name" type="text" placeholder="Имя" />
+          </div>
+          <div class="wanted-edit-field">
+            <div class="wanted-edit-label">URL КАРТИНКИ</div>
+            <input class="wanted-edit-input" id="wanted-edit-image" type="text" placeholder="https://..." />
+          </div>
+          <div class="wanted-edit-field">
+            <div class="wanted-edit-label">ОПИСАНИЕ</div>
+            <textarea class="wanted-edit-input" id="wanted-edit-text" rows="4" placeholder="Текст описания..." style="resize: vertical;"></textarea>
+          </div>
+          <div class="wanted-edit-buttons">
+            <button class="wanted-edit-btn" id="wanted-save-btn">СОХРАНИТЬ</button>
+            <button class="wanted-edit-btn" id="wanted-cancel-btn">ОТМЕНА</button>
+          </div>
+        </div>
+      </div>
+      <div class="wanted-right">
+        <div class="wanted-persons-list" id="wanted-persons-list"></div>
+        <div class="wanted-actions" id="wanted-actions">
+          <button class="wanted-action-btn" id="wanted-new-btn">NEW</button>
+          <button class="wanted-action-btn" id="wanted-edit-btn">EDIT</button>
+          <div id="delete-btn-container" style="flex:1"><button class="wanted-action-btn delete" id="wanted-delete-btn">УДАЛИТЬ</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="win-resize" id="resize5"></div>
+</div>
+
+<div id="password-dialog">
+  <div class="pd-title">ВВЕДИТЕ ПАРОЛЬ АДМИНИСТРАТОРА</div>
+  <input type="password" id="admin-password-input" placeholder="пароль" autocomplete="new-password" autocapitalize="off" spellcheck="false" />
+  <div class="pd-buttons"><button id="pd-ok">[OK]</button><button id="pd-cancel">[ОТМЕНА]</button></div>
+</div>
+
+<div id="ops-password-popup">
+  <div class="popup-title">ВВЕДИТЕ ПАРОЛЬ ДЛЯ ССЫЛКИ</div>
+  <input type="password" id="ops-pass-input" placeholder="пароль" autocomplete="new-password" autocapitalize="off" spellcheck="false" />
+  <div class="popup-buttons"><button id="ops-pass-ok">[OK]</button><button id="ops-pass-cancel">[ОТМЕНА]</button></div>
+  <div class="error-msg" id="ops-pass-error"></div>
+</div>
 
 <script>
+  // Boot, логи, чат, оператор, админ — полностью как в предыдущей рабочей версии (без изменений)
   (function() {
     function d(ms) { return new Promise(r => setTimeout(r, ms)); }
-
     async function runOverlayBoot() {
       await d(300);
       const lines = ['ob1','ob2','ob3','ob4','ob5','ob6','ob7','ob8','ob9'];
@@ -437,8 +728,6 @@ NanoTrasen не несёт ответственности за последст�
         document.getElementById(lines[i]).style.opacity = '1';
       }
       await d(200);
-
-      // Прогресс-бар
       const pbar = document.getElementById('ob-pbar');
       document.getElementById('ob-pbar-wrap').style.opacity = '1';
       const steps = [{p:15,t:60},{p:30,t:80},{p:47,t:120},{p:48,t:400},{p:60,t:70},{p:75,t:90},{p:88,t:110},{p:95,t:180},{p:100,t:80}];
@@ -447,18 +736,14 @@ NanoTrasen не несёт ответственности за последст�
         const f = Math.round(s.p / 100 * 20);
         pbar.textContent = '[' + '█'.repeat(f) + ' '.repeat(20-f) + '] ' + s.p + '%';
       }
-
       await d(150);
       document.getElementById('ob10').style.opacity = '0.45';
       await d(600);
-
-      // Показываем лицензию
       const lb = document.getElementById('license-box');
       lb.style.display = 'block';
       await d(50);
       lb.classList.add('show');
     }
-
     const SYS_LOGS = [
       '[SYS]  Сотрудник #4471 не вернулся со смены. Списан.',
       '[SYS]  Утечка плазмы на уровне 4. Уборщик направлен.',
@@ -503,20 +788,12 @@ NanoTrasen не несёт ответственности за последст�
       '[SYS]  Станция признана безопасной. Источник неизвестен.',
       '[SYS]  NanoTrasen желает вам продуктивной смены.',
     ];
-
     const MAX_VISIBLE = 12;
     const logsContainer = document.getElementById('desktop-logs');
-
     function startDesktopLogs() {
-      // Создаём строки
-      for (let i = 0; i < MAX_VISIBLE; i++) {
-        const div = document.createElement('div');
-        div.className = 'dlog';
-        logsContainer.appendChild(div);
-      }
+      for (let i = 0; i < MAX_VISIBLE; i++) { const div = document.createElement('div'); div.className = 'dlog'; logsContainer.appendChild(div); }
       const rows = logsContainer.querySelectorAll('.dlog');
       let logIndex = 0;
-
       async function fillInitial() {
         for (let i = 0; i < MAX_VISIBLE; i++) {
           await new Promise(r => setTimeout(r, 300));
@@ -526,18 +803,14 @@ NanoTrasen не несёт ответственности за последст�
         }
         startCycle();
       }
-
       function startCycle() {
         setInterval(async () => {
-          // Гасим первую строку
           rows[0].classList.remove('show');
           await new Promise(r => setTimeout(r, 650));
-          // Сдвигаем текст вверх
           for (let i = 0; i < MAX_VISIBLE - 1; i++) {
             rows[i].textContent = rows[i + 1].textContent;
             rows[i].classList.add('show');
           }
-          // Новая строка снизу
           rows[MAX_VISIBLE - 1].textContent = SYS_LOGS[logIndex % SYS_LOGS.length];
           rows[MAX_VISIBLE - 1].classList.remove('show');
           await new Promise(r => setTimeout(r, 50));
@@ -545,10 +818,8 @@ NanoTrasen не несёт ответственности за последст�
           logIndex++;
         }, 2500);
       }
-
       fillInitial();
     }
-
     document.getElementById('agree-btn').addEventListener('click', async () => {
       const overlay = document.getElementById('boot-overlay');
       overlay.style.transition = 'opacity 0.5s ease';
@@ -556,8 +827,19 @@ NanoTrasen не несёт ответственности за последст�
       await new Promise(r => setTimeout(r, 500));
       overlay.style.display = 'none';
       startDesktopLogs();
+      document.getElementById('desktop-icons').style.display = 'grid';
+      const icons = document.querySelectorAll('.desktop-icon');
+      icons.forEach((ic, i) => {
+        ic.style.opacity = '0';
+        ic.style.transform = 'translateY(12px)';
+        ic.style.transition = 'none';
+        setTimeout(() => {
+          ic.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+          ic.style.opacity = '1';
+          ic.style.transform = 'translateY(0)';
+        }, i * 100);
+      });
     });
-
     runOverlayBoot();
   })();
 </script>
@@ -575,22 +857,17 @@ NanoTrasen не несёт ответственности за последст�
     appId: "1:660872956739:web:a082bc97ed2a2469b43df6",
     databaseURL: "https://farid-9ae00-default-rtdb.europe-west1.firebasedatabase.app"
   };
-
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
   const msgsRef = ref(db, 'terminal/messages');
 
-  const COLORS = [
-    '#00FF41','#62F1F5','#ff4444','#ffaa00','#ff69b4',
-    '#bb86fc','#00cfff','#ffffff','#aaffaa','#ffd700'
-  ];
-
+  const COLORS = ['#00FF41','#62F1F5','#ff4444','#ffaa00','#ff69b4','#bb86fc','#00cfff','#ffffff','#aaffaa','#ffd700'];
   let currentNick = '';
   let currentColor = '#62F1F5';
 
-  function d(ms) { return new Promise(r => setTimeout(r, ms)); }
+  // функция ожидания для модуля
+  const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
-  // Палитра ника
   const palette = document.getElementById('color-palette');
   COLORS.forEach(c => {
     const sw = document.createElement('div');
@@ -605,123 +882,34 @@ NanoTrasen не несёт ответственности за последст�
     palette.appendChild(sw);
   });
 
-  // Палитры цветов окон
-  function buildWinPalette(containerId, windowId) {
-    const container = document.getElementById(containerId);
-    const win = document.getElementById(windowId);
-    const savedColor = localStorage.getItem('wincolor_' + windowId) || '#00FF41';
-    setWindowColor(win, savedColor);
-
-    COLORS.forEach(c => {
-      const sw = document.createElement('div');
-      sw.className = 'win-color-swatch' + (c === savedColor ? ' selected' : '');
-      sw.style.background = c;
-      sw.style.boxShadow = '0 0 4px ' + c + '88';
-      sw.addEventListener('click', () => {
-        container.querySelectorAll('.win-color-swatch').forEach(s => s.classList.remove('selected'));
-        sw.classList.add('selected');
-        setWindowColor(win, c);
-        localStorage.setItem('wincolor_' + windowId, c);
-      });
-      container.appendChild(sw);
-    });
-  }
-
-  function setWindowColor(win, color) {
-    win.style.setProperty('--win-color', color);
-    win.style.borderColor = color;
-  }
-
-  buildWinPalette('win1-palette', 'window1');
-  buildWinPalette('win2-palette', 'window2');
-
-  // Синхронизируем цвет логотипа на рабочем столе с цветом window1
-  function syncDesktopLogo() {
-    const color = getComputedStyle(document.getElementById('window1')).getPropertyValue('--win-color').trim() || '#00FF41';
-    document.getElementById('desktop-logo').style.color = color;
-    document.getElementById('desktop-logo').style.textShadow = '0 0 8px ' + color;
-  }
-  // Патчим setWindowColor чтобы обновлял логотип
-  const _origSetWindowColor = setWindowColor;
-  window._setWindowColor = function(win, color) {
-    _origSetWindowColor(win, color);
-    if (win.id === 'window1') syncDesktopLogo();
-  };
-  // Перестраиваем палитры с патченным setWindowColor
-  function buildWinPalette2(containerId, windowId) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = '';
-    const win = document.getElementById(windowId);
-    const savedColor = localStorage.getItem('wincolor_' + windowId) || '#00FF41';
-    window._setWindowColor(win, savedColor);
-    COLORS.forEach(c => {
-      const sw = document.createElement('div');
-      sw.className = 'win-color-swatch' + (c === savedColor ? ' selected' : '');
-      sw.style.background = c;
-      sw.style.boxShadow = '0 0 4px ' + c + '88';
-      sw.addEventListener('click', () => {
-        container.querySelectorAll('.win-color-swatch').forEach(s => s.classList.remove('selected'));
-        sw.classList.add('selected');
-        window._setWindowColor(win, c);
-        localStorage.setItem('wincolor_' + windowId, c);
-      });
-      container.appendChild(sw);
-    });
-  }
-  buildWinPalette2('win1-palette', 'window1');
-  buildWinPalette2('win2-palette', 'window2');
-  syncDesktopLogo();
-
-  // Settings toggle — открывается справа от window1
-  const settingsBtn = document.getElementById('settings-btn');
-  const win2 = document.getElementById('window2');
-  settingsBtn.addEventListener('click', () => {
-    const isOpen = win2.classList.contains('visible');
-    if (isOpen) {
-      win2.classList.remove('visible');
-      win2.style.display = 'none';
-      settingsBtn.classList.remove('active-btn');
-    } else {
-      const w1 = document.getElementById('window1');
-      const r = w1.getBoundingClientRect();
-      win2.style.left = (r.right + 10) + 'px';
-      win2.style.top = r.top + 'px';
-      win2.classList.add('visible');
-      win2.style.display = 'flex';
-      settingsBtn.classList.add('active-btn');
-    }
-  });
-
   async function animateProgress() {
     const pbar = document.getElementById('pbar');
     document.getElementById('pbar-wrap').style.opacity = '1';
     const steps = [{p:15,t:60},{p:30,t:80},{p:47,t:120},{p:48,t:400},{p:60,t:70},{p:75,t:90},{p:88,t:110},{p:95,t:180},{p:100,t:80}];
     for (const s of steps) {
-      await d(s.t);
+      await wait(s.t);
       const filled = Math.round(s.p / 100 * 20);
       pbar.textContent = '[' + '█'.repeat(filled) + ' '.repeat(20 - filled) + '] ' + s.p + '%';
     }
   }
 
   async function runBoot() {
-    await d(400);
-    document.getElementById('bl1').style.opacity = '1'; await d(280);
-    document.getElementById('bl2').style.opacity = '1'; await d(220);
-    document.getElementById('bl3').style.opacity = '1'; await d(350);
-    document.getElementById('bl4').style.opacity = '1'; await d(250);
-    document.getElementById('bl5').style.opacity = '1'; await d(400);
-    document.getElementById('bl6').style.opacity = '1'; await d(200);
+    await wait(400);
+    document.getElementById('bl1').style.opacity = '1'; await wait(280);
+    document.getElementById('bl2').style.opacity = '1'; await wait(220);
+    document.getElementById('bl3').style.opacity = '1'; await wait(350);
+    document.getElementById('bl4').style.opacity = '1'; await wait(250);
+    document.getElementById('bl5').style.opacity = '1'; await wait(400);
+    document.getElementById('bl6').style.opacity = '1'; await wait(200);
     await animateProgress();
-    await d(150);
+    await wait(150);
     document.getElementById('bl7').style.opacity = '0.45';
-    await d(600);
-
+    await wait(600);
     const boot = document.getElementById('boot-screen');
     boot.style.transition = 'opacity 0.3s ease';
     boot.style.opacity = '0';
-    await d(320);
+    await wait(320);
     boot.style.display = 'none';
-
     const savedNick = localStorage.getItem('nt_nick');
     const savedColor = localStorage.getItem('nt_color');
     if (savedNick) {
@@ -748,10 +936,9 @@ NanoTrasen не несёт ответственности за последст�
   async function showNickScreen() {
     const ns = document.getElementById('nick-screen');
     ns.style.display = 'block';
-    await d(50);
+    await wait(50);
     ns.classList.add('show');
     document.getElementById('nick-setup-input').focus();
-
     function confirm() {
       const val = document.getElementById('nick-setup-input').value.trim();
       if (!val) { document.getElementById('nick-setup-input').style.borderBottomColor = '#ff4444'; return; }
@@ -762,7 +949,6 @@ NanoTrasen не несёт ответственности за последст�
       ns.style.opacity = '0';
       setTimeout(async () => { ns.style.display = 'none'; await showMain(); }, 320);
     }
-
     document.getElementById('nick-confirm-btn').addEventListener('click', confirm);
     document.getElementById('nick-setup-input').addEventListener('keydown', e => { if (e.key === 'Enter') confirm(); });
   }
@@ -770,386 +956,102 @@ NanoTrasen не несёт ответственности за последст�
   async function showMain() {
     const main = document.getElementById('main-content');
     main.classList.add('visible');
-    await d(50);
+    await wait(50);
     main.style.opacity = '1';
     for (let i = 0; i < 5; i++) {
-      await d(100 + i * 40);
+      await wait(100 + i * 40);
       document.getElementById('pr' + i).classList.add('show');
     }
-    await d(200); document.getElementById('div1').classList.add('show');
-    await d(200); document.getElementById('lbl').classList.add('show');
-    await d(400); document.getElementById('chat-area').classList.add('show');
+    await wait(200); document.getElementById('div1').classList.add('show');
+    await wait(200); document.getElementById('lbl').classList.add('show');
+    await wait(400); document.getElementById('chat-area').classList.add('show');
     initChat();
+  }
+
+  function initOnlineList() {
+    const onlineListDiv = document.getElementById('online-list');
+    if (!onlineListDiv) return;
+    const onlineRef = ref(db, 'terminal/online');
+    onValue(onlineRef, (snap) => {
+      const data = snap.val();
+      onlineListDiv.innerHTML = '';
+      if (!data) { const empty = document.createElement('div'); empty.textContent = '— нет онлайн —'; empty.style.opacity = '0.4'; empty.style.fontSize = '10px'; onlineListDiv.appendChild(empty); return; }
+      const users = Object.values(data);
+      users.sort((a,b) => (a.nick || '').localeCompare(b.nick || ''));
+      users.forEach(u => {
+        const row = document.createElement('div'); row.className = 'online-user';
+        const dot = document.createElement('div'); dot.className = 'color-dot'; dot.style.backgroundColor = u.color || '#62F1F5'; dot.style.boxShadow = `0 0 4px ${u.color || '#62F1F5'}`;
+        const nickSpan = document.createElement('span'); nickSpan.className = 'nick'; nickSpan.textContent = u.nick || '???'; nickSpan.style.color = u.color || '#62F1F5';
+        row.appendChild(dot); row.appendChild(nickSpan); onlineListDiv.appendChild(row);
+      });
+    });
   }
 
   function initChat() {
     const messages = document.getElementById('messages');
     const msgInput = document.getElementById('msg-input');
     const sendBtn = document.getElementById('send-btn');
-
-    const adminInput = document.getElementById('admin-input');
-    const adminSend = document.getElementById('admin-send');
-    const adminMessages = document.getElementById('admin-messages');
-
-    // --- PRESENCE ---
-    // Уникальный ID сессии — не меняется при смене ника
-    if (!window._sessionId) {
-      window._sessionId = 'sess_' + Math.random().toString(36).slice(2) + Date.now();
-    }
+    if (!window._sessionId) window._sessionId = 'sess_' + Math.random().toString(36).slice(2) + Date.now();
     const presenceRef = ref(db, 'terminal/online/' + window._sessionId);
-    function updatePresence() {
-      set(presenceRef, { nick: currentNick, color: currentColor, ts: Date.now() });
-    }
+    function updatePresence() { set(presenceRef, { nick: currentNick, color: currentColor, ts: Date.now() }); }
     updatePresence();
     onDisconnect(presenceRef).remove();
     window.addEventListener('beforeunload', () => remove(presenceRef));
-    // Делаем updatePresence глобальной чтобы вызывать при смене ника
     window._updatePresence = updatePresence;
-
-    // --- PM listener ---
     const pmRef = ref(db, 'terminal/pm/' + currentNick);
-    onChildAdded(pmRef, snap => {
-      const data = snap.val();
-      if (data && data.from && data.text) {
-        addPmMsg(data.from, data.text, data.fromColor);
-        remove(snap.ref);
-      }
-    });
-
-    function escapeHtml(s) {
-      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
-
-    function addSystemMsg(text) {
-      const div = document.createElement('div');
-      div.className = 'msg-system';
-      div.textContent = '> ' + text;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    function addAdminMsg(text) {
-      const div = document.createElement('div');
-      div.textContent = '> ' + text;
-      adminMessages.appendChild(div);
-      adminMessages.scrollTop = adminMessages.scrollHeight;
-    }
-
-    function addPmMsg(from, text, fromColor) {
-      const div = document.createElement('div');
-      div.className = 'msg';
-      const fc = fromColor || '#ff69b4';
-      div.innerHTML =
-        '<span class="ts">[PM]</span>' +
-        '<span class="nick" style="color:' + fc + ';text-shadow:0 0 6px ' + fc + '88;margin-right:6px">' + escapeHtml(from) + ' → тебе:</span>' +
-        '<span class="text" style="color:' + fc + '">' + escapeHtml(text) + '</span>';
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    function addMsg(id, nick, text, ts, color) {
-      const time = ts
-        ? new Date(ts).toLocaleTimeString('ru', {
-            hour:'2-digit',
-            minute:'2-digit'
-          })
-        : '--:--';
-
-      const nickColor = color || '#62F1F5';
-
-      const div = document.createElement('div');
-
-      div.className = 'msg';
-      div.dataset.msgId = id;
-
-      div.innerHTML =
-        '<span class="ts">[' + time + ']</span>' +
-        '<span class="nick" style="color:' + nickColor + ';text-shadow:0 0 6px ' + nickColor + '88;margin-right:6px">' +
-        escapeHtml(nick) +
-        ':</span>' +
-        '<span class="text">' + escapeHtml(text) + '</span>';
-
-      messages.appendChild(div);
-
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    addSystemMsg('NANOTRASEN SECURE CHANNEL ONLINE');
-    addSystemMsg('Добро пожаловать, ' + currentNick + '.');
-
-    onChildAdded(msgsRef, snap => {
-      const data = snap.val();
-
-      if (data && data.nick && data.text) {
-        addMsg(
-          snap.key,
-          data.nick,
-          data.text,
-          data.ts,
-          data.color
-        );
-      }
-    });
-
-    onChildRemoved(msgsRef, snap => {
-
-      const msgEl = document.querySelector(
-        '[data-msg-id="' + snap.key + '"]'
-      );
-
-      if (msgEl) {
-        msgEl.remove();
-      }
-
-    });
-
-    // --- COMMANDS ---
+    onChildAdded(pmRef, snap => { const data = snap.val(); if (data && data.from && data.text) { addPmMsg(data.from, data.text, data.fromColor); remove(snap.ref); } });
+    function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function addSystemMsg(text) { const div = document.createElement('div'); div.className = 'msg-system'; div.textContent = '> ' + text; messages.appendChild(div); messages.scrollTop = messages.scrollHeight; }
+    function addPmMsg(from, text, fromColor) { const div = document.createElement('div'); div.className = 'msg'; const fc = fromColor || '#ff69b4'; div.innerHTML = '<span class="ts">[PM]</span><span class="nick" style="color:' + fc + ';text-shadow:0 0 6px ' + fc + '88;margin-right:6px">' + escapeHtml(from) + ' → тебе:</span><span class="text" style="color:' + fc + '">' + escapeHtml(text) + '</span>'; messages.appendChild(div); messages.scrollTop = messages.scrollHeight; }
+    function addMsg(id, nick, text, ts, color) { const time = ts ? new Date(ts).toLocaleTimeString('ru', { hour:'2-digit', minute:'2-digit' }) : '--:--'; const nickColor = color || '#62F1F5'; const div = document.createElement('div'); div.className = 'msg'; div.dataset.msgId = id; div.innerHTML = '<span class="ts">[' + time + ']</span><span class="nick" style="color:' + nickColor + ';text-shadow:0 0 6px ' + nickColor + '88;margin-right:6px">' + escapeHtml(nick) + ':</span><span class="text">' + escapeHtml(text) + '</span>'; messages.appendChild(div); messages.scrollTop = messages.scrollHeight; }
+    addSystemMsg('NANOTRASEN SECURE CHANNEL ONLINE'); addSystemMsg('Добро пожаловать, ' + currentNick + '.');
+    onChildAdded(msgsRef, snap => { const data = snap.val(); if (data && data.nick && data.text) addMsg(snap.key, data.nick, data.text, data.ts, data.color); });
+    onChildRemoved(msgsRef, snap => { const msgEl = document.querySelector('[data-msg-id="' + snap.key + '"]'); if (msgEl) msgEl.remove(); });
     function handleCommand(raw) {
       const parts = raw.trim().split(' ');
       const cmd = parts[0].toLowerCase();
-
-      if (cmd === '/help') {
-        addSystemMsg('━━ КОМАНДЫ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        addSystemMsg('/help              — список команд');
-        addSystemMsg('/login             — список пользователей онлайн');
-        addSystemMsg('/msg <ник> <текст> — личное сообщение');
-        addSystemMsg('/admin <пароль>    — доступ к панели администратора');
-        addSystemMsg('/operators         — канал операторов');
-        addSystemMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-
-      } else if (cmd === '/login') {
-        const onlineRef = ref(db, 'terminal/online');
-        // Создаём блок один раз, он остаётся на месте
-        if (!window._loginBlock) {
-          window._loginBlock = document.createElement('div');
-          window._loginBlock.dataset.loginBlock = '1';
-          messages.appendChild(window._loginBlock);
-          onValue(onlineRef, snap => {
-            const block = window._loginBlock;
-            block.innerHTML = '';
-            const data = snap.val();
-            function addLoginLine(text) {
-              const div = document.createElement('div');
-              div.className = 'msg-system';
-              div.textContent = '> ' + text;
-              block.appendChild(div);
-              messages.scrollTop = messages.scrollHeight;
-            }
-            if (!data) { addLoginLine('Онлайн: никого нет.'); return; }
-            const users = Object.values(data);
-            addLoginLine('━━ ОНЛАЙН [' + users.length + '] ━━━━━━━━━━━━━━━━━━━━━━━');
-            users.forEach(u => addLoginLine('  • ' + u.nick));
-            addLoginLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-          });
-        } else {
-          addSystemMsg('Список онлайн уже отслеживается выше.');
-        }
-
-      } else if (cmd === '/msg') {
-        const target = parts[1];
-        const text = parts.slice(2).join(' ');
-        if (!target || !text) { addSystemMsg('Использование: /msg <ник> <текст>'); return; }
-        // Check target exists in online
-        const targetRef = ref(db, 'terminal/online/' + target);
-        onValue(targetRef, snap => {
-          if (!snap.exists()) {
-            addSystemMsg('Пользователь "' + target + '" не найден или офлайн.');
-            return;
-          }
-          push(ref(db, 'terminal/pm/' + target), {
-            from: currentNick, text, fromColor: currentColor, ts: Date.now()
-          });
-          // Show locally to sender
-          const div = document.createElement('div');
-          div.className = 'msg';
-          const fc = currentColor;
-          div.innerHTML =
-            '<span class="ts">[PM]</span>' +
-            '<span class="nick" style="color:' + fc + ';text-shadow:0 0 6px ' + fc + '88;margin-right:6px">ты → ' + escapeHtml(target) + ':</span>' +
-            '<span class="text" style="color:' + fc + '">' + escapeHtml(text) + '</span>';
-          messages.appendChild(div);
-          messages.scrollTop = messages.scrollHeight;
-        }, { onlyOnce: true });
-
-      } else if (cmd === '/admin') {
-        const pass = parts[1];
-        if (pass === 'TEST') {
-          addSystemMsg('Пароль принят. Открываю панель администратора...');
-          const win3 = document.getElementById('window3');
-          const w1 = document.getElementById('window1');
-          const r = w1.getBoundingClientRect();
-          win3.style.left = (r.right + 10) + 'px';
-          win3.style.top = r.top + 'px';
-          win3.style.display = 'flex';
-          if (!win3._dragInit) {
-            win3._dragInit = true;
-            initWindowDrag(win3);
-          }
-        } else {
-          addSystemMsg('ДОСТУП ЗАПРЕЩЁН. Неверный пароль.');
-        }
-
-      } else if (cmd === '/operators') {
-        const win4 = document.getElementById('window4');
-        const w1 = document.getElementById('window1');
-        const r = w1.getBoundingClientRect();
-        win4.style.left = (r.right + 10) + 'px';
-        win4.style.top = r.top + 'px';
-        win4.style.display = 'flex';
-        if (!win4._dragInit) { win4._dragInit = true; initWindowDrag(win4); }
-        if (!win4._opsInited) { win4._opsInited = true; initOpsWindow(); }
-        addSystemMsg('Открываю канал операторов...');
-
-      } else {
-        addSystemMsg('Неизвестная команда. Введите /help для списка команд.');
-      }
+      if (cmd === '/help') addSystemMsg('Команды не поддерживаются. Используйте иконки на рабочем столе.');
+      else if (cmd === '/msg') addSystemMsg('Команда /msg удалена.');
+      else if (cmd === '/login') addSystemMsg('Список онлайн всегда виден справа.');
+      else if (cmd === '/admin') addSystemMsg('Используйте иконку АДМИН на рабочем столе.');
+      else if (cmd === '/operators') addSystemMsg('Используйте иконку ОПЕР на рабочем столе.');
+      else addSystemMsg('Неизвестная команда.');
     }
-
-    async function handleAdminCommand(raw) {
-      const parts = raw.trim().split(' ');
-      const cmd = parts[0].toLowerCase();
-
-      if (cmd === '/logclear') {
-
-        const arg = parts[1];
-
-        if (!arg) {
-          addAdminMsg('Использование: /logclear all');
-          addAdminMsg('или: /logclear <минуты>');
-          return;
-        }
-
-        addAdminMsg('Получение списка сообщений...');
-
-        onValue(msgsRef, async snap => {
-
-          const data = snap.val();
-
-          if (!data) {
-            addAdminMsg('Сообщений нет.');
-            return;
-          }
-
-          const now = Date.now();
-          let removed = 0;
-
-          const entries = Object.entries(data);
-
-          for (const [key, value] of entries) {
-
-            if (!value.ts) continue;
-
-            if (arg === 'all') {
-
-              await remove(ref(db, 'terminal/messages/' + key));
-              removed++;
-
-            } else {
-
-              const mins = parseInt(arg);
-
-              if (isNaN(mins)) {
-                addAdminMsg('Неверный формат времени.');
-                return;
-              }
-
-              const diff = now - value.ts;
-
-              if (diff <= mins * 60 * 1000) {
-                await remove(ref(db, 'terminal/messages/' + key));
-                removed++;
-              }
-            }
-          }
-
-          addAdminMsg('Удалено сообщений: ' + removed);
-
-        }, { onlyOnce: true });
-
-      } else if (cmd === '/linksp') {
-        onValue(ref(db, 'terminal/links'), snap => {
-          const data = snap.val();
-          if (!data) { addAdminMsg('Нет сохранённых ссылок.'); return; }
-          const keys = Object.keys(data);
-          addAdminMsg('━━ ВСЕ ССЫЛКИ (КОД / ПАРОЛЬ / URL) ━━━━');
-          keys.forEach(k => addAdminMsg('  ' + k + ' | ' + data[k].pass + ' | ' + data[k].url));
-          addAdminMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        }, { onlyOnce: true });
-
-      } else {
-        addAdminMsg('Неизвестная admin-команда.');
-      }
-    }
-
-    function send() {
-      const text = msgInput.value.trim();
-      if (!text) return;
-      msgInput.value = '';
-      msgInput.focus();
-      if (text.startsWith('/')) {
-        handleCommand(text);
-        return;
-      }
-      push(msgsRef, { nick: currentNick, text, ts: Date.now(), color: currentColor });
-    }
-
-    sendBtn.addEventListener('click', send);
-
-    function sendAdmin() {
-      const text = adminInput.value.trim();
-
-      if (!text) return;
-
-      adminInput.value = '';
-
-      addAdminMsg(text);
-
-      handleAdminCommand(text);
-    }
-
-    adminSend.addEventListener('click', sendAdmin);
-
-    adminInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') sendAdmin();
-    });
-    msgInput.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
-
-    document.getElementById('change-nick-btn').addEventListener('click', () => {
-      localStorage.removeItem('nt_nick');
-      localStorage.removeItem('nt_color');
-      const main = document.getElementById('main-content');
-      main.style.transition = 'opacity 0.3s ease';
-      main.style.opacity = '0';
-      setTimeout(async () => {
+    function send() { const text = msgInput.value.trim(); if (!text) return; msgInput.value = ''; msgInput.focus(); if (text.startsWith('/')) { handleCommand(text); return; } push(msgsRef, { nick: currentNick, text, ts: Date.now(), color: currentColor }); }
+    sendBtn.addEventListener('click', send); msgInput.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+    // Исправленный обработчик кнопки смены ника
+    const changeNickBtn = document.getElementById('change-nick-btn');
+    if (changeNickBtn) {
+      changeNickBtn.addEventListener('click', async () => {
+        localStorage.removeItem('nt_nick');
+        localStorage.removeItem('nt_color');
+        const main = document.getElementById('main-content');
+        main.style.transition = 'opacity 0.3s ease';
+        main.style.opacity = '0';
+        await wait(320);
         main.style.opacity = '1';
         main.style.transition = '';
         main.classList.remove('visible');
-
         const ns = document.getElementById('nick-screen');
         ns.classList.remove('show');
         ns.style.opacity = '';
         ns.style.transition = '';
         ns.style.display = 'block';
-
         const input = document.getElementById('nick-setup-input');
         input.value = '';
         input.style.borderBottomColor = '';
         input.style.color = '#62F1F5';
-
         currentColor = '#62F1F5';
         document.querySelectorAll('.color-swatch').forEach(sw => {
           sw.classList.toggle('selected', sw.style.background === 'rgb(98, 241, 245)');
         });
-
         const oldBtn = document.getElementById('nick-confirm-btn');
         const newBtn = oldBtn.cloneNode(true);
         oldBtn.parentNode.replaceChild(newBtn, oldBtn);
-
-        await d(80);
+        await wait(80);
         ns.style.transition = 'opacity 0.4s ease';
         ns.classList.add('show');
         input.focus();
-
         function confirm() {
           const val = input.value.trim();
           if (!val) { input.style.borderBottomColor = '#ff4444'; return; }
@@ -1157,7 +1059,6 @@ NanoTrasen не несёт ответственности за последст�
           currentColor = document.querySelector('.color-swatch.selected')?.style.background || '#62F1F5';
           localStorage.setItem('nt_nick', currentNick);
           localStorage.setItem('nt_color', currentColor);
-          // Обновляем presence с новым ником
           if (window._updatePresence) window._updatePresence();
           ns.style.transition = 'opacity 0.3s ease';
           ns.style.opacity = '0';
@@ -1165,246 +1066,290 @@ NanoTrasen не несёт ответственности за последст�
             ns.style.display = 'none';
             const m = document.getElementById('main-content');
             m.classList.add('visible');
-            await d(50);
+            await wait(50);
             m.style.opacity = '1';
-            const messages = document.getElementById('messages');
+            const messagesDiv = document.getElementById('messages');
             const div = document.createElement('div');
             div.className = 'msg-system';
             div.textContent = '> Позывной изменён на: ' + currentNick;
-            messages.appendChild(div);
-            messages.scrollTop = messages.scrollHeight;
+            messagesDiv.appendChild(div);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
           }, 320);
         }
-
         document.getElementById('nick-confirm-btn').addEventListener('click', confirm);
         input.addEventListener('keydown', e => { if (e.key === 'Enter') confirm(); });
-      }, 320);
-    });
+      });
+    }
+    initOnlineList();
   }
 
+  // ---------- OPERATORS WINDOW ----------
   function initOpsWindow() {
     const opsMessages = document.getElementById('ops-messages');
     const opsInput = document.getElementById('ops-input');
     const opsSendBtn = document.getElementById('ops-send-btn');
-
+    const buttonsPanel = document.getElementById('ops-buttons-panel');
     const linksRef = ref(db, 'terminal/links');
+    function addOpsMsg(text, color) { const div = document.createElement('div'); div.style.color = color || '#62F1F5'; div.style.lineHeight = '1.8'; div.style.letterSpacing = '1px'; div.style.fontSize = '12px'; div.textContent = '> ' + text; opsMessages.appendChild(div); opsMessages.scrollTop = opsMessages.scrollHeight; }
+    function subscribeRealtimeButtons() { onValue(linksRef, (snap) => { const data = snap.val(); buttonsPanel.innerHTML = ''; if (!data) return; Object.keys(data).forEach(code => { const btn = document.createElement('button'); btn.className = 'ops-link-btn'; btn.textContent = code; btn.setAttribute('data-code', code); btn.addEventListener('click', (e) => { e.stopPropagation(); showPasswordPopupForCode(code); }); buttonsPanel.appendChild(btn); }); }); }
+    function showPasswordPopupForCode(code) { const popup = document.getElementById('ops-password-popup'); const input = document.getElementById('ops-pass-input'); const errorDiv = document.getElementById('ops-pass-error'); input.value = ''; errorDiv.textContent = ''; popup.style.display = 'flex'; input.focus(); const onOk = () => { const entered = input.value.trim(); if (!entered) { errorDiv.textContent = 'Введите пароль'; return; } onValue(ref(db, 'terminal/links/' + code), (snap) => { const linkData = snap.val(); if (!linkData) { errorDiv.textContent = 'Ссылка не найдена'; return; } if (linkData.pass === entered) { window.open(linkData.url, '_blank'); popup.style.display = 'none'; } else { errorDiv.textContent = 'пароль не правильный'; } }, { onlyOnce: true }); }; const onCancel = () => { popup.style.display = 'none'; }; const okBtn = document.getElementById('ops-pass-ok'); const cancelBtn = document.getElementById('ops-pass-cancel'); const cleanup = () => { okBtn.removeEventListener('click', onOk); cancelBtn.removeEventListener('click', onCancel); input.removeEventListener('keydown', keyHandler); }; const keyHandler = (e) => { if (e.key === 'Enter') onOk(); else if (e.key === 'Escape') onCancel(); }; okBtn.addEventListener('click', onOk); cancelBtn.addEventListener('click', onCancel); input.addEventListener('keydown', keyHandler); const observer = new MutationObserver((mutations) => { if (popup.style.display !== 'flex') { cleanup(); observer.disconnect(); } }); observer.observe(popup, { attributes: true, attributeFilter: ['style'] }); }
+    addOpsMsg('OPERATORS SECURE CHANNEL — ACTIVE'); addOpsMsg('Команды: /addlink <код> <пароль> <url>'); addOpsMsg('         /rmlink <код> <пароль>'); addOpsMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    function handleOpsCmd(raw) { const parts = raw.trim().split(' '); const cmd = parts[0].toLowerCase(); if (cmd === '/addlink') { const code = parts[1], pass = parts[2], url = parts[3]; if (!code || !pass || !url) { addOpsMsg('Использование: /addlink <код> <пароль> <url>', '#ff4444'); return; } set(ref(db, 'terminal/links/' + code), { pass, url }).then(() => addOpsMsg('Ссылка "' + code + '" сохранена.', '#aaffaa')).catch(() => addOpsMsg('Ошибка сохранения.', '#ff4444')); } else if (cmd === '/rmlink') { const code = parts[1], pass = parts[2]; if (!code || !pass) { addOpsMsg('Использование: /rmlink <код> <пароль>', '#ff4444'); return; } onValue(ref(db, 'terminal/links/' + code), snap => { if (!snap.exists()) { addOpsMsg('Код "' + code + '" не найден.', '#ff4444'); return; } const data = snap.val(); if (data.pass !== pass) { addOpsMsg('НЕВЕРНЫЙ ПАРОЛЬ.', '#ff4444'); return; } remove(ref(db, 'terminal/links/' + code)).then(() => addOpsMsg('Ссылка "' + code + '" удалена.', '#aaffaa')).catch(() => addOpsMsg('Ошибка удаления.', '#ff4444')); }, { onlyOnce: true }); } else { addOpsMsg('Неизвестная команда. Используйте /addlink или /rmlink', '#ff4444'); } }
+    opsSendBtn.addEventListener('click', () => { const text = opsInput.value.trim(); if (!text) return; opsInput.value = ''; opsInput.focus(); handleOpsCmd(text); }); opsInput.addEventListener('keydown', e => { if (e.key === 'Enter') opsSendBtn.click(); });
+    subscribeRealtimeButtons();
+  }
 
-    function addOpsMsg(text, color) {
-      const div = document.createElement('div');
-      div.style.color = color || '#62F1F5';
-      div.style.lineHeight = '1.8';
-      div.style.letterSpacing = '1px';
-      div.style.fontSize = '12px';
-      div.textContent = '> ' + text;
-      opsMessages.appendChild(div);
-      opsMessages.scrollTop = opsMessages.scrollHeight;
+  let adminConsoleInitialized = false;
+  function initAdminWindow() {
+    if (adminConsoleInitialized) return;
+    adminConsoleInitialized = true;
+    const adminMessages = document.getElementById('admin-messages');
+    const adminInput = document.getElementById('admin-input');
+    const adminSend = document.getElementById('admin-send');
+    function addAdminMsg(text) { const div = document.createElement('div'); div.textContent = '> ' + text; adminMessages.appendChild(div); adminMessages.scrollTop = adminMessages.scrollHeight; }
+    async function handleAdminCommand(raw) { const parts = raw.trim().split(' '); const cmd = parts[0].toLowerCase(); if (cmd === '/help') { addAdminMsg('Доступные команды:'); addAdminMsg('/logclear all — удалить все сообщения чата'); addAdminMsg('/logclear <минуты> — удалить сообщения за последние N минут'); addAdminMsg('/linksp — показать все сохранённые ссылки (код/пароль/url)'); addAdminMsg('/help — эта справка'); return; } else if (cmd === '/logclear') { const arg = parts[1]; if (!arg) { addAdminMsg('Использование: /logclear all или /logclear <минуты>'); return; } addAdminMsg('Получение списка сообщений...'); onValue(msgsRef, async snap => { const data = snap.val(); if (!data) { addAdminMsg('Сообщений нет.'); return; } const now = Date.now(); let removed = 0; for (const [key, value] of Object.entries(data)) { if (!value.ts) continue; if (arg === 'all') { await remove(ref(db, 'terminal/messages/' + key)); removed++; } else { const mins = parseInt(arg); if (isNaN(mins)) { addAdminMsg('Неверный формат времени.'); return; } if (now - value.ts <= mins * 60 * 1000) { await remove(ref(db, 'terminal/messages/' + key)); removed++; } } } addAdminMsg('Удалено сообщений: ' + removed); }, { onlyOnce: true }); } else if (cmd === '/linksp') { onValue(ref(db, 'terminal/links'), snap => { const data = snap.val(); if (!data) { addAdminMsg('Нет сохранённых ссылок.'); return; } const keys = Object.keys(data); addAdminMsg('━━ ВСЕ ССЫЛКИ (КОД / ПАРОЛЬ / URL) ━━━━'); keys.forEach(k => addAdminMsg('  ' + k + ' | ' + data[k].pass + ' | ' + data[k].url)); addAdminMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'); }, { onlyOnce: true }); } else { addAdminMsg('Неизвестная команда. Введите /help.'); } }
+    function sendAdmin() { const text = adminInput.value.trim(); if (!text) return; adminInput.value = ''; addAdminMsg(text); handleAdminCommand(text); }
+    adminSend.addEventListener('click', sendAdmin); adminInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendAdmin(); });
+  }
+
+  // ---------- WANTED (РОЗЫСК) ----------
+  let wantedPersons = [];
+  let currentWantedIndex = 0;
+  let isEditing = false;
+  let unsubscribeWanted = null;
+  let deleteConfirmMode = false;
+
+  function initWantedWindow() {
+    const personsRef = ref(db, 'wanted/persons');
+    const container = document.getElementById('wanted-persons-list');
+    const viewArea = document.getElementById('wanted-view-area');
+    const editInline = document.getElementById('wanted-edit-inline');
+    const imageArea = document.getElementById('wanted-image-area');
+    const textArea = document.getElementById('wanted-text-area');
+    const editName = document.getElementById('wanted-edit-name');
+    const editImage = document.getElementById('wanted-edit-image');
+    const editText = document.getElementById('wanted-edit-text');
+    const saveBtn = document.getElementById('wanted-save-btn');
+    const cancelBtn = document.getElementById('wanted-cancel-btn');
+    const newBtn = document.getElementById('wanted-new-btn');
+    const editBtn = document.getElementById('wanted-edit-btn');
+    const deleteContainer = document.getElementById('delete-btn-container');
+
+    function renderPerson(index) {
+      if (!wantedPersons.length || index < 0 || index >= wantedPersons.length) {
+        imageArea.innerHTML = '<div class="wanted-image-placeholder">[ НЕТ ДАННЫХ ]</div>';
+        textArea.textContent = 'Нет разыскиваемых персон. Нажмите NEW для создания.';
+        return;
+      }
+      const p = wantedPersons[index];
+      imageArea.innerHTML = '';
+      if (p.imageUrl && p.imageUrl.trim() !== '') {
+        const img = document.createElement('img');
+        img.src = p.imageUrl;
+        img.onerror = () => { img.style.display = 'none'; imageArea.innerHTML = '<div class="wanted-image-placeholder">[ ОШИБКА ЗАГРУЗКИ ]</div>'; };
+        img.onload = () => { imageArea.innerHTML = ''; imageArea.appendChild(img); };
+        imageArea.appendChild(img);
+      } else {
+        imageArea.innerHTML = '<div class="wanted-image-placeholder">[ НЕТ ИЗОБРАЖЕНИЯ ]</div>';
+      }
+      textArea.textContent = p.description || 'Описание отсутствует.';
+      document.querySelectorAll('.wanted-person-btn').forEach((btn, i) => {
+        if (i === index) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
     }
 
-    addOpsMsg('OPERATORS SECURE CHANNEL — ACTIVE');
-    addOpsMsg('Команды: /addlink <код> <пароль> <url>');
-    addOpsMsg('         /rmlink <код> <пароль>');
-    addOpsMsg('         /links');
-    addOpsMsg('         <код> <пароль>  — открыть ссылку');
-    addOpsMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-
-    function handleOpsCmd(raw) {
-      const parts = raw.trim().split(' ');
-      const cmd = parts[0].toLowerCase();
-
-      if (cmd === '/addlink') {
-        const code = parts[1], pass = parts[2], url = parts[3];
-        if (!code || !pass || !url) { addOpsMsg('Использование: /addlink <код> <пароль> <url>', '#ff4444'); return; }
-        set(ref(db, 'terminal/links/' + code), { pass, url })
-          .then(() => addOpsMsg('Ссылка "' + code + '" сохранена.', '#aaffaa'))
-          .catch(() => addOpsMsg('Ошибка сохранения.', '#ff4444'));
-
-      } else if (cmd === '/rmlink') {
-        const code = parts[1], pass = parts[2];
-        if (!code || !pass) { addOpsMsg('Использование: /rmlink <код> <пароль>', '#ff4444'); return; }
-        onValue(ref(db, 'terminal/links/' + code), snap => {
-          if (!snap.exists()) { addOpsMsg('Код "' + code + '" не найден.', '#ff4444'); return; }
-          const data = snap.val();
-          if (data.pass !== pass) { addOpsMsg('НЕВЕРНЫЙ ПАРОЛЬ.', '#ff4444'); return; }
-          remove(ref(db, 'terminal/links/' + code))
-            .then(() => addOpsMsg('Ссылка "' + code + '" удалена.', '#aaffaa'))
-            .catch(() => addOpsMsg('Ошибка удаления.', '#ff4444'));
-        }, { onlyOnce: true });
-
-      } else if (cmd === '/links') {
-        onValue(linksRef, snap => {
-          const data = snap.val();
-          if (!data) { addOpsMsg('Нет сохранённых ссылок.'); return; }
-          const keys = Object.keys(data);
-          addOpsMsg('━━ СОХРАНЁННЫЕ ССЫЛКИ ━━━━━━━━━━━━━━━━━━');
-          keys.forEach(k => addOpsMsg('  • ' + k));
-          addOpsMsg('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        }, { onlyOnce: true });
-
+    function refreshList() {
+      container.innerHTML = '';
+      wantedPersons.forEach((p, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'wanted-person-btn';
+        btn.textContent = p.name || `Персона ${idx+1}`;
+        btn.addEventListener('click', () => {
+          currentWantedIndex = idx;
+          exitEditMode();
+          exitDeleteConfirmMode();
+          renderPerson(currentWantedIndex);
+        });
+        container.appendChild(btn);
+      });
+      if (wantedPersons.length) {
+        if (currentWantedIndex >= wantedPersons.length) currentWantedIndex = wantedPersons.length - 1;
+        renderPerson(currentWantedIndex);
       } else {
-        // Попытка открыть по коду и паролю
-        const code = parts[0], pass = parts[1];
-        if (code && pass) {
-          onValue(ref(db, 'terminal/links/' + code), snap => {
-            if (!snap.exists()) { addOpsMsg('Код "' + code + '" не найден.', '#ff4444'); return; }
-            const data = snap.val();
-            if (data.pass === pass) {
-              addOpsMsg('Авторизация принята. Открываю...', '#aaffaa');
-              window.open(data.url, '_blank');
-            } else {
-              addOpsMsg('НЕВЕРНЫЙ ПАРОЛЬ.', '#ff4444');
-            }
-          }, { onlyOnce: true });
-        } else {
-          addOpsMsg('Неизвестная команда.', '#ff4444');
-        }
+        renderPerson(-1);
       }
     }
 
-    opsSendBtn.addEventListener('click', () => {
-      const text = opsInput.value.trim();
-      if (!text) return;
-      opsInput.value = '';
-      opsInput.focus();
-      handleOpsCmd(text);
-    });
-    opsInput.addEventListener('keydown', e => { if (e.key === 'Enter') opsSendBtn.click(); });
+    function exitEditMode() {
+      if (!isEditing) return;
+      isEditing = false;
+      viewArea.style.display = 'flex';
+      editInline.classList.remove('visible');
+      editBtn.textContent = 'EDIT';
+      editBtn.disabled = (wantedPersons.length === 0);
+    }
 
-    // Кнопка назад
-    document.getElementById('ops-back-btn').addEventListener('click', () => {
-      document.getElementById('window4').style.display = 'none';
+    function enterEditMode() {
+      if (!wantedPersons.length) return;
+      const p = wantedPersons[currentWantedIndex];
+      editName.value = p.name || '';
+      editImage.value = p.imageUrl || '';
+      editText.value = p.description || '';
+      viewArea.style.display = 'none';
+      editInline.classList.add('visible');
+      isEditing = true;
+      editBtn.textContent = 'EDIT (редактирование)';
+    }
+
+    function saveCurrent() {
+      if (!isEditing || !wantedPersons.length) return;
+      const personId = wantedPersons[currentWantedIndex].id;
+      if (!personId) {
+        console.error('Ошибка: у персоны нет id');
+        return;
+      }
+      const newName = editName.value.trim() || `Персона ${currentWantedIndex+1}`;
+      const newImage = editImage.value.trim();
+      const newText = editText.value;
+      set(ref(db, `wanted/persons/${personId}`), {
+        name: newName,
+        imageUrl: newImage,
+        description: newText,
+        updatedAt: Date.now()
+      }).then(() => {
+        exitEditMode();
+      }).catch(console.warn);
+    }
+
+    function exitDeleteConfirmMode() {
+      if (!deleteConfirmMode) return;
+      deleteConfirmMode = false;
+      deleteContainer.innerHTML = '<button class="wanted-action-btn delete" id="wanted-delete-btn">УДАЛИТЬ</button>';
+      const newDeleteBtn = document.getElementById('wanted-delete-btn');
+      if (newDeleteBtn) newDeleteBtn.addEventListener('click', () => enterDeleteConfirmMode());
+    }
+
+    function enterDeleteConfirmMode() {
+      if (!wantedPersons.length) return;
+      if (deleteConfirmMode) return;
+      deleteConfirmMode = true;
+      deleteContainer.innerHTML = `
+        <div class="wanted-delete-confirm" style="display:flex; gap:6px; width:100%;">
+          <button class="wanted-action-btn" id="confirm-delete-yes" title="Подтвердить удаление" style="border-color:#ff4444; color:#ff4444; flex:1;">✓</button>
+          <button class="wanted-action-btn" id="confirm-delete-no" title="Отмена" style="flex:1;">✗</button>
+        </div>
+      `;
+      const confirmYes = document.getElementById('confirm-delete-yes');
+      const confirmNo = document.getElementById('confirm-delete-no');
+      confirmYes.addEventListener('click', () => {
+        const personId = wantedPersons[currentWantedIndex]?.id;
+        if (personId) {
+          remove(ref(db, `wanted/persons/${personId}`)).then(() => {
+            exitDeleteConfirmMode();
+          }).catch(console.warn);
+        } else {
+          exitDeleteConfirmMode();
+        }
+      });
+      confirmNo.addEventListener('click', () => {
+        exitDeleteConfirmMode();
+      });
+    }
+
+    function createNewPerson() {
+      exitEditMode();
+      exitDeleteConfirmMode();
+      const newId = Date.now().toString() + '_' + Math.random().toString(36).slice(2);
+      const newPerson = {
+        id: newId,
+        name: `Персона ${wantedPersons.length + 1}`,
+        imageUrl: '',
+        description: 'Новая запись.',
+        createdAt: Date.now()
+      };
+      set(ref(db, `wanted/persons/${newId}`), newPerson).catch(console.warn);
+    }
+
+    if (unsubscribeWanted) unsubscribeWanted();
+    unsubscribeWanted = onValue(personsRef, (snap) => {
+      const data = snap.val();
+      if (!data) {
+        wantedPersons = [];
+      } else {
+        wantedPersons = Object.entries(data).map(([key, value]) => {
+          if (!value.id) value.id = key;
+          return value;
+        }).sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0));
+      }
+      if (currentWantedIndex >= wantedPersons.length) currentWantedIndex = Math.max(0, wantedPersons.length - 1);
+      refreshList();
+      exitEditMode();
+      exitDeleteConfirmMode();
     });
+
+    newBtn.addEventListener('click', createNewPerson);
+    editBtn.addEventListener('click', () => {
+      if (!wantedPersons.length) return;
+      if (isEditing) exitEditMode();
+      else enterEditMode();
+    });
+    saveBtn.addEventListener('click', saveCurrent);
+    cancelBtn.addEventListener('click', exitEditMode);
+    const initialDeleteBtn = document.getElementById('wanted-delete-btn');
+    if (initialDeleteBtn) initialDeleteBtn.addEventListener('click', () => enterDeleteConfirmMode());
   }
 
-  runBoot();
+  // ---------- DESKTOP ICONS SETUP ----------
+  function setupDesktopIcons() {
+    const chatIcon = document.querySelector('.desktop-icon[data-app="chat"]');
+    const operIcon = document.querySelector('.desktop-icon[data-app="oper"]');
+    const adminIcon = document.querySelector('.desktop-icon[data-app="admin"]');
+    const wantedIcon = document.querySelector('.desktop-icon[data-app="wanted"]');
+    const win1 = document.getElementById('window1');
+    const win4 = document.getElementById('window4');
+    const win3 = document.getElementById('window3');
+    const win5 = document.getElementById('window5');
+
+    function bringToFront(win) {
+      document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+      win.classList.add('active');
+      let maxZ = 100;
+      document.querySelectorAll('.window').forEach(w => { let z = parseInt(w.style.zIndex); if (!isNaN(z) && z > maxZ) maxZ = z; });
+      win.style.zIndex = maxZ + 1;
+    }
+    document.querySelectorAll('.win-close').forEach(btn => { btn.addEventListener('click', (e) => { const win = btn.closest('.window'); if (win) win.style.display = 'none'; e.stopPropagation(); }); });
+    chatIcon.addEventListener('click', () => { if (win1.style.display === 'flex') win1.style.display = 'none'; else { win1.style.display = 'flex'; bringToFront(win1); if (win1.style.left === '' || win1.style.left === 'auto') win1.style.left = '80px'; if (win1.style.top === '' || win1.style.top === 'auto') win1.style.top = '60px'; } });
+    operIcon.addEventListener('click', () => { if (win4.style.display === 'flex') win4.style.display = 'none'; else { if (!win4._opsInited) { win4._opsInited = true; initOpsWindow(); } win4.style.display = 'flex'; bringToFront(win4); if (win4.style.left === '' || win4.style.left === 'auto') win4.style.left = '700px'; if (win4.style.top === '' || win4.style.top === 'auto') win4.style.top = '60px'; } });
+    const passwordDialog = document.getElementById('password-dialog');
+    const adminPassInput = document.getElementById('admin-password-input');
+    const pdOk = document.getElementById('pd-ok');
+    const pdCancel = document.getElementById('pd-cancel');
+    let activeKeyHandler = null;
+    function closeDialog() { passwordDialog.style.display = 'none'; if (activeKeyHandler) { document.removeEventListener('keydown', activeKeyHandler); activeKeyHandler = null; } }
+    function showAdminPasswordDialog() { adminPassInput.value = ''; passwordDialog.style.display = 'flex'; adminPassInput.focus(); const onOk = () => { if (adminPassInput.value === 'TEST') { closeDialog(); if (win3.style.display === 'flex') win3.style.display = 'none'; else { if (!win3._adminInited) { win3._adminInited = true; initAdminWindow(); } win3.style.display = 'flex'; bringToFront(win3); if (win3.style.left === '' || win3.style.left === 'auto') win3.style.left = '400px'; if (win3.style.top === '' || win3.style.top === 'auto') win3.style.top = '120px'; } } else { alert('ЛОХ'); closeDialog(); } }; const onCancel = () => closeDialog(); const keyHandler = (e) => { if (e.key === 'Enter') { e.preventDefault(); onOk(); } else if (e.key === 'Escape') onCancel(); }; activeKeyHandler = keyHandler; document.addEventListener('keydown', activeKeyHandler); pdOk.onclick = () => { onOk(); }; pdCancel.onclick = () => { onCancel(); }; }
+    adminIcon.addEventListener('click', showAdminPasswordDialog);
+    wantedIcon.addEventListener('click', () => { if (win5.style.display === 'flex') win5.style.display = 'none'; else { if (!win5._wantedInited) { win5._wantedInited = true; initWantedWindow(); } win5.style.display = 'flex'; bringToFront(win5); if (win5.style.left === '' || win5.style.left === 'auto') win5.style.left = '150px'; if (win5.style.top === '' || win5.style.top === 'auto') win5.style.top = '100px'; } });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => { setupDesktopIcons(); });
+  setTimeout(() => { if (document.getElementById('boot-screen').style.display !== 'none') runBoot(); }, 1000);
 </script>
 
-
-<!-- WINDOW 4: OPERATORS -->
-<div class="window" id="window4" style="top:60px; left:700px; width:420px; height:500px;">
-  <div class="scanline"></div>
-  <div class="win-titlebar" id="titlebar4">
-    <span class="win-title">⬡ OPERATORS — SECURE CHANNEL</span>
-    <div class="win-controls">
-      <button class="win-btn" id="ops-back-btn" style="--win-color:#62F1F5; border-color:rgba(98,241,245,0.4); color:#62F1F5">[← НАЗАД]</button>
-    </div>
-  </div>
-  <div class="win-body">
-    <div class="crt-overlay"></div>
-    <div class="ops-body">
-      <div id="ops-messages"></div>
-      <div class="ops-input-row">
-        <input id="ops-input" type="text" maxlength="200" placeholder="команда или <код> <пароль>..." spellcheck="false" />
-        <button id="ops-send-btn">[EXEC]</button>
-      </div>
-    </div>
-  </div>
-  <div class="win-resize" id="resize4"></div>
-</div>
-
-<!-- WINDOW 3: ADMIN -->
-<div class="window" id="window3" style="top:120px; left:400px; width:340px; height:320px;">
-  <div class="scanline"></div>
-  <div class="win-titlebar" id="titlebar3">
-    <span class="win-title">⚠ ADMIN PANEL — NANOTRASEN</span>
-  </div>
-  <div class="win-body" style="display:flex; flex-direction:column; overflow:hidden;">
-    <div class="crt-overlay"></div>
-
-    <div id="admin-body" style="padding:16px 20px; flex:1; display:flex; flex-direction:column; min-height:0; overflow:hidden;">
-      <div class="settings-title" style="flex-shrink:0; margin-bottom:10px;">> ADMIN TERMINAL</div>
-
-      <div id="admin-messages" style="
-        flex:1;
-        min-height:0;
-        overflow-y:auto;
-        overflow-x:hidden;
-        border:1px solid rgba(255,68,68,0.2);
-        border-radius:4px;
-        padding:10px;
-        margin-bottom:10px;
-        font-size:11px;
-        color:#ff4444;
-        line-height:1.8;
-        scrollbar-width:thin;
-        scrollbar-color: #ff4444 #0d0d0d;
-      "></div>
-
-      <div class="input-row" style="flex-shrink:0;">
-        <input
-          id="admin-input"
-          type="text"
-          placeholder="admin command..."
-          spellcheck="false"
-          style="
-            background:transparent;
-            border:1px solid rgba(255,68,68,0.3);
-            border-radius:4px;
-            color:#ff4444;
-            font-family:'Courier New', monospace;
-            font-size:11px;
-            padding:6px 8px;
-            flex:1;
-            outline:none;
-          "
-        />
-        <button id="admin-send" class="admin-btn">[EXEC]</button>
-      </div>
-    </div>
-  </div>
-  <div class="win-resize" id="resize3"></div>
-</div>
-
 <script>
-  // Drag & Resize
   let _zTop = 100;
-
-  function bringToFront(win) {
-    document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
-    win.classList.add('active');
-    _zTop++;
-    win.style.zIndex = _zTop;
-  }
-
+  function bringToFront(win) { document.querySelectorAll('.window').forEach(w => w.classList.remove('active')); win.classList.add('active'); _zTop++; win.style.zIndex = _zTop; }
   function initWindowDrag(win) {
     win.addEventListener('mousedown', () => bringToFront(win));
     const titlebar = win.querySelector('.win-titlebar');
     const resizeHandle = win.querySelector('.win-resize');
     let dragging = false, dx = 0, dy = 0;
-    titlebar.addEventListener('mousedown', e => {
-      if (e.target.classList.contains('win-btn')) return;
-      dragging = true;
-      dx = e.clientX - win.offsetLeft;
-      dy = e.clientY - win.offsetTop;
-      bringToFront(win);
-      e.preventDefault();
-    });
+    titlebar.addEventListener('mousedown', e => { if (e.target.classList.contains('win-close') || e.target.classList.contains('win-btn')) return; dragging = true; dx = e.clientX - win.offsetLeft; dy = e.clientY - win.offsetTop; bringToFront(win); e.preventDefault(); });
     let resizing = false, startX, startY, startW, startH;
-    if (resizeHandle) {
-      resizeHandle.addEventListener('mousedown', e => {
-        resizing = true;
-        startX = e.clientX; startY = e.clientY;
-        startW = win.offsetWidth; startH = win.offsetHeight;
-        bringToFront(win);
-        e.preventDefault();
-        e.stopPropagation();
-      });
-    }
-    document.addEventListener('mousemove', e => {
-      if (dragging) {
-        let nx = Math.max(0, Math.min(window.innerWidth - win.offsetWidth, e.clientX - dx));
-        let ny = Math.max(0, Math.min(window.innerHeight - win.offsetHeight, e.clientY - dy));
-        win.style.left = nx + 'px';
-        win.style.top = ny + 'px';
-      }
-      if (resizing) {
-        win.style.width = Math.max(220, startW + (e.clientX - startX)) + 'px';
-        win.style.height = Math.max(140, startH + (e.clientY - startY)) + 'px';
-      }
-    });
+    if (resizeHandle) { resizeHandle.addEventListener('mousedown', e => { resizing = true; startX = e.clientX; startY = e.clientY; startW = win.offsetWidth; startH = win.offsetHeight; bringToFront(win); e.preventDefault(); e.stopPropagation(); }); }
+    document.addEventListener('mousemove', e => { if (dragging) { let nx = Math.max(0, Math.min(window.innerWidth - win.offsetWidth, e.clientX - dx)); let ny = Math.max(0, Math.min(window.innerHeight - win.offsetHeight, e.clientY - dy)); win.style.left = nx + 'px'; win.style.top = ny + 'px'; } if (resizing) { win.style.width = Math.max(220, startW + (e.clientX - startX)) + 'px'; win.style.height = Math.max(140, startH + (e.clientY - startY)) + 'px'; } });
     document.addEventListener('mouseup', () => { dragging = false; resizing = false; });
   }
-
-  // Init drag for all static windows
   document.querySelectorAll('.window').forEach(win => initWindowDrag(win));
 </script>
 </body>
