@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Doc Importer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #output {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            white-space: pre-wrap; /* Сохраняет переносы строк */
+        }
+        .status {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Импорт текста из Google Docs в реальном времени</h2>
+    <p>Убедитесь, что у документа включен доступ <strong>"Все, у кого есть ссылка"</strong>.</p>
+    
+    <input type="text" id="docUrl" placeholder="Вставьте ссылку на Google Документ...">
+    <button onclick="loadGoogleDoc()">Импортировать</button>
+    
+    <div id="status" class="status"></div>
+    
+    <textarea id="output" placeholder="Здесь появится текст из документа..."></textarea>
+</div>
+
+<script>
+async function loadGoogleDoc() {
+    const urlInput = document.getElementById('docUrl').value.trim();
+    const outputArea = document.getElementById('output');
+    const statusDiv = document.getElementById('status');
+    
+    if (!urlInput) {
+        statusDiv.style.color = 'red';
+        statusDiv.innerText = 'Пожалуйста, вставьте ссылку.';
+        return;
+    }
+    
+    statusDiv.style.color = 'blue';
+    statusDiv.innerText = 'Загрузка текста...';
+    outputArea.value = '';
+
+    try {
+        // Регулярное выражение для извлечения ID документа из ссылки
+        const matches = urlInput.match(/\/d\/([a-zA-Z0-9-_]+)/);
+        if (!matches || !matches[1]) {
+            throw new Error('Неверный формат ссылки Google Docs.');
+        }
+        const docId = matches[1];
+        
+        // Ссылка на экспорт в txt формат
+        const exportUrl = `https://docs.google.com/document/d/${docId}/export?format=txt`;
+        
+        // Используем бесплатный CORS-прокси (allorigins), чтобы обойти блокировку браузера
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(exportUrl)}`;
+        
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error('Ошибка сети при запросе через прокси.');
+        
+        const data = await response.json();
+        
+        // В allorigins текст лежит внутри поля contents
+        if (data.contents) {
+            outputArea.value = data.contents;
+            statusDiv.style.color = 'green';
+            statusDiv.innerText = 'Текст успешно импортирован!';
+        } else {
+            throw new Error('Не удалось прочитать содержимое документа. Проверьте настройки доступа.');
+        }
+        
+    } catch (error) {
+        statusDiv.style.color = 'red';
+        statusDiv.innerText = `Ошибка: ${error.message}`;
+        console.error(error);
+    }
+}
+</script>
+
+</body>
+</html>
