@@ -308,148 +308,208 @@
   }
   #ops-password-popup .error-msg { color: #ff4444; font-size: 10px; }
 
-  /* WANTED WINDOW (РОЗЫСК) — исправлено растяжение по ширине */
+  /* WANTED WINDOW (РОЗЫСК) — карусель карточек по кругу */
   #window5 { display: none; --win-color: #ffaa00; border-color: #ffaa00; }
   #window5 .win-titlebar { border-bottom-color: rgba(255,170,0,0.3); }
-  .wanted-body {
-    padding: 16px 20px; flex: 1; display: flex; flex-direction: row; gap: 20px;
-    min-height: 0; overflow: hidden;
+
+  .wcar-body {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 0; overflow: hidden; position: relative; padding: 10px 8px 14px;
   }
-  .wanted-left {
-    flex: 3; display: flex; flex-direction: column; gap: 15px; min-height: 0;
-    min-width: 0; /* важно для ограничения ширины */
+  .wcar-header {
+    color: #ffaa00; letter-spacing: 3px; font-size: 10px; opacity: .7; text-align: center;
+    margin-bottom: 34px; flex-shrink: 0;
   }
-  .wanted-image-area {
-    background: #0a0a0a; border: 1px solid rgba(255,170,0,0.3);
-    border-radius: 4px;
-    height: 35%;
-    min-height: 150px;
-    max-height: 250px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    flex-shrink: 0;
+  .wcar-header .wcar-sub { font-size: 9px; opacity: .55; letter-spacing: 1.5px; margin-top: 4px; }
+
+  .wcar-tag-filters {
+    display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; width: min(420px, 100%);
+    margin-bottom: 10px; flex-shrink: 0;
   }
-  .wanted-image-area img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+  .wcar-tag-filters:empty { display: none; margin-bottom: 0; }
+  .wcar-tag-chip {
+    background: transparent; border: 1px solid rgba(255,170,0,0.4); border-radius: 10px; color: #ffaa00;
+    font-family: system-ui, -apple-system, sans-serif; font-size: 9px; letter-spacing: .5px;
+    padding: 2px 9px; cursor: pointer; opacity: .6; transition: opacity .15s, background .15s, border-color .15s;
   }
-  .wanted-image-placeholder {
-    color: rgba(255,170,0,0.3);
-    font-size: 12px;
-    letter-spacing: 2px;
+  .wcar-tag-chip:hover { opacity: .9; }
+  .wcar-tag-chip.active { opacity: 1; background: rgba(255,170,0,0.18); border-color: #ffaa00; }
+
+  .wcar-stage {
+    width: 100%; flex: 1; min-height: 0; position: relative; perspective: 1700px;
   }
-  .wanted-text-area {
-    background: #0a0a0a;
-    border: 1px solid rgba(255,170,0,0.3);
-    border-radius: 4px;
-    padding: 12px;
-    color: #ffaa00;
-    font-size: 12px;
-    line-height: 1.6;
-    overflow-y: auto;
-    overflow-x: hidden;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    flex: 1;
-    min-height: 0;
+  .wcar-ring {
+    position: absolute; inset: 0; transform-style: preserve-3d;
+    transition: transform 0.65s cubic-bezier(.22,.9,.3,1);
   }
-  .wanted-right {
-    flex: 1; min-width: 140px; display: flex; flex-direction: column;
-    border-left: 1px solid rgba(255,170,0,0.2); padding-left: 12px;
-    gap: 12px;
+  .wcar-body { --wcar-scale: 1; --wcar-card-w: 168px; --wcar-card-h: 240px; }
+  .wcar-card {
+    position: absolute; top: 50%; left: 50%;
+    width: var(--wcar-card-w); height: var(--wcar-card-h);
+    margin: calc(var(--wcar-card-h) / -2) 0 0 calc(var(--wcar-card-w) / -2);
+    transform-style: preserve-3d; backface-visibility: hidden;
+    cursor: pointer; transition: opacity .5s ease, filter .5s ease, width .25s ease, height .25s ease, margin .25s ease; user-select: none;
   }
-  .wanted-persons-list {
-    display: flex; flex-direction: column; gap: 6px;
-    max-height: 300px; overflow-y: auto;
+  .wcar-card-face {
+    width: 100%; height: 100%; background: #0a0a0a;
+    border: 1px solid rgba(255,170,0,0.5); border-radius: 5px;
+    box-shadow: 0 0 14px rgba(255,170,0,0.08), inset 0 0 18px rgba(0,0,0,0.6);
+    display: flex; flex-direction: column; overflow: hidden; position: relative;
   }
-  .wanted-person-btn {
-    background: transparent; border: 1px solid rgba(255,170,0,0.3);
-    color: #ffaa00; font-size: 11px; padding: 5px 8px;
-    text-align: left; cursor: pointer; border-radius: 3px;
-    transition: background 0.15s;
+  .wcar-card.focused .wcar-card-face {
+    border-color: #ffaa00; box-shadow: 0 0 22px rgba(255,170,0,0.35), inset 0 0 18px rgba(0,0,0,0.5);
   }
-  .wanted-person-btn:hover, .wanted-person-btn.active {
-    background: rgba(255,170,0,0.15); border-color: #ffaa00;
+  .wcar-card-tag {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    font-size: calc(8px * var(--wcar-scale)); letter-spacing: 1px; color: #ffaa00;
+    border: 1px solid rgba(255,170,0,.55); padding: 2px 6px; border-radius: 3px;
+    background: #0d0d0d; z-index: 3; white-space: nowrap; transition: background .15s, box-shadow .15s;
   }
-  .wanted-actions {
-    display: flex; gap: 8px; margin-top: 8px;
-    flex-wrap: wrap;
+  .wcar-card-tag:hover { background: rgba(255,170,0,0.15); box-shadow: 0 0 8px rgba(255,170,0,0.3); }
+  .wcar-card-tag::after { content: ' \2712'; opacity: .6; font-size: 7px; }
+  .wcar-card-status {
+    position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
+    font-size: calc(8px * var(--wcar-scale)); letter-spacing: 1px; color: #ff4444;
+    border: 1px solid rgba(255,68,68,.45); padding: 2px 6px; border-radius: 3px;
+    background: #0d0d0d; z-index: 3; white-space: nowrap;
   }
-  .wanted-action-btn {
-    background: transparent; border: 1px solid #ffaa00;
-    color: #ffaa00; font-family: 'Courier New', monospace;
-    font-size: 12px; padding: 5px 12px; cursor: pointer;
-    letter-spacing: 1px; border-radius: 3px; flex: 1;
-    text-align: center; transition: background 0.15s;
+  .wcar-card-img {
+    height: 60%; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    background: repeating-linear-gradient(45deg, rgba(255,170,0,0.04) 0 2px, transparent 2px 8px),
+                radial-gradient(circle at 50% 30%, rgba(255,170,0,0.10), transparent 70%);
+    background-size: cover; border-bottom: 1px solid rgba(255,170,0,0.25); position: relative;
   }
-  .wanted-action-btn:hover { background: rgba(255,170,0,0.1); }
-  .wanted-action-btn.delete {
-    border-color: #ff4444; color: #ff4444;
+  .wcar-avatar {
+    width: calc(46px * var(--wcar-scale)); height: calc(46px * var(--wcar-scale)); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: calc(17px * var(--wcar-scale)); font-weight: 600; letter-spacing: 1px; color: #0d0d0d;
+    box-shadow: 0 0 12px rgba(255,170,0,0.5);
   }
-  .wanted-action-btn.delete:hover { background: rgba(255,68,68,0.15); }
-  .wanted-delete-confirm {
-    display: flex; gap: 6px; width: 100%;
+  .wcar-card-img::after {
+    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 100%;
+    background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.5) 100%); pointer-events: none;
   }
-  .wanted-delete-confirm .wanted-action-btn {
-    flex: 1;
-    font-size: 16px;
-    padding: 2px 0;
+  .wcar-card-body { flex: 1; padding: 7px 8px; display: flex; flex-direction: column; gap: 3px; min-height: 0; }
+  .wcar-card-name { color: #ffaa00; font-size: calc(10.5px * var(--wcar-scale)); letter-spacing: .5px; font-weight: 600; }
+  .wcar-card-desc {
+    color: #ffaa00; opacity: .6; font-size: calc(8.3px * var(--wcar-scale)); line-height: 1.4;
+    overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
   }
-  /* Режим редактирования внутри левой панели */
-  .wanted-edit-inline {
-    display: none;
-    flex-direction: column;
-    gap: 12px;
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
+  .wcar-card-bounty { margin-top: auto; font-size: calc(8.7px * var(--wcar-scale)); color: #62F1F5; opacity: .8; letter-spacing: .5px; }
+
+  .wcar-card.add-card .wcar-card-face {
+    border-style: dashed; border-color: rgba(255,170,0,0.4); align-items: center; justify-content: center;
+    background: repeating-linear-gradient(45deg, rgba(255,170,0,0.03) 0 2px, transparent 2px 10px);
   }
-  .wanted-edit-inline.visible {
-    display: flex;
+  .wcar-card.add-card:hover .wcar-card-face { border-color: #ffaa00; box-shadow: 0 0 18px rgba(255,170,0,0.25); }
+  .wcar-add-circle {
+    width: calc(46px * var(--wcar-scale)); height: calc(46px * var(--wcar-scale)); border-radius: 50%; border: 1px solid rgba(255,170,0,0.55);
+    display: flex; align-items: center; justify-content: center; color: #ffaa00; font-size: calc(22px * var(--wcar-scale)); font-weight: 300; opacity: .8;
   }
-  .wanted-edit-field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  .wcar-add-label { margin-top: 10px; font-size: calc(8.3px * var(--wcar-scale)); letter-spacing: 1.5px; color: #ffaa00; opacity: .5; }
+
+  .wcar-controls { display: flex; align-items: center; gap: 16px; margin-top: 34px; flex-shrink: 0; }
+  .wcar-nav-btn {
+    width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(255,170,0,0.45);
+    background: transparent; color: #ffaa00; font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: background .15s, box-shadow .15s; opacity: .85;
   }
-  .wanted-edit-label {
-    font-size: 10px;
-    color: #ffaa00;
-    opacity: 0.6;
-    letter-spacing: 1px;
+  .wcar-nav-btn:hover { background: rgba(255,170,0,0.12); box-shadow: 0 0 8px rgba(255,170,0,0.25); }
+  .wcar-dots { display: flex; gap: 5px; flex-wrap: wrap; max-width: 220px; justify-content: center; }
+  .wcar-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,170,0,0.25); cursor: pointer; transition: background .2s, transform .2s; }
+  .wcar-dot.active { background: #ffaa00; transform: scale(1.4); }
+  .wcar-dot.add-dot { background: transparent; border: 1px solid rgba(255,170,0,0.4); }
+  .wcar-dot.add-dot.active { background: #ffaa00; }
+
+  .wcar-hint {
+    margin-top: 10px; font-size: 8.3px; color: #ffaa00; opacity: .35; letter-spacing: 1px;
+    text-align: center; padding: 0 14px; flex-shrink: 0;
   }
-  .wanted-edit-input {
-    background: transparent;
-    border: 1px solid rgba(255,170,0,0.4);
-    color: #ffaa00;
-    font-family: 'Courier New', monospace;
-    font-size: 12px;
-    padding: 5px 8px;
-    border-radius: 3px;
-    outline: none;
-    width: 100%;
+
+  .wcar-modal-backdrop {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: 50;
+    display: none; align-items: center; justify-content: center; padding: 14px;
   }
-  .wanted-edit-input:focus {
-    border-color: #ffaa00;
+  .wcar-modal-backdrop.open { display: flex; }
+  .wcar-modal {
+    width: 320px; max-width: 100%; background: #0d0d0d; border: 1px solid #ffaa00; border-radius: 8px;
+    box-shadow: 0 0 30px rgba(255,170,0,0.2); padding: 16px 18px; max-height: 100%; overflow-y: auto;
   }
-  .wanted-edit-buttons {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
+  .wcar-modal-title {
+    color: #ffaa00; font-size: 11px; letter-spacing: 2px; opacity: .8;
+    margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,170,0,0.25);
   }
-  .wanted-edit-btn {
-    background: transparent;
-    border: 1px solid #ffaa00;
-    color: #ffaa00;
-    font-size: 11px;
-    padding: 4px 12px;
-    cursor: pointer;
-    border-radius: 3px;
-    flex: 1;
+  .wcar-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .wcar-label { font-size: 9.5px; color: #ffaa00; opacity: .55; letter-spacing: 1px; }
+  .wcar-input, .wcar-textarea {
+    background: transparent; border: 1px solid rgba(255,170,0,0.4); border-radius: 3px;
+    color: #ffaa00; font-family: system-ui, -apple-system, sans-serif; font-size: 11.5px;
+    padding: 5px 7px; outline: none; width: 100%;
   }
+  .wcar-input:focus, .wcar-textarea:focus { border-color: #ffaa00; }
+  .wcar-textarea { resize: vertical; min-height: 50px; }
+  .wcar-tags-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+  .wcar-tags-chips:empty { margin-top: 0; }
+  .wcar-tags-chips .wcar-tag-chip.removable {
+    opacity: 1; background: rgba(255,170,0,0.15); border-color: #ffaa00; cursor: default; display: flex; align-items: center; gap: 3px;
+  }
+  .wcar-tag-chip-x { cursor: pointer; opacity: .7; }
+  .wcar-tag-chip-x:hover { opacity: 1; }
+  .wcar-tags-suggestions { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+  .wcar-tags-suggestions:empty { margin-top: 0; }
+  .wcar-tags-suggestions .wcar-tag-chip.suggestion { opacity: .4; border-style: dashed; }
+  .wcar-tags-suggestions .wcar-tag-chip.suggestion:hover { opacity: .8; }
+
+  .wcar-row { display: flex; gap: 7px; }
+  .wcar-row .wcar-input { flex: 1; min-width: 0; }
+  .wcar-crop-btn {
+    flex: 0 0 auto; background: transparent; border: 1px solid rgba(255,170,0,0.5); color: #ffaa00;
+    font-size: 9.5px; letter-spacing: 1px; padding: 0 10px; border-radius: 3px; cursor: pointer;
+    white-space: nowrap; transition: background .15s;
+  }
+  .wcar-crop-btn:hover { background: rgba(255,170,0,0.12); }
+  .wcar-crop-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .wcar-crop-thumb {
+    width: 100%; height: 90px; border: 1px solid rgba(255,170,0,0.4); border-radius: 4px;
+    background-color: #000; background-repeat: no-repeat; background-position: center; background-size: cover;
+  }
+  .wcar-buttons { display: flex; gap: 7px; margin-top: 14px; }
+  .wcar-btn {
+    flex: 1; background: transparent; border: 1px solid #ffaa00; color: #ffaa00;
+    font-size: 10.5px; letter-spacing: 1px; padding: 6px 0; border-radius: 4px; cursor: pointer;
+    transition: background .15s;
+  }
+  .wcar-btn:hover { background: rgba(255,170,0,0.12); }
+  .wcar-btn.cancel { border-color: rgba(255,170,0,0.3); color: rgba(255,170,0,0.6); }
+  .wcar-btn.delete { border-color: #ff4444; color: #ff4444; }
+  .wcar-btn.delete:hover { background: rgba(255,68,68,0.12); }
+
+  .wcar-crop-backdrop {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.9); z-index: 60;
+    display: none; align-items: center; justify-content: center; padding: 14px;
+  }
+  .wcar-crop-backdrop.open { display: flex; }
+  .wcar-crop-modal {
+    background: #0d0d0d; border: 1px solid #ffaa00; border-radius: 8px;
+    box-shadow: 0 0 40px rgba(255,170,0,0.25); padding: 14px; max-width: 100%; max-height: 100%;
+    display: flex; flex-direction: column; gap: 10px; align-items: center;
+  }
+  .wcar-crop-modal-title { color: #ffaa00; font-size: 10.5px; letter-spacing: 1.5px; opacity: .8; }
+  .wcar-crop-stage {
+    position: relative; display: inline-block; line-height: 0;
+    max-width: 460px; max-height: 200px; overflow: hidden; user-select: none; background: #000;
+  }
+  .wcar-crop-stage img { display: block; max-width: 460px; max-height: 200px; user-select: none; pointer-events: none; }
+  .wcar-crop-frame { position: absolute; border: 2px solid #ffaa00; cursor: move; box-shadow: 0 0 0 1000px rgba(0,0,0,0.65); }
+  .wcar-crop-frame-inner {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(rgba(255,170,0,0.35) 1px, transparent 1px) 0 0/100% 33.33%,
+                linear-gradient(90deg, rgba(255,170,0,0.35) 1px, transparent 1px) 0 0/33.33% 100%;
+  }
+  .wcar-crop-handle {
+    position: absolute; right: -7px; bottom: -7px; width: 14px; height: 14px;
+    border-radius: 50%; background: #ffaa00; cursor: nwse-resize; box-shadow: 0 0 6px rgba(255,170,0,0.7);
+  }
+  .wcar-crop-hint { font-size: 9px; color: #ffaa00; opacity: .5; letter-spacing: .5px; text-align: center; }
 
   #boot-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -664,37 +724,87 @@ NanoTrasen не несёт ответственности за последст�
   </div>
   <div class="win-body">
     <div class="crt-overlay"></div>
-    <div class="wanted-body">
-      <div class="wanted-left">
-        <div id="wanted-view-area" style="display:flex; flex-direction:column; gap:15px; flex:1; min-height:0;">
-          <div class="wanted-image-area" id="wanted-image-area"><div class="wanted-image-placeholder">[ ИЗОБРАЖЕНИЕ ]</div></div>
-          <div class="wanted-text-area" id="wanted-text-area"></div>
-        </div>
-        <div class="wanted-edit-inline" id="wanted-edit-inline">
-          <div class="wanted-edit-field">
-            <div class="wanted-edit-label">НАЗВАНИЕ ПЕРСОНЫ</div>
-            <input class="wanted-edit-input" id="wanted-edit-name" type="text" placeholder="Имя" />
+    <div class="wcar-body" id="wcar-body">
+      <div class="wcar-header">
+        ⚠ АРХИВ РОЗЫСКА · NANOTRASEN OS
+        <div class="wcar-sub" id="wcar-counter">00 / 00</div>
+      </div>
+
+      <div class="wcar-tag-filters" id="wcar-tag-filters"></div>
+
+      <div class="wcar-stage" id="wcar-stage">
+        <div class="wcar-ring" id="wcar-ring"></div>
+      </div>
+
+      <div class="wcar-controls">
+        <button class="wcar-nav-btn" id="wcar-prev">‹</button>
+        <div class="wcar-dots" id="wcar-dots"></div>
+        <button class="wcar-nav-btn" id="wcar-next">›</button>
+      </div>
+
+      <div class="wcar-hint">ПЕРЕТАЩИТЕ ДЛЯ ВРАЩЕНИЯ · КЛИК НА FILE# — РЕДАКТИРОВАТЬ · ⊕ — НОВОЕ ДЕЛО</div>
+
+      <!-- МОДАЛКА СОЗДАНИЯ / РЕДАКТИРОВАНИЯ -->
+      <div class="wcar-modal-backdrop" id="wcar-modal-backdrop">
+        <div class="wcar-modal">
+          <div class="wcar-modal-title" id="wcar-modal-title">НОВОЕ ДЕЛО</div>
+          <div class="wcar-field">
+            <div class="wcar-label">ИМЯ / ПОЗЫВНОЙ</div>
+            <input class="wcar-input" id="wcar-m-name" type="text" placeholder="Например: Н. ВОЛКОВ">
           </div>
-          <div class="wanted-edit-field">
-            <div class="wanted-edit-label">URL КАРТИНКИ</div>
-            <input class="wanted-edit-input" id="wanted-edit-image" type="text" placeholder="https://..." />
+          <div class="wcar-field">
+            <div class="wcar-label">СТАТУС</div>
+            <input class="wcar-input" id="wcar-m-status" type="text" placeholder="РАЗЫСКИВАЕТСЯ">
           </div>
-          <div class="wanted-edit-field">
-            <div class="wanted-edit-label">ОПИСАНИЕ</div>
-            <textarea class="wanted-edit-input" id="wanted-edit-text" rows="4" placeholder="Текст описания..." style="resize: vertical;"></textarea>
+          <div class="wcar-field">
+            <div class="wcar-label">НАГРАДА</div>
+            <input class="wcar-input" id="wcar-m-bounty" type="text" placeholder="5 000 кр.">
           </div>
-          <div class="wanted-edit-buttons">
-            <button class="wanted-edit-btn" id="wanted-save-btn">СОХРАНИТЬ</button>
-            <button class="wanted-edit-btn" id="wanted-cancel-btn">ОТМЕНА</button>
+          <div class="wcar-field">
+            <div class="wcar-label">ОПИСАНИЕ</div>
+            <textarea class="wcar-textarea" id="wcar-m-desc" placeholder="Причина розыска..."></textarea>
+          </div>
+          <div class="wcar-field">
+            <div class="wcar-label">ТЕГИ</div>
+            <input class="wcar-input" id="wcar-m-tag-input" type="text" placeholder="ввести тег и нажать Enter или запятую">
+            <div class="wcar-tags-chips" id="wcar-m-tags-chips"></div>
+            <div class="wcar-tags-suggestions" id="wcar-m-tags-suggestions"></div>
+          </div>
+          <div class="wcar-field">
+            <div class="wcar-label">ССЫЛКА НА КАРТИНКУ (необязательно)</div>
+            <div class="wcar-row">
+              <input class="wcar-input" id="wcar-m-image" type="text" placeholder="https://...">
+              <button type="button" class="wcar-crop-btn" id="wcar-m-crop-btn" disabled>ОБЛАСТЬ</button>
+            </div>
+          </div>
+          <div class="wcar-field" id="wcar-m-crop-preview-field" style="display:none;">
+            <div class="wcar-label">ПРЕДПРОСМОТР НА КАРТОЧКЕ</div>
+            <div class="wcar-crop-thumb" id="wcar-m-crop-thumb"></div>
+          </div>
+          <div class="wcar-buttons">
+            <button class="wcar-btn cancel" id="wcar-m-cancel">ОТМЕНА</button>
+            <button class="wcar-btn delete" id="wcar-m-delete" style="display:none;">УДАЛИТЬ</button>
+            <button class="wcar-btn" id="wcar-m-save">СОХРАНИТЬ</button>
           </div>
         </div>
       </div>
-      <div class="wanted-right">
-        <div class="wanted-persons-list" id="wanted-persons-list"></div>
-        <div class="wanted-actions" id="wanted-actions">
-          <button class="wanted-action-btn" id="wanted-new-btn">NEW</button>
-          <button class="wanted-action-btn" id="wanted-edit-btn">EDIT</button>
-          <div id="delete-btn-container" style="flex:1"><button class="wanted-action-btn delete" id="wanted-delete-btn">УДАЛИТЬ</button></div>
+
+      <!-- РЕДАКТОР ОБЛАСТИ КАРТИНКИ -->
+      <div class="wcar-crop-backdrop" id="wcar-crop-backdrop">
+        <div class="wcar-crop-modal">
+          <div class="wcar-crop-modal-title">ВЫБЕРИТЕ ОБЛАСТЬ ДЛЯ КАРТОЧКИ</div>
+          <div class="wcar-crop-stage" id="wcar-crop-stage">
+            <img id="wcar-crop-full-img" src="" alt="">
+            <div class="wcar-crop-frame" id="wcar-crop-frame">
+              <div class="wcar-crop-frame-inner"></div>
+              <div class="wcar-crop-handle" id="wcar-crop-handle"></div>
+            </div>
+          </div>
+          <div class="wcar-crop-hint">ПЕРЕТАЩИТЕ РАМКУ — ПЕРЕМЕСТИТЬ · ТЯНИТЕ ЗА УГОЛОК — МАСШТАБ</div>
+          <div class="wcar-buttons">
+            <button class="wcar-btn cancel" id="wcar-crop-cancel">ОТМЕНА</button>
+            <button class="wcar-btn" id="wcar-crop-confirm">ПРИМЕНИТЬ</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1112,192 +1222,557 @@ NanoTrasen не несёт ответственности за последст�
     adminSend.addEventListener('click', sendAdmin); adminInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendAdmin(); });
   }
 
-  // ---------- WANTED (РОЗЫСК) ----------
-  let wantedPersons = [];
-  let currentWantedIndex = 0;
-  let isEditing = false;
+  // ---------- WANTED (РОЗЫСК) — карусель карточек по кругу ----------
+  let wantedPersons = []; // отфильтрованный список — то, что реально рендерится в карусели
+  let allPersons = []; // полный список из Firebase, без фильтра (нужен для списка тегов)
   let unsubscribeWanted = null;
-  let deleteConfirmMode = false;
 
   function initWantedWindow() {
     const personsRef = ref(db, 'wanted/persons');
-    const container = document.getElementById('wanted-persons-list');
-    const viewArea = document.getElementById('wanted-view-area');
-    const editInline = document.getElementById('wanted-edit-inline');
-    const imageArea = document.getElementById('wanted-image-area');
-    const textArea = document.getElementById('wanted-text-area');
-    const editName = document.getElementById('wanted-edit-name');
-    const editImage = document.getElementById('wanted-edit-image');
-    const editText = document.getElementById('wanted-edit-text');
-    const saveBtn = document.getElementById('wanted-save-btn');
-    const cancelBtn = document.getElementById('wanted-cancel-btn');
-    const newBtn = document.getElementById('wanted-new-btn');
-    const editBtn = document.getElementById('wanted-edit-btn');
-    const deleteContainer = document.getElementById('delete-btn-container');
 
-    function renderPerson(index) {
-      if (!wantedPersons.length || index < 0 || index >= wantedPersons.length) {
-        imageArea.innerHTML = '<div class="wanted-image-placeholder">[ НЕТ ДАННЫХ ]</div>';
-        textArea.textContent = 'Нет разыскиваемых персон. Нажмите NEW для создания.';
-        return;
-      }
-      const p = wantedPersons[index];
-      imageArea.innerHTML = '';
-      if (p.imageUrl && p.imageUrl.trim() !== '') {
-        const img = document.createElement('img');
-        img.src = p.imageUrl;
-        img.onerror = () => { img.style.display = 'none'; imageArea.innerHTML = '<div class="wanted-image-placeholder">[ ОШИБКА ЗАГРУЗКИ ]</div>'; };
-        img.onload = () => { imageArea.innerHTML = ''; imageArea.appendChild(img); };
-        imageArea.appendChild(img);
-      } else {
-        imageArea.innerHTML = '<div class="wanted-image-placeholder">[ НЕТ ИЗОБРАЖЕНИЯ ]</div>';
-      }
-      textArea.textContent = p.description || 'Описание отсутствует.';
-      document.querySelectorAll('.wanted-person-btn').forEach((btn, i) => {
-        if (i === index) btn.classList.add('active');
-        else btn.classList.remove('active');
-      });
+    // соотношение сторон фото-зоны карточки (см. .wcar-card / .wcar-card-img в CSS)
+    const CARD_IMG_ASPECT = 132 / (188 * 0.60);
+
+    function pickRandomColor(){
+      const hue = Math.floor(Math.random() * 360);
+      return `hsl(${hue}, 78%, 58%)`;
     }
 
-    function refreshList() {
-      container.innerHTML = '';
-      wantedPersons.forEach((p, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'wanted-person-btn';
-        btn.textContent = p.name || `Персона ${idx+1}`;
-        btn.addEventListener('click', () => {
-          currentWantedIndex = idx;
-          exitEditMode();
-          exitDeleteConfirmMode();
-          renderPerson(currentWantedIndex);
+    function cropToBgStyle(crop){
+      if (!crop) return '';
+      const { x, y, w, h } = crop;
+      const sizeX = w > 0 ? (100 / w) : 100;
+      const sizeY = h > 0 ? (100 / h) : 100;
+      const posX = w < 1 ? (100 * x / (1 - w)) : 0;
+      const posY = h < 1 ? (100 * y / (1 - h)) : 0;
+      return `background-size:${sizeX}% ${sizeY}%; background-position:${posX}% ${posY}%;`;
+    }
+
+    const ring = document.getElementById('wcar-ring');
+    const stage = document.getElementById('wcar-stage');
+    const wcarBody = document.getElementById('wcar-body');
+    const dotsWrap = document.getElementById('wcar-dots');
+    const counter = document.getElementById('wcar-counter');
+
+    let current = 0;
+    let rotation = 0;
+    let angleStep = 0;
+    let radius = 0;
+    let cardEls = [];
+
+    // ---------- адаптивный размер карточек под размер окна ----------
+    // базовые величины подобраны для стандартного окна 700x500 (масштаб = 1)
+    const WCAR_BASE_CARD_W = 168;
+    const WCAR_BASE_CARD_H = 240;
+    const WCAR_BASE_STAGE_H = 250; // высота "полки" карусели в стандартном окне
+    const WCAR_MIN_SCALE = 0.7;
+    const WCAR_MAX_SCALE = 2.2;
+    let wcarScale = 1;
+
+    function updateCardScale(){
+      const w = stage.clientWidth;
+      const h = stage.clientHeight;
+      if (!w || !h) return;
+      // высота "полки" — главный ограничитель для карточки-портрета
+      let scale = h / WCAR_BASE_STAGE_H;
+      // не даём карточкам стать шире, чем позволяет ширина окна (запас на ~2.4 карточки рядом)
+      const maxByWidth = w / (WCAR_BASE_CARD_W * 1.4);
+      scale = Math.min(scale, maxByWidth);
+      scale = Math.max(WCAR_MIN_SCALE, Math.min(WCAR_MAX_SCALE, scale));
+      if (Math.abs(scale - wcarScale) < 0.02) return; // не пересобирать по мелочи
+      wcarScale = scale;
+      wcarBody.style.setProperty('--wcar-scale', wcarScale.toFixed(3));
+      wcarBody.style.setProperty('--wcar-card-w', Math.round(WCAR_BASE_CARD_W * wcarScale) + 'px');
+      wcarBody.style.setProperty('--wcar-card-h', Math.round(WCAR_BASE_CARD_H * wcarScale) + 'px');
+      buildCards();
+    }
+
+    // ---------- фильтр по тегам ----------
+    const tagFiltersWrap = document.getElementById('wcar-tag-filters');
+    let wcarActiveTags = new Set();
+
+    function renderTagFilterBar(){
+      const tagSet = new Set();
+      allPersons.forEach(p => (p.tags || []).forEach(t => tagSet.add(t)));
+      // если тег исчез у всех карточек — убираем его из активного фильтра
+      Array.from(wcarActiveTags).forEach(t => { if (!tagSet.has(t)) wcarActiveTags.delete(t); });
+      tagFiltersWrap.innerHTML = '';
+      Array.from(tagSet).sort((a,b) => a.localeCompare(b, 'ru')).forEach(tag => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'wcar-tag-chip' + (wcarActiveTags.has(tag) ? ' active' : '');
+        chip.textContent = tag;
+        chip.addEventListener('click', () => {
+          if (wcarActiveTags.has(tag)) wcarActiveTags.delete(tag); else wcarActiveTags.add(tag);
+          applyWantedFilter();
         });
-        container.appendChild(btn);
+        tagFiltersWrap.appendChild(chip);
       });
-      if (wantedPersons.length) {
-        if (currentWantedIndex >= wantedPersons.length) currentWantedIndex = wantedPersons.length - 1;
-        renderPerson(currentWantedIndex);
-      } else {
-        renderPerson(-1);
-      }
     }
 
-    function exitEditMode() {
-      if (!isEditing) return;
-      isEditing = false;
-      viewArea.style.display = 'flex';
-      editInline.classList.remove('visible');
-      editBtn.textContent = 'EDIT';
-      editBtn.disabled = (wantedPersons.length === 0);
+    function applyWantedFilter(){
+      wantedPersons = allPersons.filter(p => {
+        const matchesTags = wcarActiveTags.size === 0 || (p.tags || []).some(t => wcarActiveTags.has(t));
+        return matchesTags;
+      });
+      renderTagFilterBar();
+      buildCards();
     }
 
-    function enterEditMode() {
-      if (!wantedPersons.length) return;
-      const p = wantedPersons[currentWantedIndex];
-      editName.value = p.name || '';
-      editImage.value = p.imageUrl || '';
-      editText.value = p.description || '';
-      viewArea.style.display = 'none';
-      editInline.classList.add('visible');
-      isEditing = true;
-      editBtn.textContent = 'EDIT (редактирование)';
-    }
+    function buildCards(){
+      ring.innerHTML = '';
+      dotsWrap.innerHTML = '';
+      cardEls = [];
 
-    function saveCurrent() {
-      if (!isEditing || !wantedPersons.length) return;
-      const personId = wantedPersons[currentWantedIndex].id;
-      if (!personId) {
-        console.error('Ошибка: у персоны нет id');
-        return;
-      }
-      const newName = editName.value.trim() || `Персона ${currentWantedIndex+1}`;
-      const newImage = editImage.value.trim();
-      const newText = editText.value;
-      set(ref(db, `wanted/persons/${personId}`), {
-        name: newName,
-        imageUrl: newImage,
-        description: newText,
-        updatedAt: Date.now()
-      }).then(() => {
-        exitEditMode();
-      }).catch(console.warn);
-    }
+      const total = wantedPersons.length + 1; // +1 = карта "добавить"
+      angleStep = 360 / total;
+      radius = total <= 1
+        ? 0
+        : Math.min(520 * wcarScale, Math.max(0, Math.round((100 * wcarScale) / Math.tan(Math.PI / total))));
 
-    function exitDeleteConfirmMode() {
-      if (!deleteConfirmMode) return;
-      deleteConfirmMode = false;
-      deleteContainer.innerHTML = '<button class="wanted-action-btn delete" id="wanted-delete-btn">УДАЛИТЬ</button>';
-      const newDeleteBtn = document.getElementById('wanted-delete-btn');
-      if (newDeleteBtn) newDeleteBtn.addEventListener('click', () => enterDeleteConfirmMode());
-    }
+      wantedPersons.forEach((p, i) => {
+        const el = document.createElement('div');
+        el.className = 'wcar-card';
+        el.dataset.index = i;
+        el.style.transform = `rotateY(${i * angleStep}deg) translateZ(${radius}px)`;
+        const hasImg = !!(p.imageUrl && p.imageUrl.trim());
+        const photoStyle = hasImg
+          ? (p.crop ? `style="${cropToBgStyle(p.crop)} background-image:url('${p.imageUrl}');"` : `style="background-image:url('${p.imageUrl}'); background-size:cover; background-position:center;"`)
+          : '';
+        el.innerHTML = `
+          <div class="wcar-card-tag" data-edit="${i}">FILE #${String(i+1).padStart(3,'0')}</div>
+          <div class="wcar-card-face">
+            <div class="wcar-card-img" ${photoStyle}>
+              ${hasImg ? '' : `<div class="wcar-avatar" style="background:${p.color || '#ffaa00'};">${(p.name || '?').trim()[0] || '?'}</div>`}
+            </div>
+            <div class="wcar-card-body">
+              <div class="wcar-card-name">${p.name || 'БЕЗ ИМЕНИ'}</div>
+              <div class="wcar-card-desc">${p.description || 'Описание отсутствует.'}</div>
+              <div class="wcar-card-bounty">НАГРАДА: ${p.bounty || '—'}</div>
+            </div>
+          </div>
+          <div class="wcar-card-status">${p.status || 'РАЗЫСКИВАЕТСЯ'}</div>
+        `;
+        el.addEventListener('click', () => goTo(i));
+        const tag = el.querySelector('.wcar-card-tag');
+        tag.addEventListener('mousedown', e => e.stopPropagation());
+        tag.addEventListener('click', e => { e.stopPropagation(); openModal(i); });
+        ring.appendChild(el);
+        cardEls.push(el);
+      });
 
-    function enterDeleteConfirmMode() {
-      if (!wantedPersons.length) return;
-      if (deleteConfirmMode) return;
-      deleteConfirmMode = true;
-      deleteContainer.innerHTML = `
-        <div class="wanted-delete-confirm" style="display:flex; gap:6px; width:100%;">
-          <button class="wanted-action-btn" id="confirm-delete-yes" title="Подтвердить удаление" style="border-color:#ff4444; color:#ff4444; flex:1;">✓</button>
-          <button class="wanted-action-btn" id="confirm-delete-no" title="Отмена" style="flex:1;">✗</button>
+      // карта "добавить" — всегда последняя
+      const addEl = document.createElement('div');
+      addEl.className = 'wcar-card add-card';
+      addEl.dataset.index = wantedPersons.length;
+      addEl.style.transform = `rotateY(${wantedPersons.length * angleStep}deg) translateZ(${radius}px)`;
+      addEl.innerHTML = `
+        <div class="wcar-card-face">
+          <div class="wcar-add-circle">+</div>
+          <div class="wcar-add-label">НОВОЕ ДЕЛО</div>
         </div>
       `;
-      const confirmYes = document.getElementById('confirm-delete-yes');
-      const confirmNo = document.getElementById('confirm-delete-no');
-      confirmYes.addEventListener('click', () => {
-        const personId = wantedPersons[currentWantedIndex]?.id;
-        if (personId) {
-          remove(ref(db, `wanted/persons/${personId}`)).then(() => {
-            exitDeleteConfirmMode();
-          }).catch(console.warn);
-        } else {
-          exitDeleteConfirmMode();
-        }
+      addEl.addEventListener('click', () => { goTo(wantedPersons.length); openModal(null); });
+      ring.appendChild(addEl);
+      cardEls.push(addEl);
+
+      // точки
+      for (let i = 0; i < total; i++){
+        const d = document.createElement('div');
+        d.className = 'wcar-dot' + (i === wantedPersons.length ? ' add-dot' : '');
+        d.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(d);
+      }
+
+      if (current > wantedPersons.length) current = wantedPersons.length;
+      rotation = -current * angleStep;
+      render();
+    }
+
+    function normalize(a){
+      a = a % 360;
+      if (a > 180) a -= 360;
+      if (a < -180) a += 360;
+      return a;
+    }
+
+    function render(){
+      const total = wantedPersons.length + 1;
+      ring.style.transform = `rotateY(${rotation}deg)`;
+      cardEls.forEach((el, i) => {
+        const eff = normalize(i * angleStep + rotation);
+        const abs = Math.abs(eff);
+        const opacity = Math.max(0.12, 1 - (abs/180) * 0.92);
+        const blur = Math.min(4, (abs/180) * 5);
+        const dim = 1 - Math.min(0.55, (abs/180) * 0.7);
+        el.style.opacity = opacity;
+        el.style.filter = `blur(${blur}px) brightness(${dim})`;
+        el.style.zIndex = Math.round(1000 - abs);
+        el.classList.toggle('focused', i === current);
       });
-      confirmNo.addEventListener('click', () => {
-        exitDeleteConfirmMode();
+      const dots = dotsWrap.querySelectorAll('.wcar-dot');
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+      if (current === wantedPersons.length) {
+        counter.textContent = 'НОВОЕ ДЕЛО';
+      } else if (wantedPersons.length) {
+        counter.textContent = String(current+1).padStart(2,'0') + ' / ' + String(total-1).padStart(2,'0');
+      } else {
+        counter.textContent = '00 / 00';
+      }
+    }
+
+    // переход по кратчайшему пути (не облетает круг целиком в обратную сторону)
+    function goTo(i){
+      const total = wantedPersons.length + 1;
+      current = ((i % total) + total) % total;
+      const target = -current * angleStep;
+      let diff = target - rotation;
+      diff = ((diff + 180) % 360 + 360) % 360 - 180;
+      rotation += diff;
+      render();
+    }
+
+    document.getElementById('wcar-prev').addEventListener('click', () => goTo(current - 1));
+    document.getElementById('wcar-next').addEventListener('click', () => goTo(current + 1));
+
+    // ---------- перетаскивание карусели ----------
+    let dragging = false, startX = 0, startRotation = 0;
+
+    stage.addEventListener('mousedown', e => {
+      dragging = true; startX = e.clientX; startRotation = rotation;
+      ring.style.transition = 'none';
+    });
+    window.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      rotation = startRotation + dx * 0.35;
+      render();
+    });
+    window.addEventListener('mouseup', () => {
+      if (!dragging) return;
+      dragging = false;
+      ring.style.transition = '';
+      const nearest = Math.round(-rotation / angleStep);
+      goTo(nearest);
+    });
+
+    stage.addEventListener('touchstart', e => {
+      dragging = true; startX = e.touches[0].clientX; startRotation = rotation;
+      ring.style.transition = 'none';
+    }, {passive:true});
+    stage.addEventListener('touchmove', e => {
+      if (!dragging) return;
+      const dx = e.touches[0].clientX - startX;
+      rotation = startRotation + dx * 0.35;
+      render();
+    }, {passive:true});
+    stage.addEventListener('touchend', () => {
+      if (!dragging) return;
+      dragging = false;
+      ring.style.transition = '';
+      const nearest = Math.round(-rotation / angleStep);
+      goTo(nearest);
+    });
+
+    // ---------- модалка создания / редактирования ----------
+    const backdrop = document.getElementById('wcar-modal-backdrop');
+    const modalTitle = document.getElementById('wcar-modal-title');
+    const mName = document.getElementById('wcar-m-name');
+    const mStatus = document.getElementById('wcar-m-status');
+    const mBounty = document.getElementById('wcar-m-bounty');
+    const mDesc = document.getElementById('wcar-m-desc');
+    const mImage = document.getElementById('wcar-m-image');
+    const mCropBtn = document.getElementById('wcar-m-crop-btn');
+    const mCropPreviewField = document.getElementById('wcar-m-crop-preview-field');
+    const mCropThumb = document.getElementById('wcar-m-crop-thumb');
+    const mDelete = document.getElementById('wcar-m-delete');
+    const mTagInput = document.getElementById('wcar-m-tag-input');
+    const mTagsChips = document.getElementById('wcar-m-tags-chips');
+    const mTagsSuggestions = document.getElementById('wcar-m-tags-suggestions');
+
+    let editingIndex = null; // null = создание новой карточки
+    let selectedColor = pickRandomColor();
+    let pendingCrop = null;
+    let currentTags = [];
+
+    function renderTagChips(){
+      mTagsChips.innerHTML = '';
+      currentTags.forEach(tag => {
+        const chip = document.createElement('span');
+        chip.className = 'wcar-tag-chip removable';
+        chip.textContent = tag;
+        const x = document.createElement('span');
+        x.className = 'wcar-tag-chip-x';
+        x.textContent = '×';
+        x.addEventListener('click', () => { currentTags = currentTags.filter(t => t !== tag); renderTagChips(); renderTagSuggestions(); });
+        chip.appendChild(x);
+        mTagsChips.appendChild(chip);
       });
     }
 
-    function createNewPerson() {
-      exitEditMode();
-      exitDeleteConfirmMode();
-      const newId = Date.now().toString() + '_' + Math.random().toString(36).slice(2);
-      const newPerson = {
-        id: newId,
-        name: `Персона ${wantedPersons.length + 1}`,
-        imageUrl: '',
-        description: 'Новая запись.',
-        createdAt: Date.now()
+    function renderTagSuggestions(){
+      mTagsSuggestions.innerHTML = '';
+      const tagSet = new Set();
+      allPersons.forEach(p => (p.tags || []).forEach(t => tagSet.add(t)));
+      const remaining = Array.from(tagSet).filter(t => !currentTags.some(ct => ct.toLowerCase() === t.toLowerCase()));
+      remaining.sort((a,b) => a.localeCompare(b, 'ru')).forEach(tag => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'wcar-tag-chip suggestion';
+        chip.textContent = '+ ' + tag;
+        chip.addEventListener('click', () => addTag(tag));
+        mTagsSuggestions.appendChild(chip);
+      });
+    }
+
+    function addTag(raw){
+      const tag = raw.trim();
+      if (!tag) return;
+      if (!currentTags.some(t => t.toLowerCase() === tag.toLowerCase())) currentTags.push(tag);
+      mTagInput.value = '';
+      renderTagChips();
+      renderTagSuggestions();
+    }
+
+    mTagInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addTag(mTagInput.value); }
+    });
+    mTagInput.addEventListener('blur', () => { if (mTagInput.value.trim()) addTag(mTagInput.value); });
+
+    function updateThumb(){
+      if (!mImage.value.trim()){
+        mCropPreviewField.style.display = 'none';
+        return;
+      }
+      mCropPreviewField.style.display = 'flex';
+      mCropThumb.style.backgroundImage = `url('${mImage.value.trim()}')`;
+      const styleStr = pendingCrop ? cropToBgStyle(pendingCrop) : 'background-size:cover; background-position:center;';
+      const cleaned = (mCropThumb.getAttribute('style') || '').split(';').filter(s => !s.includes('background-size') && !s.includes('background-position')).join(';');
+      mCropThumb.setAttribute('style', cleaned + ';' + styleStr);
+    }
+
+    mImage.addEventListener('input', () => {
+      const has = !!mImage.value.trim();
+      mCropBtn.disabled = !has;
+      pendingCrop = null; // новая ссылка — сбрасываем ранее выбранную область
+      updateThumb();
+    });
+
+    mCropBtn.addEventListener('click', () => {
+      if (!mImage.value.trim()) return;
+      openCropEditor(mImage.value.trim(), pendingCrop);
+    });
+
+    function openModal(index){
+      editingIndex = index;
+      if (index === null){
+        modalTitle.textContent = 'НОВОЕ ДЕЛО';
+        mName.value = ''; mStatus.value = 'РАЗЫСКИВАЕТСЯ'; mBounty.value = ''; mDesc.value = ''; mImage.value = '';
+        selectedColor = pickRandomColor(); // новой карточке — случайный цвет метки
+        pendingCrop = null;
+        mCropBtn.disabled = true;
+        mCropPreviewField.style.display = 'none';
+        mDelete.style.display = 'none';
+        currentTags = [];
+      } else {
+        const p = wantedPersons[index];
+        modalTitle.textContent = `РЕДАКТИРОВАНИЕ · FILE #${String(index+1).padStart(3,'0')}`;
+        mName.value = p.name || '';
+        mStatus.value = p.status || 'РАЗЫСКИВАЕТСЯ';
+        mBounty.value = p.bounty || '';
+        mDesc.value = p.description || '';
+        mImage.value = p.imageUrl || '';
+        selectedColor = p.color || pickRandomColor(); // при редактировании цвет сохраняется как есть
+        pendingCrop = p.crop || null;
+        mCropBtn.disabled = !mImage.value.trim();
+        updateThumb();
+        mDelete.style.display = '';
+        currentTags = Array.isArray(p.tags) ? [...p.tags] : [];
+      }
+      mTagInput.value = '';
+      renderTagChips();
+      renderTagSuggestions();
+      backdrop.classList.add('open');
+      setTimeout(() => mName.focus(), 50);
+    }
+
+    function closeModal(){ backdrop.classList.remove('open'); }
+
+    document.getElementById('wcar-m-cancel').addEventListener('click', closeModal);
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+
+    document.getElementById('wcar-m-save').addEventListener('click', () => {
+      const data = {
+        name: (mName.value.trim() || 'БЕЗ ИМЕНИ').toUpperCase(),
+        status: mStatus.value.trim() || 'РАЗЫСКИВАЕТСЯ',
+        bounty: mBounty.value.trim() || '—',
+        description: mDesc.value.trim() || 'Описание отсутствует.',
+        color: selectedColor,
+        imageUrl: mImage.value.trim(),
+        crop: pendingCrop,
+        tags: currentTags
       };
-      set(ref(db, `wanted/persons/${newId}`), newPerson).catch(console.warn);
+      if (editingIndex === null){
+        const newId = Date.now().toString() + '_' + Math.random().toString(36).slice(2);
+        pendingNewFocusId = newId;
+        set(ref(db, `wanted/persons/${newId}`), { ...data, id: newId, createdAt: Date.now() }).catch(console.warn);
+      } else {
+        const person = wantedPersons[editingIndex];
+        const personId = person.id;
+        if (!personId) { console.error('Ошибка: у персоны нет id'); return; }
+        set(ref(db, `wanted/persons/${personId}`), { ...data, id: personId, createdAt: person.createdAt || Date.now(), updatedAt: Date.now() }).catch(console.warn);
+      }
+      closeModal();
+    });
+
+    mDelete.addEventListener('click', () => {
+      if (editingIndex === null) return;
+      const personId = wantedPersons[editingIndex]?.id;
+      if (personId) remove(ref(db, `wanted/persons/${personId}`)).catch(console.warn);
+      closeModal();
+    });
+
+    // ---------- редактор области картинки (кроп) ----------
+    const cropBackdrop = document.getElementById('wcar-crop-backdrop');
+    const cropFullImg = document.getElementById('wcar-crop-full-img');
+    const cropFrame = document.getElementById('wcar-crop-frame');
+    const cropHandle = document.getElementById('wcar-crop-handle');
+
+    let frame = { left:0, top:0, width:0, height:0 };
+    let dispW = 0, dispH = 0;
+
+    function openCropEditor(url, existingCrop){
+      cropFullImg.onload = () => {
+        dispW = cropFullImg.clientWidth;
+        dispH = cropFullImg.clientHeight;
+        if (existingCrop){
+          frame.width = existingCrop.w * dispW;
+          frame.height = existingCrop.h * dispH;
+          frame.left = existingCrop.x * dispW;
+          frame.top = existingCrop.y * dispH;
+        } else {
+          if (dispW / dispH > CARD_IMG_ASPECT){
+            frame.height = dispH * 0.86;
+            frame.width = frame.height * CARD_IMG_ASPECT;
+          } else {
+            frame.width = dispW * 0.86;
+            frame.height = frame.width / CARD_IMG_ASPECT;
+          }
+          frame.left = (dispW - frame.width) / 2;
+          frame.top = (dispH - frame.height) / 2;
+        }
+        clampFrame();
+        paintFrame();
+      };
+      cropFullImg.src = url;
+      cropBackdrop.classList.add('open');
     }
 
+    function clampFrame(){
+      frame.width = Math.min(frame.width, dispW);
+      frame.height = frame.width / CARD_IMG_ASPECT;
+      if (frame.height > dispH){ frame.height = dispH; frame.width = frame.height * CARD_IMG_ASPECT; }
+      frame.left = Math.max(0, Math.min(dispW - frame.width, frame.left));
+      frame.top = Math.max(0, Math.min(dispH - frame.height, frame.top));
+    }
+
+    function paintFrame(){
+      cropFrame.style.left = frame.left + 'px';
+      cropFrame.style.top = frame.top + 'px';
+      cropFrame.style.width = frame.width + 'px';
+      cropFrame.style.height = frame.height + 'px';
+    }
+
+    // перетаскивание рамки
+    let movingFrame = false, mfStartX = 0, mfStartY = 0, mfStartLeft = 0, mfStartTop = 0;
+    cropFrame.addEventListener('mousedown', e => {
+      if (e.target === cropHandle) return;
+      movingFrame = true; mfStartX = e.clientX; mfStartY = e.clientY;
+      mfStartLeft = frame.left; mfStartTop = frame.top;
+      e.preventDefault();
+    });
+    window.addEventListener('mousemove', e => {
+      if (!movingFrame) return;
+      frame.left = mfStartLeft + (e.clientX - mfStartX);
+      frame.top = mfStartTop + (e.clientY - mfStartY);
+      frame.left = Math.max(0, Math.min(dispW - frame.width, frame.left));
+      frame.top = Math.max(0, Math.min(dispH - frame.height, frame.top));
+      paintFrame();
+    });
+    window.addEventListener('mouseup', () => { movingFrame = false; });
+
+    // изменение размера (масштаб) через уголок, с сохранением пропорции
+    let resizingFrame = false, rfStartX = 0, rfStartWidth = 0;
+    cropHandle.addEventListener('mousedown', e => {
+      resizingFrame = true; rfStartX = e.clientX; rfStartWidth = frame.width;
+      e.preventDefault(); e.stopPropagation();
+    });
+    window.addEventListener('mousemove', e => {
+      if (!resizingFrame) return;
+      let newWidth = rfStartWidth + (e.clientX - rfStartX);
+      newWidth = Math.max(40, newWidth);
+      let newHeight = newWidth / CARD_IMG_ASPECT;
+      newWidth = Math.min(newWidth, dispW - frame.left);
+      newHeight = Math.min(newHeight, dispH - frame.top);
+      if (newWidth / CARD_IMG_ASPECT > newHeight) newWidth = newHeight * CARD_IMG_ASPECT;
+      else newHeight = newWidth / CARD_IMG_ASPECT;
+      frame.width = newWidth; frame.height = newHeight;
+      paintFrame();
+    });
+    window.addEventListener('mouseup', () => { resizingFrame = false; });
+
+    document.getElementById('wcar-crop-cancel').addEventListener('click', () => {
+      cropBackdrop.classList.remove('open');
+    });
+    document.getElementById('wcar-crop-confirm').addEventListener('click', () => {
+      pendingCrop = {
+        x: frame.left / dispW,
+        y: frame.top / dispH,
+        w: frame.width / dispW,
+        h: frame.height / dispH
+      };
+      updateThumb();
+      cropBackdrop.classList.remove('open');
+    });
+
+    // ---------- адаптация размера карточек: следим за реальным размером "полки" ----------
+    // ResizeObserver реагирует на ЛЮБОЕ изменение размера #wcar-stage — а его размер зависит
+    // и от размера самого окна #window5 (при resize/fullscreen), и от размера окна "браузера",
+    // в который это окно вложено как вкладка (см. window._browserSystem), т.к. .win-body
+    // (и всё внутри) устроено на flex и просто повторяет размер своего контейнера.
+    if (window.ResizeObserver) {
+      if (!stage._wcarResizeObserver) {
+        stage._wcarResizeObserver = new ResizeObserver(() => updateCardScale());
+        stage._wcarResizeObserver.observe(stage);
+      }
+    } else {
+      // фолбэк для очень старых браузеров без ResizeObserver
+      window.addEventListener('resize', updateCardScale);
+    }
+    updateCardScale();
+
+    // ---------- подключение к Firebase ----------
+    var pendingNewFocusId = null;
     if (unsubscribeWanted) unsubscribeWanted();
     unsubscribeWanted = onValue(personsRef, (snap) => {
       const data = snap.val();
+      let list;
       if (!data) {
-        wantedPersons = [];
+        list = [];
       } else {
-        wantedPersons = Object.entries(data).map(([key, value]) => {
+        list = Object.entries(data).map(([key, value]) => {
           if (!value.id) value.id = key;
+          if (!value.color) value.color = pickRandomColor(); // легаси-запись без сохранённого цвета
           return value;
         }).sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0));
       }
-      if (currentWantedIndex >= wantedPersons.length) currentWantedIndex = Math.max(0, wantedPersons.length - 1);
-      refreshList();
-      exitEditMode();
-      exitDeleteConfirmMode();
+      allPersons = list;
+      applyWantedFilter();
+      if (pendingNewFocusId){
+        const idx = wantedPersons.findIndex(p => p.id === pendingNewFocusId);
+        if (idx >= 0){ goTo(idx); pendingNewFocusId = null; }
+      }
     });
-
-    newBtn.addEventListener('click', createNewPerson);
-    editBtn.addEventListener('click', () => {
-      if (!wantedPersons.length) return;
-      if (isEditing) exitEditMode();
-      else enterEditMode();
-    });
-    saveBtn.addEventListener('click', saveCurrent);
-    cancelBtn.addEventListener('click', exitEditMode);
-    const initialDeleteBtn = document.getElementById('wanted-delete-btn');
-    if (initialDeleteBtn) initialDeleteBtn.addEventListener('click', () => enterDeleteConfirmMode());
   }
 
   // ---------- DESKTOP ICONS SETUP ----------
