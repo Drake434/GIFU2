@@ -732,6 +732,64 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
   border-bottom: 1px solid rgba(98,241,245,0.2);
   outline: none; color: #00FF41; font-family: 'Courier New', monospace; font-size: 13px;
 }
+
+/* RADAR */
+.nt-radar{opacity:0;transition:opacity .3s;margin:4px 0;display:flex;justify-content:center}
+.nt-radar.show{opacity:1}
+.nt-radar svg{width:100%;max-width:380px;height:auto;overflow:visible}
+.rd-name{fill:#00FF41;font:12px 'Courier New',monospace;letter-spacing:1px}
+.rd-val{fill:#62F1F5;font:12px 'Courier New',monospace}
+/* CYBERWARE MENU */
+.cy-root{display:flex;flex-direction:column;height:100%;gap:8px;min-height:0}
+.cy-bar{display:flex;gap:6px;flex-shrink:0}
+.cy-mbtn{background:transparent;border:1px solid rgba(0,255,65,.3);color:#00FF41;font:12px 'Courier New',monospace;letter-spacing:2px;padding:3px 12px;cursor:pointer;opacity:.5;transition:opacity .15s,background .15s}
+.cy-mbtn:hover{opacity:.85}.cy-mbtn.on{opacity:1;background:rgba(0,255,65,.1)}
+.cy-body{flex:1;min-height:0}
+.cy-compact{overflow-y:auto;display:flex;flex-direction:column;gap:5px;padding-right:4px}
+.cy-ico{width:30px;height:30px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid color-mix(in srgb,var(--cc) 55%,transparent);background:rgba(0,0,0,.45);color:var(--cc);font-size:16px;overflow:hidden;border-radius:3px;text-shadow:0 0 8px var(--cc)}
+.cy-ico img{width:100%;height:100%;object-fit:cover}
+.cy-row{--cc:#00FF41;border:1px solid color-mix(in srgb,var(--cc) 30%,transparent);background:color-mix(in srgb,var(--cc) 5%,black);border-radius:3px;flex-shrink:0;transition:box-shadow .25s,border-color .25s}
+.cy-row.open{border-color:var(--cc);box-shadow:0 0 14px color-mix(in srgb,var(--cc) 30%,transparent)}
+.cy-rhead{display:flex;align-items:center;gap:10px;padding:6px 10px;cursor:pointer;user-select:none}
+.cy-rname{color:var(--cc);font-size:14px;letter-spacing:1px;flex:1}
+.cy-rtag{font-size:11px;color:var(--cc);opacity:.55;letter-spacing:1px}
+.cy-rarrow{color:var(--cc);transition:transform .25s}.cy-row.open .cy-rarrow{transform:rotate(90deg)}
+.cy-rwrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.cy-row.open .cy-rwrap{grid-template-rows:1fr}
+.cy-rinner{overflow:hidden;min-height:0}
+.cy-dbody{padding:8px 12px 12px;border-top:1px solid color-mix(in srgb,var(--cc) 18%,transparent)}
+.cy-img{display:block;width:100%;max-height:170px;object-fit:cover;border:1px solid color-mix(in srgb,var(--cc) 40%,transparent);border-radius:3px;margin-bottom:8px}
+.cy-dline{font-size:13px;line-height:1.7;margin-bottom:3px}
+.cy-note{font-size:12px;line-height:1.6;margin-top:6px}
+.cy-stagewrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.cy-stage{position:relative;background:#050a0d center/100% 100% no-repeat;border:1px solid rgba(98,241,245,.25);overflow:hidden;flex-shrink:0}
+.cy-lines{position:absolute;inset:0;width:100%;height:100%}
+.cy-line{stroke:var(--cc);stroke-width:1.2;vector-effect:non-scaling-stroke;opacity:.35;transition:opacity .2s}
+.cy-line.sel{opacity:1;stroke-width:2;filter:drop-shadow(0 0 3px var(--cc))}
+.cy-adot{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--cc);transform:translate(-50%,-50%);box-shadow:0 0 8px var(--cc);pointer-events:none}
+.cy-ibtn{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:transform .15s}
+.cy-ibtn{z-index:3}
+.cy-ibtn .cy-ico{width:var(--isz,38px);height:var(--isz,38px);font-size:calc(var(--isz,38px)*.5);background:rgba(0,0,0,.7)}
+.cy-ibtn:hover{transform:translate(-50%,-50%) scale(1.12)}
+.cy-ibtn.sel .cy-ico{box-shadow:0 0 14px var(--cc);background:color-mix(in srgb,var(--cc) 25%,black)}
+.cy-pop{position:absolute;height:62%;width:29%;z-index:5;display:flex;flex-direction:column;border:1px solid var(--cc);background:rgba(5,10,13,.93);box-shadow:0 0 20px color-mix(in srgb,var(--cc) 35%,transparent);animation:cypop .28s ease-out}
+.cy-pop.l{left:1.5%}.cy-pop.r{right:1.5%}
+.cy-pophead{display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid color-mix(in srgb,var(--cc) 25%,transparent)}
+.cy-popname{flex:1;color:var(--cc);font-size:14px;letter-spacing:1px}
+.cy-popbody{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--cc) #0d0d0d}
+@keyframes cypop{from{transform:scale(.08);opacity:0}to{transform:scale(1);opacity:1}}
+.cy-pick{position:relative;width:100%;aspect-ratio:1024/572;background:#000 center/100% 100% no-repeat;border:1px solid rgba(98,241,245,.3);cursor:crosshair}
+.cy-pickmark{position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid #62F1F5;background:rgba(98,241,245,.3);transform:translate(-50%,-50%);pointer-events:none}
+
+/* STORAGE (хранилище данных в карточке) */
+.cy-store{margin-top:8px;border:1px dashed color-mix(in srgb,var(--cc) 45%,transparent);border-radius:3px;background:rgba(0,0,0,.25)}
+.cy-store-h{padding:4px 8px;font-size:11px;letter-spacing:2px;color:var(--cc);opacity:.8;border-bottom:1px dashed color-mix(in srgb,var(--cc) 25%,transparent)}
+.cy-store-row{padding:5px 8px;border-bottom:1px solid color-mix(in srgb,var(--cc) 10%,transparent)}
+.cy-store-row:last-child{border-bottom:none}
+.cy-store-n{display:block;font-size:12px;color:var(--cc);letter-spacing:1px}
+.cy-store-t{font-size:12px;line-height:1.55;color:var(--cc);opacity:.7;white-space:pre-wrap;word-break:break-word}
+.store-item{display:flex;flex-direction:column;gap:4px;padding:6px;border:1px solid rgba(98,241,245,.2);border-radius:2px;background:rgba(0,0,0,.2)}
+.store-row1{display:flex;gap:5px;align-items:center}
 </style>
 </head>
 <body>
@@ -839,6 +897,12 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
                   <button class="e-btn" id="btn-add-tag" style="width:auto;padding:5px 10px">+</button>
                 </div>
               </div>
+<div id="card-cy-fields">
+<div class="e-field"><div class="e-label">ИКОНКА (эмодзи или ссылка на картинку)</div><input class="e-input" id="card-icon" type="text" spellcheck="false" placeholder="🧠 или https://..." /></div>
+<div class="e-field"><div class="e-label">КАРТИНКА В ОПИСАНИИ (ссылка)</div><input class="e-input" id="card-image" type="text" spellcheck="false" placeholder="https://..." /></div>
+<div class="e-field"><div class="e-label">МЕСТО НА ТЕЛЕ (клик по картинке)</div><div class="cy-pick" id="card-pos"><div class="cy-pickmark" id="card-pos-mark"></div></div><button class="e-btn" id="card-pos-reset" style="margin-top:4px">СБРОСИТЬ МЕСТО</button></div>
+<div class="e-field"><div class="e-label">ХРАНИЛИЩЕ ДАННЫХ</div><div class="lines-list" id="store-list"></div><button class="e-btn" id="btn-add-store">+ ХРАНИЛИЩЕ</button></div>
+</div>
               <div class="e-field">
                 <div class="e-label">СТРОКИ ТЕКСТА</div>
                 <div class="lines-list" id="lines-list"></div>
@@ -1231,7 +1295,9 @@ async function renderPage(num) {
   pm._renderId = renderId;
 
   pm.innerHTML = '';
+  pm._radarDone = false;
   const blocks = getPageBlocks(num);
+  if (num === 3) { renderCyberMenu(pm, blocks); applyLinksToPage(pm, num); return; }
 
   await d(80);
   if (pm._renderId !== renderId) return; // Отмена рендеринга, если запущен более новый
@@ -1249,7 +1315,7 @@ async function renderPage(num) {
     } else if (block.type === 'divider') {
       addDivider(pm, num);
     } else if (block.type === 'stat') {
-      renderStat(pm, block, num);
+      if (!pm._radarDone) { pm._radarDone = true; renderRadar(pm, blocks.filter(b => b.type === 'stat')); }
     } else if (block.type === 'widget') {
       renderWidget(pm, block);
     } else {
@@ -1400,6 +1466,265 @@ function renderStat(container, block, pageNum) {
   setTimeout(() => wrap.classList.add('show'), 30);
 }
 
+
+// ─── RADAR CHART (статы) ─────────────────────────────────────────────────────
+function renderRadar(container, stats) {
+  const NS = 'http://www.w3.org/2000/svg', MAX = 30, R = 90, CX = 190, CY = 160;
+  const n = stats.length;
+  const mk = (tag, attrs, txt) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (txt != null) e.textContent = txt; return e; };
+  const ang = i => -Math.PI / 2 + i * 2 * Math.PI / n;
+  const pt = (i, r) => [CX + Math.cos(ang(i)) * r, CY + Math.sin(ang(i)) * r];
+  const svg = mk('svg', { viewBox: '0 0 380 330' });
+  [10, 20, 30].forEach(lv => {
+    const pts = stats.map((_, i) => pt(i, R * lv / MAX).join(',')).join(' ');
+    svg.appendChild(mk('polygon', { points: pts, fill: 'none', stroke: 'rgba(0,255,65,0.22)', 'stroke-width': 1 }));
+  });
+  stats.forEach((_, i) => { const [x, y] = pt(i, R); svg.appendChild(mk('line', { x1: CX, y1: CY, x2: x, y2: y, stroke: 'rgba(0,255,65,0.22)' })); });
+  const dpts = stats.map((b, i) => pt(i, R * Math.max(1, Math.min(MAX, b.value ?? 20)) / MAX).join(',')).join(' ');
+  svg.appendChild(mk('polygon', { points: dpts, fill: 'rgba(0,255,65,0.22)', stroke: '#00FF41', 'stroke-width': 2 }));
+  stats.forEach((b, i) => {
+    const v = Math.max(1, Math.min(MAX, b.value ?? 20)), m = calcMod(v);
+    const [px, py] = pt(i, R * v / MAX);
+    svg.appendChild(mk('circle', { cx: px, cy: py, r: 3, fill: '#00FF41' }));
+    const [lx, ly] = pt(i, R + 20), c = Math.cos(ang(i));
+    const anchor = Math.abs(c) < 0.25 ? 'middle' : (c > 0 ? 'start' : 'end');
+    svg.appendChild(mk('text', { x: lx, y: ly - 2, 'text-anchor': anchor, class: 'rd-name' }, (b.name || 'СТАТ')));
+    svg.appendChild(mk('text', { x: lx, y: ly + 12, 'text-anchor': anchor, class: 'rd-val' }, v + '  (' + (m >= 0 ? '+' : '') + m + ')'));
+  });
+  const wrap = document.createElement('div');
+  wrap.className = 'nt-radar';
+  wrap.appendChild(svg);
+  container.appendChild(wrap);
+  setTimeout(() => wrap.classList.add('show'), 30);
+}
+
+// ─── CYBERWARE MENU (страница 3) ─────────────────────────────────────────────
+const CY_BG = 'https://raw.githubusercontent.com/Drake434/GIFU2/main/h.png';
+const CY_DEF = { // стартовые точки на картинке, % (x,y)
+  'Голова':[50.5,13.5], 'Визер':[50.5,17.8], 'Корпус':[50.5,31], 'Источник питания':[50.5,44],
+  'П. рука':[43,34], 'П. кисть':[38.5,49], 'Л. рука':[58,34], 'Л. кисть':[61.5,49],
+  'П. нога':[47.5,70], 'Л. нога':[54.5,70],
+  'Антенна':[50.5,11], 'Картограф':[49.2,16.5], 'Анализатор':[51.8,16.5], 'Энергетический пистолет':[54.8,78]
+};
+// режим выбирается автоматически по размеру окна страницы 3
+const CY_FULL_W = 720, CY_FULL_H = 400;
+// силуэт человека на картинке: [левый%, правый%] для каждой полосы высотой 2%
+const CY_BODY = [null,null,null,null,null,[49.1,51.7],[48.5,52.1],[48.3,52.3],[48.3,52.4],[48.5,52.1],[48.8,52.0],[46.7,54.2],[44.9,55.9],[44.4,56.4],[44.2,56.6],[43.8,56.9],[43.3,57.5],[42.5,58.2],[41.6,59.1],[41.1,59.6],[40.6,60.2],[40.0,60.6],[38.4,61.7],[37.5,63.5],[38.1,63.6],[37.9,62.7],[38.5,62.3],[45.3,55.4],[45.2,55.5],[45.2,55.5],[45.3,55.4],[45.4,55.3],[45.2,55.3],[45.1,55.4],[44.8,55.7],[44.7,55.8],[44.7,55.8],[44.7,55.8],[44.9,55.7],[45.0,55.6],[45.0,55.4],[44.8,55.5],[44.3,55.9],[43.8,56.4],[43.4,56.8],[43.5,56.8],[55.0,56.0],null,null,null];
+let _cySel = null, _cyOpen = false, _cyMode = null, _cyStageRO = null;
+function cyUrl(u) {
+  u = (u || '').trim();
+  const m = u.match(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/);
+  return m ? 'https://raw.githubusercontent.com/' + m[1] + '/' + m[2] + '/' + m[3] : u;
+}
+function cyTagText(t) { return typeof t === 'object' && t ? (t.text || '') : String(t || ''); }
+function cyAnchor(c) { return (typeof c.x === 'number' && typeof c.y === 'number') ? [c.x, c.y] : (CY_DEF[c.name] || [50, 50]); }
+function cyIcon(c) {
+  const span = document.createElement('span'); span.className = 'cy-ico';
+  const ic = (c.icon || '').trim(), fb = (c.name || '?')[0].toUpperCase();
+  if (/^(https?:|data:)/i.test(ic)) {
+    const im = document.createElement('img'); im.src = cyUrl(ic);
+    im.onerror = () => { im.remove(); span.textContent = fb; };
+    span.appendChild(im);
+  } else span.textContent = ic ? Array.from(ic).slice(0, 3).join('') : fb;
+  return span;
+}
+function cyDetail(c) {
+  const box = document.createElement('div'); box.className = 'cy-dbody';
+  if (c.image) { const im = document.createElement('img'); im.className = 'cy-img'; im.src = cyUrl(c.image); im.onerror = () => im.remove(); box.appendChild(im); }
+  if ((c.tags || []).length) {
+    const tg = document.createElement('div'); tg.className = 'nt-card-tags'; tg.style.padding = '0 0 8px 0';
+    c.tags.forEach(x => { const e = document.createElement('span'); e.className = 'nt-card-tag'; if (x && x.color) e.style.setProperty('--cc', x.color); e.textContent = cyTagText(x); tg.appendChild(e); });
+    box.appendChild(tg);
+  }
+  (c.lines || []).forEach(l => { const e = document.createElement('div'); e.className = 'cy-dline'; e.style.color = l.color || c.color || '#00FF41'; e.textContent = l.text || ''; box.appendChild(e); });
+  const st = (Array.isArray(c.storage) ? c.storage : []).filter(s => s && (s.name || s.text));
+  if (st.length) {
+    const sb = document.createElement('div'); sb.className = 'cy-store';
+    const h = document.createElement('div'); h.className = 'cy-store-h'; h.textContent = '▤ ХРАНИЛИЩЕ [' + st.length + ']'; sb.appendChild(h);
+    st.forEach(s => {
+      const r = document.createElement('div'); r.className = 'cy-store-row';
+      if (s.name) { const n = document.createElement('span'); n.className = 'cy-store-n'; n.textContent = s.name; r.appendChild(n); }
+      if (s.text) { const t = document.createElement('div'); t.className = 'cy-store-t'; t.textContent = s.text; r.appendChild(t); }
+      sb.appendChild(r);
+    });
+    box.appendChild(sb);
+  }
+  return box;
+}
+function cySizeWindow(pw) { // стартовый размер окна — компактный; дальше пользователь тянет за уголок
+  if (!pw) return;
+  const w = Math.min(460, window.innerWidth - 24), h = Math.min(540, window.innerHeight - 24);
+  pw.style.width = w + 'px'; pw.style.height = h + 'px';
+}
+function cyWantMode(pw) {
+  const w = pw.clientWidth, h = pw.clientHeight;
+  if (!w || !h) return null;
+  return (w >= CY_FULL_W && h >= CY_FULL_H) ? 'full' : 'compact';
+}
+function cyWatch() {
+  const pw = document.getElementById('pw3');
+  if (!pw || pw._cyRO) return;
+  pw._cyRO = new ResizeObserver(() => {
+    const m = cyWantMode(pw);
+    if (!m || m === _cyMode) return;
+    const pm3 = document.getElementById('pm3');
+    if (pm3) renderCyberMenu(pm3, getPageBlocks(3));
+  });
+  pw._cyRO.observe(pw);
+}
+function renderCyberMenu(pm, blocks) {
+  const cards = blocks.filter(b => b.type === 'card');
+  const notes = blocks.filter(b => b.type === 'text' && b.text);
+  const pw = document.getElementById('pw3');
+  const mode = (pw && cyWantMode(pw)) || 'compact';
+  if (mode !== _cyMode) { _cyMode = mode; _cyOpen = false; }
+  if (_cyStageRO) { _cyStageRO.disconnect(); _cyStageRO = null; }
+  pm.style.overflow = 'hidden'; pm.innerHTML = '';
+  const root = document.createElement('div'); root.className = 'cy-root';
+  const body = document.createElement('div'); body.className = 'cy-body';
+  root.appendChild(body); pm.appendChild(root);
+  if (_cyMode === 'full') cyFull(body, cards); else cyCompact(body, cards, notes);
+  cyWatch();
+}
+function cyCompact(body, cards, notes) {
+  body.classList.add('cy-compact');
+  cards.forEach(c => {
+    const row = document.createElement('div'); row.className = 'cy-row' + (c.name === _cySel ? ' open' : '');
+    row.style.setProperty('--cc', c.color || '#00FF41');
+    const head = document.createElement('div'); head.className = 'cy-rhead';
+    const nm = document.createElement('span'); nm.className = 'cy-rname'; nm.textContent = c.name || '—';
+    const tg = document.createElement('span'); tg.className = 'cy-rtag'; tg.textContent = cyTagText((c.tags || [])[0]);
+    const ar = document.createElement('span'); ar.className = 'cy-rarrow'; ar.textContent = '▸';
+    head.append(cyIcon(c), nm, tg, ar);
+    const wrap = document.createElement('div'); wrap.className = 'cy-rwrap';
+    const inner = document.createElement('div'); inner.className = 'cy-rinner'; inner.appendChild(cyDetail(c)); wrap.appendChild(inner);
+    head.addEventListener('click', () => {
+      const was = row.classList.contains('open');
+      body.querySelectorAll('.cy-row.open').forEach(r => r.classList.remove('open'));
+      if (was) { _cySel = null; return; }
+      row.classList.add('open'); _cySel = c.name;
+      setTimeout(() => row.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 300);
+    });
+    row.append(head, wrap); body.appendChild(row);
+  });
+  notes.forEach(n => { const e = document.createElement('div'); e.className = 'cy-note'; e.style.color = n.color || '#00FF41'; e.textContent = n.text; body.appendChild(e); });
+}
+
+// раскладка иконок: рядом со своей точкой, но вне силуэта человека и без наложений друг на друга
+function cySegX(a, b, c, d) {
+  const o = (p, q, r) => (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]);
+  return o(a, b, c) * o(a, b, d) < 0 && o(c, d, a) * o(c, d, b) < 0;
+}
+function cyPlace(items, sw, sh, sz) {
+  const half = sz / 2, M = 6, GAP = 5, rows = CY_BODY.length;
+  const hitBody = (cx, cy) => {
+    const i0 = Math.max(0, Math.floor((cy - half - M) / sh * rows)), i1 = Math.min(rows - 1, Math.floor((cy + half + M) / sh * rows));
+    for (let i = i0; i <= i1; i++) {
+      const r = CY_BODY[i]; if (!r) continue;
+      if (cx + half + M > r[0] * sw / 100 && cx - half - M < r[1] * sw / 100) return true;
+    }
+    return false;
+  };
+  const tiers = [
+    [sw * 0.31 + half, sw * 0.69 - half],   // зона рядом с телом (по бокам остаётся место под окно описания)
+    [half + 4, sw - half - 4]               // запасной вариант — вся сцена
+  ];
+  const placed = [];
+  items.slice().sort((p, q) => p.a[1] - q.a[1] || p.a[0] - q.a[0]).forEach(it => {
+    const ax = it.a[0] * sw / 100, ay = it.a[1] * sh / 100, dir = it.side === 'L' ? -1 : 1;
+    let best = null;
+    for (const [xmin, xmax] of tiers) {
+      for (let r = sz * 0.8; r <= sw * 0.5 && !best; r += 4) {
+        let tierBest = null;
+        for (let deg = -90; deg <= 90; deg += 10) {
+          const rad = deg * Math.PI / 180;
+          const cx = ax + dir * Math.cos(rad) * r, cy = ay + Math.sin(rad) * r;
+          if (cx < xmin || cx > xmax || cy < half + 4 || cy > sh - half - 4) continue;
+          if (dir < 0 ? cx > sw / 2 : cx < sw / 2) continue;
+          if (hitBody(cx, cy)) continue;
+          if (placed.some(p => Math.max(Math.abs(p.cx - cx), Math.abs(p.cy - cy)) < sz + GAP)) continue;
+          let cost = r + Math.abs(cy - ay) * 0.35;
+          placed.forEach(p => { if (cySegX([cx, cy], [ax, ay], [p.cx, p.cy], [p.ax, p.ay])) cost += 80; });
+          if (!tierBest || cost < tierBest.cost) tierBest = { cx, cy, cost };
+        }
+        // небольшой запас по радиусу: берём лучший вариант среди ближайших колец, чтобы линии не пересекались
+        if (tierBest) { best = tierBest; }
+      }
+      if (best) break;
+    }
+    if (!best) best = { cx: dir < 0 ? sw * 0.055 : sw * 0.945, cy: ay };
+    placed.push({ cx: best.cx, cy: best.cy, ax, ay });
+    it.ix = best.cx / sw * 100; it.iy = best.cy / sh * 100;
+  });
+}
+function cyFull(body, cards) {
+  const wrap = document.createElement('div'); wrap.className = 'cy-stagewrap';
+  const stage = document.createElement('div'); stage.className = 'cy-stage';
+  stage.style.backgroundImage = "url('" + CY_BG + "')";
+  wrap.appendChild(stage); body.appendChild(wrap);
+
+  const items = cards.map(c => ({ c, a: cyAnchor(c) }));
+  let nl = 0, nr = 0;
+  items.forEach(it => { if (it.a[0] < 47) { it.side = 'L'; nl++; } else if (it.a[0] > 53) { it.side = 'R'; nr++; } });
+  items.filter(it => !it.side).sort((p, q) => p.a[1] - q.a[1]).forEach(it => { if (nl <= nr) { it.side = 'L'; nl++; } else { it.side = 'R'; nr++; } });
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'cy-lines'); svg.setAttribute('viewBox', '0 0 100 100'); svg.setAttribute('preserveAspectRatio', 'none');
+  stage.appendChild(svg);
+  const redraw = () => { body.innerHTML = ''; cyFull(body, getPageBlocks(3).filter(b => b.type === 'card')); };
+  items.forEach(it => {
+    const col = it.c.color || '#00FF41', sel = it.c.name === _cySel && _cyOpen;
+    it.sel = sel;
+    it.ln = document.createElementNS(NS, 'line');
+    it.ln.setAttribute('class', 'cy-line' + (sel ? ' sel' : ''));
+    it.ln.style.setProperty('--cc', col);
+    svg.appendChild(it.ln);
+    it.dot = document.createElement('div'); it.dot.className = 'cy-adot';
+    it.dot.style.cssText = '--cc:' + col + ';left:' + it.a[0] + '%;top:' + it.a[1] + '%;' + (sel ? '' : 'opacity:.55;width:6px;height:6px');
+    it.btn = document.createElement('div'); it.btn.className = 'cy-ibtn' + (sel ? ' sel' : '');
+    it.btn.style.setProperty('--cc', col);
+    it.btn.title = it.c.name || ''; it.btn.appendChild(cyIcon(it.c));
+    it.btn.addEventListener('click', () => { if (_cySel === it.c.name && _cyOpen) _cyOpen = false; else { _cySel = it.c.name; _cyOpen = true; } redraw(); });
+    stage.append(it.dot, it.btn);
+  });
+  const cur = items.find(it => it.c.name === _cySel && _cyOpen);
+  let pop = null;
+  if (cur) {
+    pop = document.createElement('div'); pop.className = 'cy-pop ' + (cur.side === 'L' ? 'l' : 'r');
+    pop.style.setProperty('--cc', cur.c.color || '#00FF41');
+    const hd = document.createElement('div'); hd.className = 'cy-pophead';
+    const nm = document.createElement('span'); nm.className = 'cy-popname'; nm.textContent = cur.c.name || '—';
+    const x = document.createElement('button'); x.className = 'win-close'; x.textContent = '[X]';
+    x.addEventListener('click', () => { _cyOpen = false; redraw(); });
+    hd.append(cyIcon(cur.c), nm, x);
+    const bd = document.createElement('div'); bd.className = 'cy-popbody'; bd.appendChild(cyDetail(cur.c));
+    pop.append(hd, bd); stage.appendChild(pop);
+  }
+
+  const layout = () => {
+    const sw = stage.clientWidth, sh = stage.clientHeight; if (!sw || !sh) return;
+    const sz = Math.max(26, Math.min(38, Math.round(sw / 22)));
+    cyPlace(items, sw, sh, sz);
+    items.forEach(it => {
+      it.btn.style.setProperty('--isz', sz + 'px');
+      it.btn.style.left = it.ix + '%'; it.btn.style.top = it.iy + '%';
+      it.ln.setAttribute('x1', it.ix); it.ln.setAttribute('y1', it.iy); it.ln.setAttribute('x2', it.a[0]); it.ln.setAttribute('y2', it.a[1]);
+    });
+    if (pop && cur) {
+      const ptop = Math.max(4, Math.min(34, cur.iy - 31));
+      pop.style.top = ptop + '%';
+      pop.style.transformOrigin = (cur.side === 'L' ? '100%' : '0%') + ' ' + Math.max(0, Math.min(100, (cur.iy - ptop) / 62 * 100)) + '%';
+    }
+  };
+  const fit = () => {
+    const w = wrap.clientWidth, h = wrap.clientHeight; if (!w || !h) return;
+    const sw = Math.min(w, h * 1024 / 572);
+    stage.style.width = sw + 'px'; stage.style.height = (sw * 572 / 1024) + 'px';
+    layout();
+  };
+  _cyStageRO = new ResizeObserver(fit); _cyStageRO.observe(wrap); fit();
+}
+
 function addMsg(container, text, color, sep) {
   const div = document.createElement('div');
   div.className = 'pmsg' + (sep ? ' sep' : ' content');
@@ -1488,6 +1813,7 @@ function openPage(num) {
   let top = Math.max(12, Math.round((window.innerHeight - 460) / 2) - 50 + offset);
   pw.style.left = left + 'px';
   pw.style.top = top + 'px';
+  if (num === 3) cySizeWindow(pw);
   pw.style.display = 'flex';
   zTop++; pw.style.zIndex = zTop;
   renderPage(num);
@@ -2434,10 +2760,11 @@ const statPages = new Set(); // страницы где включён режи�
 
 function updateStatBtn() {
   const btn = document.getElementById('btn-add-stat');
-  btn.style.display = statPages.has(currentEditorPage) ? '' : 'none';
+  btn.style.display = (statPages.has(currentEditorPage) && currentEditorPage !== 5) ? '' : 'none';
 }
 
 document.getElementById('btn-add-stat').addEventListener('click', () => {
+  if (currentEditorPage === 5) { consoleLog('ERR: Page 5 защищена от редактирования.'); return; }
   const blocks = [...getPageBlocks(currentEditorPage)];
   const newBlock = { type: 'stat', name: 'Новый стат', value: 20 };
   blocks.push(newBlock);
@@ -2473,8 +2800,65 @@ function normalizeColor(val) {
   return '';
 }
 
+function cyBlk() { return editingBlockIdx === null ? null : getPageBlocks(currentEditorPage)[editingBlockIdx]; }
+function cyDrawMark(b) {
+  const m = document.getElementById('card-pos-mark'), a = cyAnchor(b);
+  m.style.left = a[0] + '%'; m.style.top = a[1] + '%'; m.style.opacity = typeof b.x === 'number' ? 1 : 0.45;
+}
+function cyLoadFields(b) {
+  const on = currentEditorPage === 3;
+  document.getElementById('card-cy-fields').style.display = on ? '' : 'none';
+  if (!on) return;
+  document.getElementById('card-icon').value = b.icon || '';
+  document.getElementById('card-image').value = b.image || '';
+  document.getElementById('card-pos').style.backgroundImage = "url('" + CY_BG + "')";
+  cyDrawMark(b);
+  cyRenderStore(b.storage || []);
+}
+function cyRenderStore(list) {
+  const box = document.getElementById('store-list'); box.innerHTML = '';
+  list.forEach((s, i) => {
+    const it = document.createElement('div'); it.className = 'store-item';
+    const r1 = document.createElement('div'); r1.className = 'store-row1';
+    const nm = document.createElement('input'); nm.className = 'e-input'; nm.type = 'text'; nm.spellcheck = false;
+    nm.placeholder = 'Название хранилища / данных'; nm.value = s.name || '';
+    nm.addEventListener('input', () => { const b = cyBlk(); if (!b || !b.storage[i]) return; b.storage[i].name = nm.value; autoSave(); });
+    const rm = document.createElement('button'); rm.className = 'line-remove'; rm.textContent = '✕'; rm.title = 'Удалить хранилище';
+    rm.addEventListener('click', () => { const b = cyBlk(); if (!b) return; b.storage.splice(i, 1); cyRenderStore(b.storage); autoSave(); });
+    r1.append(nm, rm);
+    const tx = document.createElement('textarea'); tx.className = 'e-input e-textarea'; tx.spellcheck = false;
+    tx.placeholder = 'Содержимое: какие данные записаны'; tx.value = s.text || '';
+    tx.addEventListener('input', () => { const b = cyBlk(); if (!b || !b.storage[i]) return; b.storage[i].text = tx.value; autoSave(); });
+    it.append(r1, tx); box.appendChild(it);
+  });
+}
+document.getElementById('btn-add-store').addEventListener('click', () => {
+  const b = cyBlk(); if (!b) return;
+  if (!Array.isArray(b.storage)) b.storage = [];
+  b.storage.push({ name: '', text: '' });
+  cyRenderStore(b.storage); autoSave();
+});
+[['card-icon', 'icon'], ['card-image', 'image']].forEach(([id, key]) => {
+  document.getElementById(id).addEventListener('input', () => {
+    const b = cyBlk(); if (!b) return;
+    b[key] = document.getElementById(id).value.trim(); autoSave();
+  });
+});
+document.getElementById('card-pos').addEventListener('click', e => {
+  const b = cyBlk(); if (!b) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  b.x = Math.round((e.clientX - r.left) / r.width * 1000) / 10;
+  b.y = Math.round((e.clientY - r.top) / r.height * 1000) / 10;
+  cyDrawMark(b); autoSave();
+});
+document.getElementById('card-pos-reset').addEventListener('click', () => {
+  const b = cyBlk(); if (!b) return;
+  delete b.x; delete b.y; cyDrawMark(b); autoSave();
+});
+
 function loadCardPanel(block) {
   showPanel('card');
+  cyLoadFields(block);
   document.getElementById('card-name').value = block.name || '';
   document.getElementById('card-color').value = block.color || '#00FF41';
   updateSwatch('card-color-swatch', 'card-color');
@@ -2695,6 +3079,7 @@ function autoSave() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     const num = currentEditorPage;
+    if (num === 5) { setEditorStatus('PAGE 5 ЗАЩИЩЕНА'); return; }
     _savingPages.add(num);
     savePage(num)
       .then(() => {
@@ -2960,6 +3345,7 @@ function handleConsole(raw) {
   if (cmd === 'stat') {
     const pg = parseInt(rest[0]);
     const targetPage = (!isNaN(pg) && pg > 0) ? pg : currentEditorPage;
+    if (targetPage === 5) { consoleLog('ERR: Page 5 защищена от редактирования.'); return; }
     if (statPages.has(targetPage)) {
       statPages.delete(targetPage);
       updateStatBtn();
