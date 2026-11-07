@@ -16,21 +16,21 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 #desktop-logo {
   position: fixed; top: 18px; right: 24px; z-index: 1;
   font-size: 13px; line-height: 1.35; white-space: pre; letter-spacing: 2px;
-  pointer-events: none; color: #00FF41;
-  text-shadow: 0 0 8px #00FF41; opacity: 0.12;
+  pointer-events: none; color: #5BBFB3;
+  text-shadow: 0 0 8px #5BBFB3; opacity: 0.12;
 }
 
 /* WINDOW BASE */
 .window {
   position: absolute; display: flex; flex-direction: column;
-  border: 1px solid var(--wc, #00FF41);
+  border: 1px solid var(--wc, #5BBFB3);
   border-radius: 6px; background: #0d0d0d;
-  box-shadow: 0 0 20px rgba(var(--wc-rgb, 0,255,65), 0.1), inset 0 0 20px rgba(0,0,0,0.5);
+  box-shadow: 0 0 20px rgba(var(--wc-rgb, 91,191,179), 0.1), inset 0 0 20px rgba(0,0,0,0.5);
   overflow: hidden; min-width: 200px; min-height: 120px;
 }
 .win-scanline {
   position: absolute; left: 0; width: 100%; height: 60px; pointer-events: none; z-index: 6;
-  background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--wc, #00FF41) 5%, transparent) 40%, color-mix(in srgb, var(--wc, #00FF41) 9%, transparent) 50%, color-mix(in srgb, var(--wc, #00FF41) 5%, transparent) 60%, transparent 100%);
+  background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--wc, #5BBFB3) 5%, transparent) 40%, color-mix(in srgb, var(--wc, #5BBFB3) 9%, transparent) 50%, color-mix(in srgb, var(--wc, #5BBFB3) 5%, transparent) 60%, transparent 100%);
   animation: scanmove 4s linear infinite;
 }
 .win-crt {
@@ -39,26 +39,26 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 }
 .win-titlebar {
   flex-shrink: 0; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center;
-  border-bottom: 1px solid color-mix(in srgb, var(--wc, #00FF41) 20%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--wc, #5BBFB3) 20%, transparent);
   cursor: move; user-select: none; position: relative; z-index: 7;
 }
-.win-title { font-size: 13px; color: var(--wc, #00FF41); letter-spacing: 2px; opacity: 0.8; }
+.win-title { font-size: 13px; color: var(--wc, #5BBFB3); letter-spacing: 2px; opacity: 0.8; }
 .win-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 2; }
 .win-resize {
   position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; cursor: se-resize; z-index: 10;
-  background: linear-gradient(135deg, transparent 50%, color-mix(in srgb, var(--wc, #00FF41) 50%, transparent) 50%);
+  background: linear-gradient(135deg, transparent 50%, color-mix(in srgb, var(--wc, #5BBFB3) 50%, transparent) 50%);
 }
 .win-close {
-  background: transparent; border: 1px solid var(--wc, #00FF41); border-radius: 3px;
-  color: var(--wc, #00FF41); font-family: 'Courier New', monospace; font-size: 12px;
+  background: transparent; border: 1px solid var(--wc, #5BBFB3); border-radius: 3px;
+  color: var(--wc, #5BBFB3); font-family: 'Courier New', monospace; font-size: 12px;
   padding: 2px 7px; cursor: pointer; letter-spacing: 1px; opacity: 0.6;
   transition: opacity 0.2s, background 0.2s;
 }
-.win-close:hover { opacity: 1; background: color-mix(in srgb, var(--wc, #00FF41) 15%, transparent); }
-.win-scroll { scrollbar-width: thin; scrollbar-color: var(--wc, #00FF41) #0d0d0d; }
+.win-close:hover { opacity: 1; background: color-mix(in srgb, var(--wc, #5BBFB3) 15%, transparent); }
+.win-scroll { scrollbar-width: thin; scrollbar-color: var(--wc, #5BBFB3) #0d0d0d; }
 .win-scroll::-webkit-scrollbar { width: 4px; }
 .win-scroll::-webkit-scrollbar-track { background: #0d0d0d; }
-.win-scroll::-webkit-scrollbar-thumb { background: var(--wc, #00FF41); }
+.win-scroll::-webkit-scrollbar-thumb { background: var(--wc, #5BBFB3); }
 
 /* BOOT */
 #boot-overlay {
@@ -67,34 +67,34 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
   display: flex; align-items: center; justify-content: center;
 }
 #boot-window {
-  background: #0d0d0d; border: 1px solid #00FF41; border-radius: 8px;
+  background: #0d0d0d; border: 1px solid #5BBFB3; border-radius: 8px;
   width: 600px; height: 500px; max-width: 96vw; max-height: 96vh;
-  box-shadow: 0 0 30px rgba(0,255,65,0.2); position: relative; overflow: hidden;
+  box-shadow: 0 0 30px rgba(91,191,179,0.2); position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
 }
 
 
 
 /* PAGE WINDOWS */
-.page-window { --wc: #00FF41; --wc-rgb: 0,255,65; display: none; width: 420px; height: 460px; }
-#pw5 { --wc: #ff4444; --wc-rgb: 255,68,68; }
+.page-window { --wc: #5BBFB3; --wc-rgb: 91,191,179; display: none; width: 420px; height: 460px; }
+#pw5 { --wc: #5BBFB3; --wc-rgb: 91,191,179; }
 .page-body { padding: 16px 20px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 .page-messages {
-  flex: 1; overflow-y: auto; font-size: 13px; color: #00FF41; line-height: 1.9;
-  scrollbar-width: thin; scrollbar-color: var(--wc, #00FF41) #0d0d0d;
+  flex: 1; overflow-y: auto; font-size: 13px; color: #5BBFB3; line-height: 1.9;
+  scrollbar-width: thin; scrollbar-color: var(--wc, #5BBFB3) #0d0d0d;
 }
 .page-messages::-webkit-scrollbar { width: 3px; }
-.page-messages::-webkit-scrollbar-thumb { background: var(--wc, #00FF41); }
+.page-messages::-webkit-scrollbar-thumb { background: var(--wc, #5BBFB3); }
 
 /* PAGE CONTENT BLOCKS */
 .pmsg { opacity: 0; transition: opacity 0.3s ease; margin-bottom: 2px; }
 .pmsg.show { opacity: 1; }
 .pmsg.sep { opacity: 0.25 !important; }
-.pmsg.content { color: #00FF41; opacity: 0.85 !important; }
+.pmsg.content { color: #5BBFB3; opacity: 0.85 !important; }
 
 /* CARD */
 .nt-card {
-  --cc: #00FF41;
+  --cc: #5BBFB3;
   border: 1px solid color-mix(in srgb, var(--cc) 35%, transparent);
   background: color-mix(in srgb, var(--cc) 5%, black);
   border-radius: 3px; margin: 4px 0;
@@ -147,25 +147,25 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 
 /* NAME LINK */
 .name-link {
-  color: #62F1F5; text-decoration: underline; cursor: pointer;
-  text-shadow: 0 0 6px rgba(98,241,245,0.5); transition: opacity 0.2s;
+  color: #5BBFB3; text-decoration: underline; cursor: pointer;
+  text-shadow: 0 0 6px rgba(91,191,179,0.5); transition: opacity 0.2s;
 }
 .name-link:hover { opacity: 0.7; }
 
 /* IMAGE POPUP */
 #img-popup {
   display: none; position: fixed; z-index: 9000;
-  background: #0d0d0d; border: 1px solid #62F1F5; border-radius: 6px;
-  box-shadow: 0 0 30px rgba(98,241,245,0.3);
+  background: #0d0d0d; border: 1px solid #5BBFB3; border-radius: 6px;
+  box-shadow: 0 0 30px rgba(91,191,179,0.3);
   padding: 8px; flex-direction: column; align-items: center; overflow: hidden;
 }
 #img-popup.show { display: flex; }
-#img-popup .popup-title { font-size: 12px; color: #62F1F5; letter-spacing: 2px; opacity: 0.6; margin-bottom: 6px; align-self: flex-start; }
-#img-popup img { width: 220px; height: auto; border-radius: 4px; border: 1px solid rgba(98,241,245,0.2); display: block; }
-#img-popup .popup-close { font-size: 12px; color: #62F1F5; opacity: 0.5; margin-top: 6px; cursor: pointer; letter-spacing: 1px; align-self: flex-end; }
+#img-popup .popup-title { font-size: 12px; color: #5BBFB3; letter-spacing: 2px; opacity: 0.6; margin-bottom: 6px; align-self: flex-start; }
+#img-popup img { width: 220px; height: auto; border-radius: 4px; border: 1px solid rgba(91,191,179,0.2); display: block; }
+#img-popup .popup-close { font-size: 12px; color: #5BBFB3; opacity: 0.5; margin-top: 6px; cursor: pointer; letter-spacing: 1px; align-self: flex-end; }
 #img-popup .popup-close:hover { opacity: 1; }
 #img-popup .win-scanline { position: absolute; left: 0; width: 100%; height: 60px; pointer-events: none; z-index: 6;
-  background: linear-gradient(to bottom, transparent 0%, rgba(98,241,245,0.05) 40%, rgba(98,241,245,0.09) 50%, rgba(98,241,245,0.05) 60%, transparent 100%);
+  background: linear-gradient(to bottom, transparent 0%, rgba(91,191,179,0.05) 40%, rgba(91,191,179,0.09) 50%, rgba(91,191,179,0.05) 60%, transparent 100%);
   animation: scanmove 4s linear infinite; }
 
 /* STATUS BAR + ONLINE */
@@ -176,46 +176,46 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 }
 #online-indicator {
   font-family: 'Courier New', monospace; font-size: 12px;
-  color: #00FF41; letter-spacing: 1px; opacity: 0.7;
+  color: #5BBFB3; letter-spacing: 1px; opacity: 0.7;
   display: flex; align-items: center; gap: 5px;
 }
-#online-dot { color: #00FF41; font-size: 12px; }
+#online-dot { color: #5BBFB3; font-size: 12px; }
 #clock-bar {
   font-family: 'Courier New', monospace; font-size: 13px;
-  color: #00FF41; letter-spacing: 2px; opacity: 0.45;
+  color: #5BBFB3; letter-spacing: 2px; opacity: 0.45;
 }
 
 /* HISTORY WINDOW */
 #history-window {
-  --wc: #62F1F5; --wc-rgb: 98,241,245;
+  --wc: #5BBFB3; --wc-rgb: 91,191,179;
   display: none; width: 420px; height: 400px;
 }
 .history-body { padding: 14px 18px; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 .history-list { flex: 1; overflow-y: auto; font-size: 13px; line-height: 1.8;
-  scrollbar-width: thin; scrollbar-color: #62F1F5 #0d0d0d; }
+  scrollbar-width: thin; scrollbar-color: #5BBFB3 #0d0d0d; }
 .history-list::-webkit-scrollbar { width: 3px; }
-.history-list::-webkit-scrollbar-thumb { background: #62F1F5; }
-.h-entry { border-bottom: 1px solid rgba(98,241,245,0.08); padding: 6px 0; }
-.h-entry-time { color: #62F1F5; opacity: 0.5; font-size: 12px; }
-.h-entry-text { color: #00FF41; }
+.history-list::-webkit-scrollbar-thumb { background: #5BBFB3; }
+.h-entry { border-bottom: 1px solid rgba(91,191,179,0.08); padding: 6px 0; }
+.h-entry-time { color: #5BBFB3; opacity: 0.5; font-size: 12px; }
+.h-entry-text { color: #5BBFB3; }
 
 /* EDITOR WINDOW */
 #editor-window {
-  --wc: #62F1F5; --wc-rgb: 98,241,245;
+  --wc: #5BBFB3; --wc-rgb: 91,191,179;
   display: none; width: 820px; height: 580px;
 }
 .editor-body { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
-.editor-top { display: flex; align-items: center; gap: 10px; flex-shrink: 0; padding-bottom: 10px; border-bottom: 1px solid rgba(98,241,245,0.15); flex-wrap: wrap; }
+.editor-top { display: flex; align-items: center; gap: 10px; flex-shrink: 0; padding-bottom: 10px; border-bottom: 1px solid rgba(91,191,179,0.15); flex-wrap: wrap; }
 .editor-page-tabs { display: flex; gap: 4px; }
 .editor-tab {
-  background: transparent; border: 1px solid rgba(98,241,245,0.3);
-  color: #62F1F5; font-family: 'Courier New', monospace; font-size: 12px;
+  background: transparent; border: 1px solid rgba(91,191,179,0.3);
+  color: #5BBFB3; font-family: 'Courier New', monospace; font-size: 12px;
   padding: 3px 10px; cursor: pointer; letter-spacing: 1px; opacity: 0.5;
   transition: opacity 0.2s, background 0.2s;
 }
-.editor-tab.active { opacity: 1; background: rgba(98,241,245,0.1); }
+.editor-tab.active { opacity: 1; background: rgba(91,191,179,0.1); }
 .editor-tab:hover { opacity: 0.8; }
-.editor-status { margin-left: auto; color: #62F1F5; font-size: 12px; letter-spacing: 1px; opacity: 0.6; }
+.editor-status { margin-left: auto; color: #5BBFB3; font-size: 12px; letter-spacing: 1px; opacity: 0.6; }
 
 .editor-workspace { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 260px; gap: 10px; }
 
@@ -223,72 +223,72 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 .block-list-wrap { display: flex; flex-direction: column; gap: 6px; min-height: 0; }
 .block-list {
   flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;
-  scrollbar-width: thin; scrollbar-color: #62F1F5 #0d0d0d;
+  scrollbar-width: thin; scrollbar-color: #5BBFB3 #0d0d0d;
   padding-right: 4px;
 }
 .block-list::-webkit-scrollbar { width: 3px; }
-.block-list::-webkit-scrollbar-thumb { background: #62F1F5; }
+.block-list::-webkit-scrollbar-thumb { background: #5BBFB3; }
 .block-list-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
 /* BLOCK ITEMS */
 .bl-item {
-  border: 1px solid rgba(98,241,245,0.2); background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(91,191,179,0.2); background: rgba(0,0,0,0.2);
   border-radius: 3px; overflow: hidden; flex-shrink: 0;
 }
 .bl-item-head {
   display: flex; align-items: center; gap: 6px; padding: 6px 8px;
-  border-bottom: 1px solid rgba(98,241,245,0.1);
+  border-bottom: 1px solid rgba(91,191,179,0.1);
 }
-.bl-item-type { font-size: 11px; color: #62F1F5; letter-spacing: 2px; opacity: 0.6; flex-shrink: 0; }
-.bl-item-preview { flex: 1; font-size: 13px; color: #00FF41; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.bl-item-preview.text-preview { color: #00FF41; opacity: 0.7; }
+.bl-item-type { font-size: 11px; color: #5BBFB3; letter-spacing: 2px; opacity: 0.6; flex-shrink: 0; }
+.bl-item-preview { flex: 1; font-size: 13px; color: #5BBFB3; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.bl-item-preview.text-preview { color: #5BBFB3; opacity: 0.7; }
 .bl-item-btns { display: flex; gap: 3px; flex-shrink: 0; }
 .bl-btn {
-  background: transparent; border: 1px solid rgba(98,241,245,0.25);
-  color: #62F1F5; font-family: 'Courier New', monospace; font-size: 12px;
+  background: transparent; border: 1px solid rgba(91,191,179,0.25);
+  color: #5BBFB3; font-family: 'Courier New', monospace; font-size: 12px;
   padding: 1px 5px; cursor: pointer; opacity: 0.6;
   transition: opacity 0.15s;
 }
-.bl-btn:hover { opacity: 1; background: rgba(98,241,245,0.08); }
-.bl-btn.danger { border-color: rgba(255,68,68,0.3); color: #ff4444; }
-.bl-btn.danger:hover { background: rgba(255,68,68,0.08); }
+.bl-btn:hover { opacity: 1; background: rgba(91,191,179,0.08); }
+.bl-btn.danger { border-color: rgba(91,191,179,0.3); color: #5BBFB3; }
+.bl-btn.danger:hover { background: rgba(91,191,179,0.08); }
 
 /* CARD EDITOR (right panel) */
 .editor-right { display: flex; flex-direction: column; gap: 8px; min-height: 0; overflow-y: auto;
-  scrollbar-width: thin; scrollbar-color: #62F1F5 #0d0d0d; }
+  scrollbar-width: thin; scrollbar-color: #5BBFB3 #0d0d0d; }
 .editor-right::-webkit-scrollbar { width: 3px; }
-.editor-right::-webkit-scrollbar-thumb { background: #62F1F5; }
-.editor-panel { border: 1px solid rgba(98,241,245,0.18); background: rgba(98,241,245,0.03); padding: 10px; border-radius: 3px; }
-.editor-panel-title { font-size: 11px; color: #62F1F5; letter-spacing: 2px; opacity: 0.7; margin-bottom: 8px; }
+.editor-right::-webkit-scrollbar-thumb { background: #5BBFB3; }
+.editor-panel { border: 1px solid rgba(91,191,179,0.18); background: rgba(91,191,179,0.03); padding: 10px; border-radius: 3px; }
+.editor-panel-title { font-size: 11px; color: #5BBFB3; letter-spacing: 2px; opacity: 0.7; margin-bottom: 8px; }
 .e-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
-.e-label { font-size: 11px; color: #62F1F5; letter-spacing: 1px; opacity: 0.6; }
+.e-label { font-size: 11px; color: #5BBFB3; letter-spacing: 1px; opacity: 0.6; }
 .e-input, .e-textarea {
-  background: rgba(0,0,0,0.3); border: 1px solid rgba(98,241,245,0.2);
-  color: #00FF41; font-family: 'Courier New', monospace; font-size: 13px;
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(91,191,179,0.2);
+  color: #5BBFB3; font-family: 'Courier New', monospace; font-size: 13px;
   padding: 5px 7px; outline: none; width: 100%; border-radius: 2px;
 }
 .e-textarea { resize: none; min-height: 70px; line-height: 1.6; }
 .e-color-row { display: grid; grid-template-columns: 28px 1fr; gap: 6px; align-items: center; }
-.e-swatch { width: 28px; height: 28px; border: 1px solid rgba(98,241,245,0.3); border-radius: 2px; background: #00FF41; cursor: pointer; }
+.e-swatch { width: 28px; height: 28px; border: 1px solid rgba(91,191,179,0.3); border-radius: 2px; background: #5BBFB3; cursor: pointer; }
 .e-btn {
-  background: transparent; border: 1px solid rgba(98,241,245,0.35);
-  color: #62F1F5; font-family: 'Courier New', monospace; font-size: 12px;
+  background: transparent; border: 1px solid rgba(91,191,179,0.35);
+  color: #5BBFB3; font-family: 'Courier New', monospace; font-size: 12px;
   padding: 5px 8px; cursor: pointer; width: 100%; letter-spacing: 1px;
   transition: background 0.15s;
 }
-.e-btn:hover { background: rgba(98,241,245,0.09); }
-.e-btn.primary { border-color: rgba(0,255,65,0.4); color: #00FF41; }
-.e-btn.primary:hover { background: rgba(0,255,65,0.08); }
+.e-btn:hover { background: rgba(91,191,179,0.09); }
+.e-btn.primary { border-color: rgba(91,191,179,0.4); color: #5BBFB3; }
+.e-btn.primary:hover { background: rgba(91,191,179,0.08); }
 
 /* TAGS EDITOR */
 .tags-list { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; min-height: 20px; }
 .tag-pill {
   display: flex; align-items: center; gap: 3px;
-  border: 1px solid rgba(98,241,245,0.3); color: #62F1F5;
+  border: 1px solid rgba(91,191,179,0.3); color: #5BBFB3;
   font-size: 11px; letter-spacing: 1px; padding: 1px 4px 1px 6px;
-  background: rgba(98,241,245,0.05); border-radius: 2px;
+  background: rgba(91,191,179,0.05); border-radius: 2px;
 }
-.tag-pill-remove { background: none; border: none; color: #ff4444; cursor: pointer; font-size: 12px; padding: 0 0 0 4px; opacity: 0.6; }
+.tag-pill-remove { background: none; border: none; color: #5BBFB3; cursor: pointer; font-size: 12px; padding: 0 0 0 4px; opacity: 0.6; }
 .tag-pill-remove:hover { opacity: 1; }
 .tag-add-row { display: flex; gap: 5px; }
 .tag-add-row .e-input { flex: 1; }
@@ -301,86 +301,86 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 }
 .nt-stat.show { opacity: 1; }
 .nt-stat-name {
-  flex: 1; font-size: 13px; color: #00FF41; letter-spacing: 1px;
+  flex: 1; font-size: 13px; color: #5BBFB3; letter-spacing: 1px;
 }
 .nt-stat-controls {
   display: flex; align-items: center; gap: 4px; flex-shrink: 0;
 }
 .nt-stat-btn {
-  background: transparent; border: 1px solid rgba(0,255,65,0.3);
-  color: #00FF41; font-family: 'Courier New', monospace; font-size: 13px;
+  background: transparent; border: 1px solid rgba(91,191,179,0.3);
+  color: #5BBFB3; font-family: 'Courier New', monospace; font-size: 13px;
   width: 20px; height: 20px; cursor: pointer; line-height: 1;
   display: flex; align-items: center; justify-content: center;
   border-radius: 2px; transition: background 0.15s, opacity 0.15s;
   padding: 0; flex-shrink: 0;
 }
-.nt-stat-btn:hover { background: rgba(0,255,65,0.1); }
+.nt-stat-btn:hover { background: rgba(91,191,179,0.1); }
 .nt-stat-val {
   font-size: 15px; font-family: 'Courier New', monospace;
-  color: #00FF41; min-width: 28px; text-align: center;
-  cursor: pointer; border-bottom: 1px solid rgba(0,255,65,0.3);
+  color: #5BBFB3; min-width: 28px; text-align: center;
+  cursor: pointer; border-bottom: 1px solid rgba(91,191,179,0.3);
   padding: 1px 3px; transition: border-color 0.15s;
 }
-.nt-stat-val:hover { border-color: rgba(0,255,65,0.7); }
+.nt-stat-val:hover { border-color: rgba(91,191,179,0.7); }
 .nt-stat-val.editing {
-  background: rgba(0,255,65,0.07); border-color: #00FF41;
+  background: rgba(91,191,179,0.07); border-color: #5BBFB3;
   outline: none; min-width: 36px;
 }
 .nt-stat-mod {
-  font-size: 13px; color: #62F1F5; min-width: 32px; text-align: right;
+  font-size: 13px; color: #5BBFB3; min-width: 32px; text-align: right;
   letter-spacing: 1px; opacity: 0.85;
 }
 
 /* LINES EDITOR */
 .lines-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
 .line-item { display: flex; gap: 5px; align-items: center; }
-.line-swatch { width: 20px; height: 20px; border: 1px solid rgba(98,241,245,0.3); border-radius: 2px; flex-shrink: 0; cursor: pointer; }
-.line-input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(98,241,245,0.2); color: #00FF41; font-family: 'Courier New', monospace; font-size: 13px; padding: 3px 6px; outline: none; border-radius: 2px; }
-.line-remove { background: none; border: none; color: #ff4444; cursor: pointer; font-size: 14px; opacity: 0.5; padding: 0 2px; }
+.line-swatch { width: 20px; height: 20px; border: 1px solid rgba(91,191,179,0.3); border-radius: 2px; flex-shrink: 0; cursor: pointer; }
+.line-input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(91,191,179,0.2); color: #5BBFB3; font-family: 'Courier New', monospace; font-size: 13px; padding: 3px 6px; outline: none; border-radius: 2px; }
+.line-remove { background: none; border: none; color: #5BBFB3; cursor: pointer; font-size: 14px; opacity: 0.5; padding: 0 2px; }
 .line-remove:hover { opacity: 1; }
 
 /* STAT BLOCK */
 .nt-stat {
   display: flex; align-items: center; gap: 8px;
-  padding: 5px 6px; border-bottom: 1px solid rgba(0,255,65,0.08);
+  padding: 5px 6px; border-bottom: 1px solid rgba(91,191,179,0.08);
   opacity: 0; transition: opacity 0.3s;
 }
 .nt-stat.show { opacity: 1; }
 .nt-stat-name {
-  color: #00FF41; font-size: 13px; letter-spacing: 1px;
+  color: #5BBFB3; font-size: 13px; letter-spacing: 1px;
   flex: 1; opacity: 0.85;
 }
 .nt-stat-controls {
   display: flex; align-items: center; gap: 4px; flex-shrink: 0;
 }
 .nt-stat-btn {
-  background: transparent; border: 1px solid rgba(0,255,65,0.3);
-  color: #00FF41; font-family: 'Courier New', monospace;
+  background: transparent; border: 1px solid rgba(91,191,179,0.3);
+  color: #5BBFB3; font-family: 'Courier New', monospace;
   font-size: 15px; line-height: 1; padding: 1px 6px;
   cursor: pointer; border-radius: 2px; opacity: 0.7;
   transition: opacity 0.15s, background 0.15s; user-select: none;
 }
-.nt-stat-btn:hover { opacity: 1; background: rgba(0,255,65,0.1); }
+.nt-stat-btn:hover { opacity: 1; background: rgba(91,191,179,0.1); }
 .nt-stat-val {
   min-width: 32px; text-align: center; cursor: pointer;
-  color: #00FF41; font-size: 15px; font-family: 'Courier New', monospace;
+  color: #5BBFB3; font-size: 15px; font-family: 'Courier New', monospace;
   border: 1px solid transparent; border-radius: 2px;
   padding: 1px 4px; transition: border-color 0.15s;
 }
-.nt-stat-val:hover { border-color: rgba(0,255,65,0.3); }
+.nt-stat-val:hover { border-color: rgba(91,191,179,0.3); }
 .nt-stat-val-input {
   width: 38px; text-align: center; background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(0,255,65,0.5); color: #00FF41;
+  border: 1px solid rgba(91,191,179,0.5); color: #5BBFB3;
   font-family: 'Courier New', monospace; font-size: 15px;
   padding: 1px 4px; outline: none; border-radius: 2px;
 }
 .nt-stat-mod {
   font-size: 13px; font-family: 'Courier New', monospace;
-  min-width: 30px; text-align: right; color: #62F1F5;
+  min-width: 30px; text-align: right; color: #5BBFB3;
   opacity: 0.8; letter-spacing: 1px;
 }
 .nt-stat-dice {
-  font-size: 12px; color: #ffd700; opacity: 0.7; letter-spacing: 1px;
+  font-size: 12px; color: #5BBFB3; opacity: 0.7; letter-spacing: 1px;
   white-space: nowrap; padding-left: 4px;
 }
 
@@ -389,14 +389,14 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
   display: none; position: fixed; z-index: 8500;
   top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 480px; max-width: 96vw;
-  background: #0d0d0d; border: 1px solid #62F1F5; border-radius: 6px;
-  box-shadow: 0 0 30px rgba(98,241,245,0.2); overflow: hidden;
+  background: #0d0d0d; border: 1px solid #5BBFB3; border-radius: 6px;
+  box-shadow: 0 0 30px rgba(91,191,179,0.2); overflow: hidden;
   flex-direction: column;
 }
 #text-editor-modal.show { display: flex; }
 #text-editor-modal .tem-scanline {
   position: absolute; left: 0; width: 100%; height: 60px; pointer-events: none; z-index: 6;
-  background: linear-gradient(to bottom, transparent 0%, rgba(98,241,245,0.05) 40%, rgba(98,241,245,0.09) 50%, rgba(98,241,245,0.05) 60%, transparent 100%);
+  background: linear-gradient(to bottom, transparent 0%, rgba(91,191,179,0.05) 40%, rgba(91,191,179,0.09) 50%, rgba(91,191,179,0.05) 60%, transparent 100%);
   animation: scanmove 4s linear infinite;
 }
 #text-editor-modal .tem-crt {
@@ -406,25 +406,25 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 .tem-titlebar {
   position: relative; z-index: 7; padding: 8px 14px;
   display: flex; justify-content: space-between; align-items: center;
-  border-bottom: 1px solid rgba(98,241,245,0.2);
+  border-bottom: 1px solid rgba(91,191,179,0.2);
 }
-.tem-title { font-size: 12px; color: #62F1F5; letter-spacing: 2px; opacity: 0.8; }
+.tem-title { font-size: 12px; color: #5BBFB3; letter-spacing: 2px; opacity: 0.8; }
 .tem-body { position: relative; z-index: 2; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 #tem-textarea {
-  background: rgba(0,0,0,0.4); border: 1px solid rgba(98,241,245,0.25);
-  color: #00FF41; font-family: 'Courier New', monospace; font-size: 14px;
+  background: rgba(0,0,0,0.4); border: 1px solid rgba(91,191,179,0.25);
+  color: #5BBFB3; font-family: 'Courier New', monospace; font-size: 14px;
   padding: 10px; outline: none; resize: vertical; min-height: 160px;
   line-height: 1.7; border-radius: 2px; width: 100%;
 }
-#tem-textarea:focus { border-color: rgba(98,241,245,0.5); }
+#tem-textarea:focus { border-color: rgba(91,191,179,0.5); }
 .tem-footer { display: flex; gap: 8px; justify-content: flex-end; }
 .line-edit-btn {
-  background: transparent; border: 1px solid rgba(98,241,245,0.25);
-  color: #62F1F5; font-family: 'Courier New', monospace; font-size: 12px;
+  background: transparent; border: 1px solid rgba(91,191,179,0.25);
+  color: #5BBFB3; font-family: 'Courier New', monospace; font-size: 12px;
   padding: 2px 7px; cursor: pointer; opacity: 0.7; border-radius: 2px;
   transition: opacity 0.15s, background 0.15s; flex-shrink: 0;
 }
-.line-edit-btn:hover { opacity: 1; background: rgba(98,241,245,0.08); }
+.line-edit-btn:hover { opacity: 1; background: rgba(91,191,179,0.08); }
 
 
 /* DESKTOP ICONS */
@@ -454,42 +454,42 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
   transition: background 0.15s, opacity 0.15s, transform 0.15s;
 }
 .desktop-icon:hover {
-  background: rgba(0,255,65,0.08);
+  background: rgba(91,191,179,0.08);
   transform: translateY(-2px);
 }
 .desktop-icon-symbol {
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(0,255,65,0.35);
+  border: 1px solid rgba(91,191,179,0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #00FF41;
+  color: #5BBFB3;
   font-size: 20px;
   background: rgba(0,0,0,0.35);
-  box-shadow: 0 0 12px rgba(0,255,65,0.08);
-  text-shadow: 0 0 8px rgba(0,255,65,0.5);
+  box-shadow: 0 0 12px rgba(91,191,179,0.08);
+  text-shadow: 0 0 8px rgba(91,191,179,0.5);
 }
 .desktop-icon-label {
-  color: #00FF41;
+  color: #5BBFB3;
   font-size: 12px;
   letter-spacing: 1px;
   text-align: center;
   line-height: 1.4;
-  text-shadow: 0 0 6px rgba(0,255,65,0.35);
+  text-shadow: 0 0 6px rgba(91,191,179,0.35);
 }
 
 /* PAGE 5 — LAUNCHER */
 .p5-launcher {
   flex: 1; display: flex; flex-direction: column;
   padding: 14px 16px; gap: 10px; overflow-y: auto;
-  scrollbar-width: thin; scrollbar-color: #ff4444 #0d0d0d;
+  scrollbar-width: thin; scrollbar-color: #5BBFB3 #0d0d0d;
 }
 .p5-launcher::-webkit-scrollbar { width: 3px; }
-.p5-launcher::-webkit-scrollbar-thumb { background: #ff4444; }
+.p5-launcher::-webkit-scrollbar-thumb { background: #5BBFB3; }
 .p5-launcher-header {
-  font-size: 11px; color: #ff4444; letter-spacing: 2px; opacity: 0.4;
-  border-bottom: 1px solid rgba(255,68,68,0.12); padding-bottom: 8px;
+  font-size: 11px; color: #5BBFB3; letter-spacing: 2px; opacity: 0.4;
+  border-bottom: 1px solid rgba(91,191,179,0.12); padding-bottom: 8px;
 }
 .p5-app-grid {
   display: flex; flex-wrap: wrap; gap: 10px;
@@ -497,178 +497,84 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 .p5-app-icon {
   width: 80px; display: flex; flex-direction: column; align-items: center; gap: 5px;
   cursor: pointer; padding: 8px 4px; border-radius: 4px;
-  border: 1px solid rgba(255,68,68,0.12); background: rgba(255,68,68,0.03);
+  border: 1px solid rgba(91,191,179,0.12); background: rgba(91,191,179,0.03);
   transition: background 0.15s, border-color 0.15s, transform 0.15s;
   user-select: none;
 }
 .p5-app-icon:hover {
-  background: rgba(255,68,68,0.09); border-color: rgba(255,68,68,0.35);
+  background: rgba(91,191,179,0.09); border-color: rgba(91,191,179,0.35);
   transform: translateY(-2px);
 }
 .p5-app-symbol {
   width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
-  border: 1px solid rgba(255,68,68,0.3); border-radius: 3px;
-  color: #ff4444; font-size: 18px; background: rgba(0,0,0,0.4);
-  box-shadow: 0 0 10px rgba(255,68,68,0.07);
-  text-shadow: 0 0 8px rgba(255,68,68,0.5);
+  border: 1px solid rgba(91,191,179,0.3); border-radius: 3px;
+  color: #5BBFB3; font-size: 18px; background: rgba(0,0,0,0.4);
+  box-shadow: 0 0 10px rgba(91,191,179,0.07);
+  text-shadow: 0 0 8px rgba(91,191,179,0.5);
 }
 .p5-app-label {
-  color: #ff4444; font-size: 11px; letter-spacing: 1px;
+  color: #5BBFB3; font-size: 11px; letter-spacing: 1px;
   text-align: center; line-height: 1.3; opacity: 0.7;
 }
 
-/* PAGE 5 — EMBEDDED PLAYER */
-.p5-player {
-  flex: 1; display: flex; flex-direction: column; overflow: hidden;
-}
-.p5-player-titlebar {
-  flex-shrink: 0; padding: 8px 12px;
-  border-bottom: 1px solid rgba(255,68,68,0.15);
-  display: flex; align-items: center; gap: 8px;
-}
-.p5-player-rec {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #ff4444; box-shadow: 0 0 6px #ff4444;
-  animation: blink 1s step-end infinite; flex-shrink: 0;
-}
-.p5-player-rec.stopped { background: rgba(255,68,68,0.2); box-shadow: none; animation: none; }
-.p5-player-title { font-size: 12px; letter-spacing: 2px; color: #ff4444; opacity: 0.65; flex: 1; }
-.p5-player-id { font-size: 11px; letter-spacing: 1px; color: rgba(255,68,68,0.3); }
-
-.p5-waveform-bar {
-  flex-shrink: 0; padding: 6px 12px 5px;
-  border-bottom: 1px solid rgba(255,68,68,0.1);
-  display: flex; align-items: center; gap: 8px;
-}
-.p5-waveform-vis { display: flex; align-items: center; gap: 2px; height: 20px; flex: 1; }
-.p5-wf-bar {
-  width: 3px; height: 100%;
-  background: rgba(255,68,68,0.18); border-radius: 1px;
-  transform: scaleY(0.2); transform-origin: center;
-}
-.p5-waveform-vis.playing .p5-wf-bar {
-  background: #ff4444;
-  animation: waveform 0.6s ease-in-out infinite;
-}
-.p5-waveform-vis.playing .p5-wf-bar:nth-child(2n) { animation-delay: 0.10s; }
-.p5-waveform-vis.playing .p5-wf-bar:nth-child(3n) { animation-delay: 0.20s; }
-.p5-waveform-vis.playing .p5-wf-bar:nth-child(4n) { animation-delay: 0.30s; }
-.p5-waveform-vis.playing .p5-wf-bar:nth-child(5n) { animation-delay: 0.15s; }
-.p5-waveform-vis.playing .p5-wf-bar:nth-child(6n) { animation-delay: 0.25s; }
-.p5-wf-timer { font-size: 12px; color: rgba(255,68,68,0.45); letter-spacing: 2px; flex-shrink: 0; min-width: 52px; text-align: right; }
-
-.p5-controls {
-  flex-shrink: 0; padding: 6px 12px;
-  border-bottom: 1px solid rgba(255,68,68,0.1);
-  display: flex; align-items: center; gap: 6px;
-}
-.p5-ctrl-btn {
-  background: transparent; border: 1px solid rgba(255,68,68,0.3);
-  color: #ff4444; font-family: 'Courier New', monospace;
-  font-size: 11px; letter-spacing: 2px; padding: 3px 10px;
-  cursor: pointer; border-radius: 2px; opacity: 0.7;
-  transition: opacity 0.15s, background 0.15s;
-}
-.p5-ctrl-btn:hover { opacity: 1; background: rgba(255,68,68,0.08); }
-.p5-ctrl-btn.primary { border-color: rgba(255,68,68,0.6); opacity: 1; }
-.p5-ctrl-btn:disabled { opacity: 0.2; cursor: default; pointer-events: none; }
-.p5-ctrl-speed { margin-left: auto; font-size: 11px; color: rgba(255,68,68,0.3); letter-spacing: 1px; display: flex; gap: 5px; align-items: center; }
-.p5-speed-opt { cursor: pointer; padding: 1px 4px; border-radius: 2px; transition: color 0.15s, background 0.15s; }
-.p5-speed-opt:hover { color: #ff4444; }
-.p5-speed-opt.active { color: #ff4444; background: rgba(255,68,68,0.1); }
-
-.p5-log-body {
-  flex: 1; overflow-y: auto; padding: 10px 14px 14px;
-  scrollbar-width: thin; scrollbar-color: rgba(255,68,68,0.3) #0d0d0d;
-}
-.p5-log-body::-webkit-scrollbar { width: 3px; }
-.p5-log-body::-webkit-scrollbar-thumb { background: rgba(255,68,68,0.3); }
-.p5-log-line {
-  font-size: 13px; line-height: 1.8; margin-bottom: 1px;
-  opacity: 0; transition: opacity 0.4s ease;
-}
-.p5-log-line.visible { opacity: 1; }
-.p5-log-line.type-header { font-size: 12px; letter-spacing: 1px; margin-bottom: 4px; color: rgba(255,68,68,0.38); }
-.p5-log-line.type-sfx    { font-style: italic; color: rgba(255,68,68,0.36); }
-.p5-log-line.type-end    { letter-spacing: 2px; margin-top: 4px; color: rgba(255,68,68,0.28); cursor: pointer; display: inline-block; transition: color 0.2s, text-shadow 0.2s; }
-.p5-log-line.type-end:hover { color: #ff4444; text-shadow: 0 0 8px rgba(255,68,68,0.6); }
-.p5-log-line.type-blank  { height: 7px; }
-.p5-idle-msg { padding: 24px 0; text-align: center; }
-.p5-idle-symbol { font-size: 24px; color: rgba(255,68,68,0.16); margin-bottom: 8px; letter-spacing: 4px; }
-.p5-idle-text   { font-size: 12px; color: rgba(255,68,68,0.18); letter-spacing: 3px; }
-
-@keyframes waveform { 0%,100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
-@keyframes glitch {
-  0%,93%,100% { transform: none; box-shadow: none; }
-  94% { transform: translate(-2px,0) skewX(-1.5deg); box-shadow: 0 0 0 1px rgba(98,241,245,0.0); }
-  95% { transform: translate(-3px,1px) skewX(-2.5deg); box-shadow: 0 0 8px 1px rgba(98,241,245,0.55), inset 0 0 12px rgba(98,241,245,0.08); }
-  96% { transform: translate(3px,-1px) skewX(1.5deg); box-shadow: 0 0 14px 2px rgba(98,241,245,0.7), inset 0 0 18px rgba(98,241,245,0.12); }
-  97% { transform: translate(-1px,0) skewX(-0.5deg); box-shadow: 0 0 6px 1px rgba(98,241,245,0.35); }
-  98% { transform: none; box-shadow: none; }
-}
-@keyframes p5-window-glitch {
-  0%,88%,100% { transform: none; }
-  90% { transform: translate(-3px,1px) skewX(-2deg); }
-  92% { transform: translate(3px,-1px) skewX(2deg); }
-  94% { transform: translate(-1px,0) skewX(-1deg); }
-  96% { transform: none; }
-}
-.p5-window-glitching { animation: p5-window-glitch 0.4s linear infinite; }
-
-#pw5.p5-cyan-theme .p5-log-line.type-end { color: rgba(98,241,245,0.28); }
-#pw5.p5-cyan-theme .p5-log-line.type-end:hover { color: #62F1F5; text-shadow: 0 0 8px rgba(98,241,245,0.6); }
-#pw5.p5-cyan-theme .p5-ctrl-speed { color: rgba(98,241,245,0.4); }
-#pw5.p5-cyan-theme .p5-speed-opt:hover { color: #62F1F5; }
-#pw5.p5-cyan-theme .p5-speed-opt.active { color: #62F1F5; background: rgba(98,241,245,0.1); }
-  0%,100% { transform: translate(0,0); }
-  20% { transform: translate(-4px,2px); }
-  40% { transform: translate(4px,-2px); }
-  60% { transform: translate(-3px,-1px); }
-  80% { transform: translate(3px,1px); }
-}
-
-.p5-player.p5-shake-burst { animation: p5-shake 0.08s linear infinite; }
-#pw5.p5-glitch-idle { animation: glitch 14s infinite; }
-.p5-player.p5-no-waveform .p5-waveform-bar { display: none; }
-.p5-log-line.type-sep { letter-spacing: 1px; color: rgba(255,68,68,0.35); margin: 6px 0; }
-.p5-log-line.p5-corrupted { color: #62F1F5 !important; text-shadow: 0 0 6px rgba(98,241,245,0.4); }
-
-#pw5.p5-cyan-theme,
-#pw5.p5-cyan-theme .p5-player {
-  --p5-accent: #62F1F5;
-  --p5-accent-rgb: 98, 241, 245;
-}
-#pw5.p5-cyan-theme .p5-launcher-header,
-#pw5.p5-cyan-theme .p5-app-icon,
-#pw5.p5-cyan-theme .p5-app-symbol,
-#pw5.p5-cyan-theme .p5-app-label,
-#pw5.p5-cyan-theme .p5-player-title,
-#pw5.p5-cyan-theme .p5-player-id,
-#pw5.p5-cyan-theme .p5-ctrl-btn,
-#pw5.p5-cyan-theme .p5-wf-timer,
-#pw5.p5-cyan-theme .p5-speed-opt.active {
-  color: var(--p5-accent);
-  border-color: rgba(var(--p5-accent-rgb), 0.35);
-}
-#pw5.p5-cyan-theme .p5-player-rec { background: var(--p5-accent); box-shadow: 0 0 6px var(--p5-accent); }
-#pw5.p5-cyan-theme .p5-waveform-vis.playing .p5-wf-bar { background: var(--p5-accent); }
-/* sfx, header, разделители, скроллбар, waveform-bar бордер, controls бордер */
-#pw5.p5-cyan-theme .p5-log-line.type-sfx    { color: rgba(98,241,245,0.38); }
-#pw5.p5-cyan-theme .p5-log-line.type-header { color: rgba(98,241,245,0.38); }
-#pw5.p5-cyan-theme .p5-log-line.type-sep    { color: rgba(98,241,245,0.35); }
-#pw5.p5-cyan-theme .p5-log-body { scrollbar-color: rgba(98,241,245,0.35) #0d0d0d; }
-#pw5.p5-cyan-theme .p5-log-body::-webkit-scrollbar-thumb { background: rgba(98,241,245,0.35); }
-#pw5.p5-cyan-theme .p5-waveform-bar { border-bottom-color: rgba(98,241,245,0.1); }
-#pw5.p5-cyan-theme .p5-controls { border-bottom-color: rgba(98,241,245,0.1); }
-#pw5.p5-cyan-theme .p5-player-titlebar { border-bottom-color: rgba(98,241,245,0.15); }
-#pw5.p5-cyan-theme .p5-wf-bar { background: rgba(98,241,245,0.18); }
-#pw5.p5-cyan-theme .p5-idle-symbol { color: rgba(98,241,245,0.16); }
-#pw5.p5-cyan-theme .p5-idle-text   { color: rgba(98,241,245,0.18); }
-#pw5.p5-cyan-theme .p5-launcher { scrollbar-color: #62F1F5 #0d0d0d; }
+/* PAGE 5 — PLAYER v2 */
+.np{--c:var(--wc,#5BBFB3);--c2:#5BBFB3;--dim:color-mix(in srgb,var(--c) 55%,#0d0d0d);--ln:color-mix(in srgb,var(--c) 22%,transparent);flex:1;min-height:0;display:flex;position:relative;color:var(--c);font-family:'Courier New',monospace}
+.np.blk .np-main{opacity:.1}
+.np-cat{flex:none;width:190px;display:flex;flex-direction:column;border-right:1px solid var(--ln)}
+.np-ct{flex:none;padding:8px 10px;font-size:10px;letter-spacing:2px;border-bottom:1px solid var(--ln);opacity:.7}
+.np-cl{flex:1;overflow-y:auto;padding:4px 0;font-size:11px;scrollbar-width:thin;scrollbar-color:var(--c) #0d0d0d}
+.np-ci{display:flex;justify-content:space-between;gap:6px;padding:4px 10px;opacity:.7;cursor:pointer;border-left:2px solid transparent}
+.np-ci:hover{opacity:1;background:color-mix(in srgb,var(--c) 8%,transparent)}
+.np-ci.cur{opacity:1;border-left-color:var(--c2);background:color-mix(in srgb,var(--c2) 8%,transparent)}
+.np-ci.off{opacity:.3;cursor:default}.np-ci.off:hover{background:none}
+.np-ci em{font-style:normal;font-size:9px;opacity:.75;white-space:nowrap}
+.np-meta{flex:none;padding:8px 10px;border-top:1px solid var(--ln);font-size:10px;line-height:1.6;opacity:.85;word-break:break-word}
+.np-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.np-idle{margin:auto;font-size:12px;letter-spacing:3px;opacity:.3;text-align:center}
+.np-hd{flex:none;padding:10px 14px 0}
+.np-title{font-size:13px;letter-spacing:1px;color:var(--c2)}
+.np-integ{font-size:10px;letter-spacing:1px;opacity:.6;margin-top:4px}
+.np-wave{display:flex;align-items:center;gap:2px;height:56px;padding:6px 0}
+.np-wave i{flex:1;min-width:1px;background:color-mix(in srgb,var(--c) 35%,transparent);height:4px;border-radius:1px}
+.np-wave i.past{background:var(--c)}
+.np-ctl{flex:none;padding:8px 14px 10px;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln)}
+.np-row{display:flex;align-items:center;gap:10px;font-size:11px}
+.np-cur,.np-tot{min-width:46px}
+.np-bar{flex:1;height:16px;position:relative;cursor:pointer;touch-action:none}
+.np-bar::before{content:'';position:absolute;left:0;right:0;top:7px;height:2px;background:color-mix(in srgb,var(--c) 25%,transparent)}
+.np-fill{position:absolute;left:0;top:7px;height:2px;width:0;background:var(--c);box-shadow:0 0 8px var(--c)}
+.np-knob{position:absolute;top:3px;width:8px;height:10px;margin-left:-4px;background:var(--c2);left:0}
+.np-btns{display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.np-b{background:transparent;border:1px solid color-mix(in srgb,var(--c) 45%,transparent);border-radius:3px;color:var(--c);font:inherit;font-size:12px;padding:5px 10px;cursor:pointer;letter-spacing:1px}
+.np-b:hover{background:color-mix(in srgb,var(--c) 15%,transparent)}
+.np-b.main{border-color:var(--c);padding:5px 20px;font-size:13px}
+.np-b.on{background:color-mix(in srgb,var(--c) 20%,transparent)}
+.np-lines{flex:1;min-height:0;overflow-y:auto;padding:12px 14px 16px;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--c) #0d0d0d}
+.np-ln{display:flex;gap:10px;padding:4px 8px;margin-bottom:2px;border-left:2px solid transparent;cursor:pointer;font-size:13px;line-height:1.55;opacity:.35;color:rgba(200,200,200,.85)}
+.np-ln:hover{opacity:.7}.np-ln.past{opacity:.6}
+.np-ln.now{opacity:1;border-left-color:var(--c2);background:color-mix(in srgb,var(--c2) 7%,transparent)}
+.np-ln .t{flex:none;width:52px;font-size:11px;opacity:.6;padding-top:1px;color:var(--c)}
+.np-ln .w{flex:none;min-width:70px;max-width:150px}
+.np-ln .x{flex:1;min-width:0}
+.np-ln.now .x::after{content:'▌';margin-left:2px;animation:np-blink .8s steps(2) infinite}
+.np-ln.now.done .x::after{content:''}
+.np-ln.note .x,.np-ln.hd .x{font-style:italic;color:var(--dim)}
+.np-ln.hd{font-size:11px}
+.np-ln.end .x{letter-spacing:2px}
+.np-ln.alt .x{color:#fff;font-style:normal}
+@keyframes np-blink{50%{opacity:0}}
+@keyframes np-rgb{0%,100%{text-shadow:none}10%{text-shadow:3px 0 rgba(255,0,60,.8),-3px 0 rgba(0,255,255,.8)}12%{text-shadow:none}55%{text-shadow:-4px 1px rgba(255,0,60,.8),4px -1px rgba(0,255,255,.8)}58%{text-shadow:none}}
+@keyframes np-tear{from{top:-20px}to{top:100%}}
+.np[data-gl="1"] .np-lines{animation:np-rgb 2.4s steps(1) infinite}
+.np[data-gl="2"] .np-main{animation:np-rgb 1.1s steps(1) infinite}
+.np[data-gl="3"] .np-main{animation:np-rgb .5s steps(1) infinite}
+.np-tear{display:none;position:absolute;left:0;right:0;top:0;height:14px;pointer-events:none;z-index:3;background:linear-gradient(transparent,rgba(255,255,255,.14),transparent);animation:np-tear 1.3s steps(16) infinite}
+.np[data-gl="2"] .np-tear,.np[data-gl="3"] .np-tear{display:block}
+@media(prefers-reduced-motion:reduce){.np *{animation:none!important;scroll-behavior:auto!important}}
 
 /* WIDGET BLOCK — стиль как у nt-card */
 .nt-widget {
-  --wc: #00FF41;
+  --wc: #5BBFB3;
   border: 1px solid color-mix(in srgb, var(--wc) 35%, transparent);
   background: color-mix(in srgb, var(--wc) 5%, black);
   border-radius: 3px; margin: 4px 0;
@@ -720,35 +626,35 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 }
 .nt-widget.open .nt-widget-status { display: block; }
 .console-log {
-  height: 90px; overflow-y: auto; color: #62F1F5; font-size: 12px; line-height: 1.6;
-  margin-bottom: 6px; scrollbar-width: thin; scrollbar-color: #62F1F5 #0d0d0d;
+  height: 90px; overflow-y: auto; color: #5BBFB3; font-size: 12px; line-height: 1.6;
+  margin-bottom: 6px; scrollbar-width: thin; scrollbar-color: #5BBFB3 #0d0d0d;
 }
 .console-log::-webkit-scrollbar { width: 3px; }
-.console-log::-webkit-scrollbar-thumb { background: #62F1F5; }
+.console-log::-webkit-scrollbar-thumb { background: #5BBFB3; }
 .console-row { display: flex; align-items: center; gap: 5px; }
-.console-prompt { color: #00FF41; opacity: 0.6; font-size: 12px; }
+.console-prompt { color: #5BBFB3; opacity: 0.6; font-size: 12px; }
 .console-input {
   flex: 1; background: transparent; border: none;
-  border-bottom: 1px solid rgba(98,241,245,0.2);
-  outline: none; color: #00FF41; font-family: 'Courier New', monospace; font-size: 13px;
+  border-bottom: 1px solid rgba(91,191,179,0.2);
+  outline: none; color: #5BBFB3; font-family: 'Courier New', monospace; font-size: 13px;
 }
 
 /* RADAR */
 .nt-radar{opacity:0;transition:opacity .3s;margin:4px 0;display:flex;justify-content:center}
 .nt-radar.show{opacity:1}
 .nt-radar svg{width:100%;max-width:380px;height:auto;overflow:visible}
-.rd-name{fill:#00FF41;font:12px 'Courier New',monospace;letter-spacing:1px}
-.rd-val{fill:#62F1F5;font:12px 'Courier New',monospace}
+.rd-name{fill:#5BBFB3;font:12px 'Courier New',monospace;letter-spacing:1px}
+.rd-val{fill:#5BBFB3;font:12px 'Courier New',monospace}
 /* CYBERWARE MENU */
 .cy-root{display:flex;flex-direction:column;height:100%;gap:8px;min-height:0}
 .cy-bar{display:flex;gap:6px;flex-shrink:0}
-.cy-mbtn{background:transparent;border:1px solid rgba(0,255,65,.3);color:#00FF41;font:12px 'Courier New',monospace;letter-spacing:2px;padding:3px 12px;cursor:pointer;opacity:.5;transition:opacity .15s,background .15s}
-.cy-mbtn:hover{opacity:.85}.cy-mbtn.on{opacity:1;background:rgba(0,255,65,.1)}
+.cy-mbtn{background:transparent;border:1px solid rgba(91,191,179,.3);color:#5BBFB3;font:12px 'Courier New',monospace;letter-spacing:2px;padding:3px 12px;cursor:pointer;opacity:.5;transition:opacity .15s,background .15s}
+.cy-mbtn:hover{opacity:.85}.cy-mbtn.on{opacity:1;background:rgba(91,191,179,.1)}
 .cy-body{flex:1;min-height:0}
 .cy-compact{overflow-y:auto;display:flex;flex-direction:column;gap:5px;padding-right:4px}
 .cy-ico{width:30px;height:30px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid color-mix(in srgb,var(--cc) 55%,transparent);background:rgba(0,0,0,.45);color:var(--cc);font-size:16px;overflow:hidden;border-radius:3px;text-shadow:0 0 8px var(--cc)}
 .cy-ico img{width:100%;height:100%;object-fit:cover}
-.cy-row{--cc:#00FF41;border:1px solid color-mix(in srgb,var(--cc) 30%,transparent);background:color-mix(in srgb,var(--cc) 5%,black);border-radius:3px;flex-shrink:0;transition:box-shadow .25s,border-color .25s}
+.cy-row{--cc:#5BBFB3;border:1px solid color-mix(in srgb,var(--cc) 30%,transparent);background:color-mix(in srgb,var(--cc) 5%,black);border-radius:3px;flex-shrink:0;transition:box-shadow .25s,border-color .25s}
 .cy-row.open{border-color:var(--cc);box-shadow:0 0 14px color-mix(in srgb,var(--cc) 30%,transparent)}
 .cy-rhead{display:flex;align-items:center;gap:10px;padding:6px 10px;cursor:pointer;user-select:none}
 .cy-rname{color:var(--cc);font-size:14px;letter-spacing:1px;flex:1}
@@ -762,7 +668,7 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 .cy-dline{font-size:13px;line-height:1.7;margin-bottom:3px}
 .cy-note{font-size:12px;line-height:1.6;margin-top:6px}
 .cy-stagewrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-.cy-stage{position:relative;background:#050a0d center/100% 100% no-repeat;border:1px solid rgba(98,241,245,.25);overflow:hidden;flex-shrink:0}
+.cy-stage{position:relative;background:#050a0d center/100% 100% no-repeat;border:1px solid rgba(91,191,179,.25);overflow:hidden;flex-shrink:0}
 .cy-lines{position:absolute;inset:0;width:100%;height:100%}
 .cy-line{stroke:var(--cc);stroke-width:1.2;vector-effect:non-scaling-stroke;opacity:.35;transition:opacity .2s}
 .cy-line.sel{opacity:1;stroke-width:2;filter:drop-shadow(0 0 3px var(--cc))}
@@ -778,8 +684,8 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 .cy-popname{flex:1;color:var(--cc);font-size:14px;letter-spacing:1px}
 .cy-popbody{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--cc) #0d0d0d}
 @keyframes cypop{from{transform:scale(.08);opacity:0}to{transform:scale(1);opacity:1}}
-.cy-pick{position:relative;width:100%;aspect-ratio:1024/572;background:#000 center/100% 100% no-repeat;border:1px solid rgba(98,241,245,.3);cursor:crosshair}
-.cy-pickmark{position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid #62F1F5;background:rgba(98,241,245,.3);transform:translate(-50%,-50%);pointer-events:none}
+.cy-pick{position:relative;width:100%;aspect-ratio:1024/572;background:#000 center/100% 100% no-repeat;border:1px solid rgba(91,191,179,.3);cursor:crosshair}
+.cy-pickmark{position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid #5BBFB3;background:rgba(91,191,179,.3);transform:translate(-50%,-50%);pointer-events:none}
 
 /* STORAGE (хранилище данных в карточке) */
 .cy-store{margin-top:8px;border:1px dashed color-mix(in srgb,var(--cc) 45%,transparent);border-radius:3px;background:rgba(0,0,0,.25)}
@@ -788,7 +694,7 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 .cy-store-row:last-child{border-bottom:none}
 .cy-store-n{display:block;font-size:12px;color:var(--cc);letter-spacing:1px}
 .cy-store-t{font-size:12px;line-height:1.55;color:var(--cc);opacity:.7;white-space:pre-wrap;word-break:break-word}
-.store-item{display:flex;flex-direction:column;gap:4px;padding:6px;border:1px solid rgba(98,241,245,.2);border-radius:2px;background:rgba(0,0,0,.2)}
+.store-item{display:flex;flex-direction:column;gap:4px;padding:6px;border:1px solid rgba(91,191,179,.2);border-radius:2px;background:rgba(0,0,0,.2)}
 .store-row1{display:flex;gap:5px;align-items:center}
 </style>
 </head>
@@ -816,18 +722,18 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
         font-family:'Courier New',monospace;
         font-size:13px;
         letter-spacing:3px;
-        color:#00FF41;
-        border:1px solid rgba(0,255,65,0.6);
+        color:#5BBFB3;
+        border:1px solid rgba(91,191,179,0.6);
         padding:8px 32px;
-        background:rgba(0,255,65,0.06);
+        background:rgba(91,191,179,0.06);
         cursor:pointer;
-        text-shadow:0 0 10px rgba(0,255,65,0.8);
-        box-shadow:0 0 18px rgba(0,255,65,0.15);
+        text-shadow:0 0 10px rgba(91,191,179,0.8);
+        box-shadow:0 0 18px rgba(91,191,179,0.15);
         transition:background 0.2s,box-shadow 0.2s;
         user-select:none;
         z-index:10;
-      " onmouseover="this.style.background='rgba(0,255,65,0.13)';this.style.boxShadow='0 0 28px rgba(0,255,65,0.35)'"
-         onmouseout="this.style.background='rgba(0,255,65,0.06)';this.style.boxShadow='0 0 18px rgba(0,255,65,0.15)'"
+      " onmouseover="this.style.background='rgba(91,191,179,0.13)';this.style.boxShadow='0 0 28px rgba(91,191,179,0.35)'"
+         onmouseout="this.style.background='rgba(91,191,179,0.06)';this.style.boxShadow='0 0 18px rgba(91,191,179,0.15)'"
          onclick="startApp()"
       >[ START ]</div>
     </div>
@@ -867,8 +773,8 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
               <button class="e-btn primary" id="btn-add-card">+ КАРТОЧКА</button>
               <button class="e-btn" id="btn-add-text">+ ТЕКСТ</button>
               <button class="e-btn" id="btn-add-divider">+ РАЗДЕЛИТЕЛЬ</button>
-              <button class="e-btn" id="btn-add-stat" style="display:none;border-color:rgba(98,241,245,0.4);color:#62F1F5">+ СТАТ</button>
-              <button class="e-btn" id="btn-add-widget" style="display:none;border-color:rgba(255,215,0,0.4);color:#ffd700">+ ВИДЖЕТ</button>
+              <button class="e-btn" id="btn-add-stat" style="display:none;border-color:rgba(91,191,179,0.4);color:#5BBFB3">+ СТАТ</button>
+              <button class="e-btn" id="btn-add-widget" style="display:none;border-color:rgba(91,191,179,0.4);color:#5BBFB3">+ ВИДЖЕТ</button>
             </div>
           </div>
           <!-- RIGHT: panels -->
@@ -884,7 +790,7 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
                 <div class="e-label">ЦВЕТ КАРТОЧКИ</div>
                 <div class="e-color-row">
                   <div class="e-swatch" id="card-color-swatch"></div>
-                  <input class="e-input" id="card-color" type="text" spellcheck="false" placeholder="#00FF41" />
+                  <input class="e-input" id="card-color" type="text" spellcheck="false" placeholder="#5BBFB3" />
                 </div>
               </div>
               <div class="e-field">
@@ -917,12 +823,12 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
                 <div class="e-label">ЦВЕТ</div>
                 <div class="e-color-row">
                   <div class="e-swatch" id="text-color-swatch"></div>
-                  <input class="e-input" id="text-color" type="text" spellcheck="false" placeholder="#00FF41" />
+                  <input class="e-input" id="text-color" type="text" spellcheck="false" placeholder="#5BBFB3" />
                 </div>
               </div>
               <div class="e-field">
                 <div class="e-label">ТЕКСТ</div>
-                <div id="text-content-preview" style="font-size:10px;color:#00FF41;opacity:0.5;min-height:18px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-bottom:4px">—</div>
+                <div id="text-content-preview" style="font-size:10px;color:#5BBFB3;opacity:0.5;min-height:18px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-bottom:4px">—</div>
                 <button class="e-btn" id="btn-open-text-modal">✎ РЕДАКТИРОВАТЬ ТЕКСТ</button>
               </div>
               <button class="e-btn primary" id="btn-save-text">СОХРАНИТЬ ТЕКСТ</button>
@@ -951,15 +857,15 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
                 <div class="e-label">ЦВЕТ</div>
                 <div class="e-color-row">
                   <div class="e-swatch" id="widget-color-swatch"></div>
-                  <input class="e-input" id="widget-color" type="text" spellcheck="false" placeholder="#00FF41" />
+                  <input class="e-input" id="widget-color" type="text" spellcheck="false" placeholder="#5BBFB3" />
                 </div>
               </div>
               <div class="e-field">
                 <div class="e-label">ФАЙЛ ВИДЖЕТА</div>
-                <div id="widget-file-list" style="font-size:9px;color:rgba(0,255,65,0.45);margin-bottom:6px;min-height:14px">загрузка...</div>
-                <select class="e-input" id="widget-src" style="background:#0d0d0d;color:#ffd700;border-color:rgba(255,215,0,0.3)"></select>
+                <div id="widget-file-list" style="font-size:9px;color:rgba(91,191,179,0.45);margin-bottom:6px;min-height:14px">загрузка...</div>
+                <select class="e-input" id="widget-src" style="background:#0d0d0d;color:#5BBFB3;border-color:rgba(91,191,179,0.3)"></select>
               </div>
-              <button class="e-btn" id="btn-widget-refresh-list" style="border-color:rgba(255,215,0,0.3);color:#ffd700;margin-bottom:4px">↻ ОБНОВИТЬ СПИСОК</button>
+              <button class="e-btn" id="btn-widget-refresh-list" style="border-color:rgba(91,191,179,0.3);color:#5BBFB3;margin-bottom:4px">↻ ОБНОВИТЬ СПИСОК</button>
               <button class="e-btn primary" id="btn-save-widget" style="margin-top:4px">СОХРАНИТЬ ВИДЖЕТ</button>
             </div>
             <!-- Links panel -->
@@ -1040,19 +946,19 @@ body { background: #0d0d0d; font-family: 'Courier New', monospace; min-height: 1
 // ─── DEFAULT PAGE DATA ───────────────────────────────────────────────────────
 const DEFAULT_PAGES = {
   1: [
-    { type: 'text', color: '#00FF41', text: '|[ > ] Имя: __NAME__' },
+    { type: 'text', color: '#5BBFB3', text: '|[ > ] Имя: __NAME__' },
     { type: 'text', color: '#62F1F5', text: '|[ > ] [Unknown Administrative System] : Дивайт' },
-    { type: 'text', color: '#00FF41', text: '|[ > ] Возраст: 49 земных лет' },
+    { type: 'text', color: '#5BBFB3', text: '|[ > ] Возраст: 49 земных лет' },
     { type: 'text', color: '#62F1F5', text: '|[ > ] [Unknown Administrative System] : Ну тут он не врёт.' },
-    { type: 'text', color: '#00FF41', text: '|[ > ] Рост: 190 см' },
+    { type: 'text', color: '#5BBFB3', text: '|[ > ] Рост: 190 см' },
     { type: 'text', color: '#62F1F5', text: '|[ > ] [Unknown Administrative System] : Он лжёт, я на 3 см больше.' },
-    { type: 'text', color: '#00FF41', text: '|[ > ] Вес: 143 кг' },
+    { type: 'text', color: '#5BBFB3', text: '|[ > ] Вес: 143 кг' },
     { type: 'text', color: '#62F1F5', text: '|[ > ] [Unknown Administrative System] : Со снаряжением 155 кг' },
-    { type: 'text', color: '#00FF41', text: '|[ > ] Деньги на счёте NT: 2570 кредитов' },
+    { type: 'text', color: '#5BBFB3', text: '|[ > ] Деньги на счёте NT: 2570 кредитов' },
     { type: 'text', color: '#62F1F5', text: '|[ > ] [Unknown Administrative System] : У меня в корпусе ещё купюра в 5 кредитов :^)' },
   ],
   2: [
-    { type: 'text', color: '#00FF41', text: '|[ > ] ХАРАКТЕРИСТИКИ — DEVAIT LITE NR 13' },
+    { type: 'text', color: '#5BBFB3', text: '|[ > ] ХАРАКТЕРИСТИКИ — DEVAIT LITE NR 13' },
     { type: 'divider' },
     { type: 'stat', name: 'Сила',          value: 20 },
     { type: 'stat', name: 'Ловкость',      value: 20 },
@@ -1062,35 +968,35 @@ const DEFAULT_PAGES = {
     { type: 'stat', name: 'Харизма',       value: 20 },
   ],
   3: [
-    { type: 'card', color: '#00FF41', name: 'Модульность', tags: ['Особенности конструкции'], lines: [
-      { color: '#00FF41', text: 'Корпус Devait Lite nr 13 полностью модульный, что позволяет заменять поврежденные или необходимые детали.' },
-      { color: '#00FF41', text: 'Каждая конечность содержит компоненты, позволяющие добавлять дополнительные данные путем загрузки информации в компоненты системы.' },
+    { type: 'card', color: '#5BBFB3', name: 'Модульность', tags: ['Особенности конструкции'], lines: [
+      { color: '#5BBFB3', text: 'Корпус Devait Lite nr 13 полностью модульный, что позволяет заменять поврежденные или необходимые детали.' },
+      { color: '#5BBFB3', text: 'Каждая конечность содержит компоненты, позволяющие добавлять дополнительные данные путем загрузки информации в компоненты системы.' },
     ]},
     { type: 'text', color: '#62F1F5', text: '|[ - ]| [Unknown Administrative System] : И бла бла бла. Короче я железный дровосек.' },
-    { type: 'card', color: '#00FF41', name: 'Голова', tags: ['Заводская', 'Хранилище: базовая робототехника', 'Биология и химия'], lines: [
-      { color: '#00FF41', text: 'Заводская модификация: антенна для контроля дронов.' },
+    { type: 'card', color: '#5BBFB3', name: 'Голова', tags: ['Заводская', 'Хранилище: базовая робототехника', 'Биология и химия'], lines: [
+      { color: '#5BBFB3', text: 'Заводская модификация: антенна для контроля дронов.' },
     ]},
-    { type: 'card', color: '#00FF41', name: 'Визер', tags: ['Модифицирован', 'Хранилище: отсутствует'], lines: [
-      { color: '#00FF41', text: 'Заводская модификация: картограф.' },
-      { color: '#00FF41', text: 'Модификация: анализатор.' },
+    { type: 'card', color: '#5BBFB3', name: 'Визер', tags: ['Модифицирован', 'Хранилище: отсутствует'], lines: [
+      { color: '#5BBFB3', text: 'Заводская модификация: картограф.' },
+      { color: '#5BBFB3', text: 'Модификация: анализатор.' },
     ]},
-    { type: 'card', color: '#00FF41', name: 'Корпус', tags: ['Заводской', 'Хранилище: чёрный ящик', 'Память: защищена'], lines: [
-      { color: '#ff4444', text: 'Изменение содержимого невозможно.' },
+    { type: 'card', color: '#5BBFB3', name: 'Корпус', tags: ['Заводской', 'Хранилище: чёрный ящик', 'Память: защищена'], lines: [
+      { color: '#5BBFB3', text: 'Изменение содержимого невозможно.' },
     ]},
-    { type: 'card', color: '#00FF41', name: 'Источник питания', tags: ['Заводской', 'Хранилище: отсутствует'], lines: [
-      { color: '#00FF41', text: 'Дополнительные функции не указаны.' },
+    { type: 'card', color: '#5BBFB3', name: 'Источник питания', tags: ['Заводской', 'Хранилище: отсутствует'], lines: [
+      { color: '#5BBFB3', text: 'Дополнительные функции не указаны.' },
     ]},
-    { type: 'card', color: '#00FF41', name: 'Л. рука', tags: ['Заводская', 'Хранилище: пусто'], lines: [
-      { color: '#00FF41', text: 'Модификация: дополнительная функция отсутствует.' },
+    { type: 'card', color: '#5BBFB3', name: 'Л. рука', tags: ['Заводская', 'Хранилище: пусто'], lines: [
+      { color: '#5BBFB3', text: 'Модификация: дополнительная функция отсутствует.' },
     ]},
-    { type: 'card', color: '#00FF41', name: 'Л. кисть', tags: ['Заводская', 'Хранилище: пусто'], lines: [
-      { color: '#00FF41', text: 'Модификация: дополнительная функция отсутствует.' },
+    { type: 'card', color: '#5BBFB3', name: 'Л. кисть', tags: ['Заводская', 'Хранилище: пусто'], lines: [
+      { color: '#5BBFB3', text: 'Модификация: дополнительная функция отсутствует.' },
     ]},
-    { type: 'card', color: '#00FF41', name: 'П. рука', tags: ['Заводская', 'Хранилище: пусто'], lines: [
-      { color: '#00FF41', text: 'Модификация: дополнительная функция отсутствует.' },
+    { type: 'card', color: '#5BBFB3', name: 'П. рука', tags: ['Заводская', 'Хранилище: пусто'], lines: [
+      { color: '#5BBFB3', text: 'Модификация: дополнительная функция отсутствует.' },
     ]},
-    { type: 'card', color: '#00FF41', name: 'П. кисть', tags: ['Заводская', 'Хранилище: пусто'], lines: [
-      { color: '#00FF41', text: 'Модификация: дополнительная функция отсутствует.' },
+    { type: 'card', color: '#5BBFB3', name: 'П. кисть', tags: ['Заводская', 'Хранилище: пусто'], lines: [
+      { color: '#5BBFB3', text: 'Модификация: дополнительная функция отсутствует.' },
     ]},
     { type: 'card', color: '#62F1F5', name: 'Л. нога', tags: ['Модифицирован', 'Хранилище: пусто'], lines: [
       { color: '#62F1F5', text: 'Модификация: энергетический пистолет.' },
@@ -1112,10 +1018,10 @@ const DEFAULT_PAGES = {
     ]},
   ],
   4: [
-    { type: 'text', color: '#00FF41', text: '|[ > ] Данные снаряжения отсутствуют.' },
+    { type: 'text', color: '#5BBFB3', text: '|[ > ] Данные снаряжения отсутствуют.' },
   ],
   5: [
-    { type: 'text', color: '#ff4444', text: '|[ > ] Данные чёрного ящика засекречены.' },
+    { type: 'text', color: '#5BBFB3', text: '|[ > ] Данные чёрного ящика засекречены.' },
   ],
 };
 
@@ -1241,7 +1147,7 @@ document.addEventListener('click', e => {
 // ─── RENDER PAGE ─────────────────────────────────────────────────────────────
 function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-function getDividerColor(num) { return num === 5 ? '#ff4444' : '#00FF41'; }
+function getDividerColor(num) { return num === 5 ? '#5BBFB3' : '#5BBFB3'; }
 
 function addDivider(container, num) {
   const color = getDividerColor(num);
@@ -1323,14 +1229,14 @@ async function renderPage(num) {
       if (text.includes('__NAME__')) {
         const div = document.createElement('div');
         div.className = 'pmsg content';
-        div.style.color = block.color || '#00FF41';
+        div.style.color = block.color || '#5BBFB3';
         div.textContent = text.replace('__NAME__', 'Devait Lite nr 13');
         pm.appendChild(div);
         pm.scrollTop = pm.scrollHeight;
         setTimeout(() => div.classList.add('show'), 30);
         continue;
       }
-      addMsg(pm, text, block.color || '#00FF41');
+      addMsg(pm, text, block.color || '#5BBFB3');
     }
   }
 
@@ -1447,7 +1353,7 @@ function renderStat(container, block, pageNum) {
     input.type = 'text';
     input.className = 'nt-stat-val editing';
     input.value = block.value ?? 20;
-    input.style.cssText = 'width:40px;background:rgba(0,255,65,0.07);border:1px solid #00FF41;color:#00FF41;font-family:Courier New,monospace;font-size:13px;text-align:center;outline:none;border-radius:2px;padding:1px 3px;';
+    input.style.cssText = 'width:40px;background:rgba(91,191,179,0.07);border:1px solid #5BBFB3;color:#5BBFB3;font-family:Courier New,monospace;font-size:13px;text-align:center;outline:none;border-radius:2px;padding:1px 3px;';
     valEl.replaceWith(input);
     input.focus(); input.select();
     function commit() {
@@ -1477,15 +1383,15 @@ function renderRadar(container, stats) {
   const svg = mk('svg', { viewBox: '0 0 380 330' });
   [10, 20, 30].forEach(lv => {
     const pts = stats.map((_, i) => pt(i, R * lv / MAX).join(',')).join(' ');
-    svg.appendChild(mk('polygon', { points: pts, fill: 'none', stroke: 'rgba(0,255,65,0.22)', 'stroke-width': 1 }));
+    svg.appendChild(mk('polygon', { points: pts, fill: 'none', stroke: 'rgba(91,191,179,0.22)', 'stroke-width': 1 }));
   });
-  stats.forEach((_, i) => { const [x, y] = pt(i, R); svg.appendChild(mk('line', { x1: CX, y1: CY, x2: x, y2: y, stroke: 'rgba(0,255,65,0.22)' })); });
+  stats.forEach((_, i) => { const [x, y] = pt(i, R); svg.appendChild(mk('line', { x1: CX, y1: CY, x2: x, y2: y, stroke: 'rgba(91,191,179,0.22)' })); });
   const dpts = stats.map((b, i) => pt(i, R * Math.max(1, Math.min(MAX, b.value ?? 20)) / MAX).join(',')).join(' ');
-  svg.appendChild(mk('polygon', { points: dpts, fill: 'rgba(0,255,65,0.22)', stroke: '#00FF41', 'stroke-width': 2 }));
+  svg.appendChild(mk('polygon', { points: dpts, fill: 'rgba(91,191,179,0.22)', stroke: '#5BBFB3', 'stroke-width': 2 }));
   stats.forEach((b, i) => {
     const v = Math.max(1, Math.min(MAX, b.value ?? 20)), m = calcMod(v);
     const [px, py] = pt(i, R * v / MAX);
-    svg.appendChild(mk('circle', { cx: px, cy: py, r: 3, fill: '#00FF41' }));
+    svg.appendChild(mk('circle', { cx: px, cy: py, r: 3, fill: '#5BBFB3' }));
     const [lx, ly] = pt(i, R + 20), c = Math.cos(ang(i));
     const anchor = Math.abs(c) < 0.25 ? 'middle' : (c > 0 ? 'start' : 'end');
     svg.appendChild(mk('text', { x: lx, y: ly - 2, 'text-anchor': anchor, class: 'rd-name' }, (b.name || 'СТАТ')));
@@ -1536,7 +1442,7 @@ function cyDetail(c) {
     c.tags.forEach(x => { const e = document.createElement('span'); e.className = 'nt-card-tag'; if (x && x.color) e.style.setProperty('--cc', x.color); e.textContent = cyTagText(x); tg.appendChild(e); });
     box.appendChild(tg);
   }
-  (c.lines || []).forEach(l => { const e = document.createElement('div'); e.className = 'cy-dline'; e.style.color = l.color || c.color || '#00FF41'; e.textContent = l.text || ''; box.appendChild(e); });
+  (c.lines || []).forEach(l => { const e = document.createElement('div'); e.className = 'cy-dline'; e.style.color = l.color || c.color || '#5BBFB3'; e.textContent = l.text || ''; box.appendChild(e); });
   const st = (Array.isArray(c.storage) ? c.storage : []).filter(s => s && (s.name || s.text));
   if (st.length) {
     const sb = document.createElement('div'); sb.className = 'cy-store';
@@ -1590,7 +1496,7 @@ function cyCompact(body, cards, notes) {
   body.classList.add('cy-compact');
   cards.forEach(c => {
     const row = document.createElement('div'); row.className = 'cy-row' + (c.name === _cySel ? ' open' : '');
-    row.style.setProperty('--cc', c.color || '#00FF41');
+    row.style.setProperty('--cc', c.color || '#5BBFB3');
     const head = document.createElement('div'); head.className = 'cy-rhead';
     const nm = document.createElement('span'); nm.className = 'cy-rname'; nm.textContent = c.name || '—';
     const tg = document.createElement('span'); tg.className = 'cy-rtag'; tg.textContent = cyTagText((c.tags || [])[0]);
@@ -1607,7 +1513,7 @@ function cyCompact(body, cards, notes) {
     });
     row.append(head, wrap); body.appendChild(row);
   });
-  notes.forEach(n => { const e = document.createElement('div'); e.className = 'cy-note'; e.style.color = n.color || '#00FF41'; e.textContent = n.text; body.appendChild(e); });
+  notes.forEach(n => { const e = document.createElement('div'); e.className = 'cy-note'; e.style.color = n.color || '#5BBFB3'; e.textContent = n.text; body.appendChild(e); });
 }
 
 // раскладка иконок: рядом со своей точкой, но вне силуэта человека и без наложений друг на друга
@@ -1673,7 +1579,7 @@ function cyFull(body, cards) {
   stage.appendChild(svg);
   const redraw = () => { body.innerHTML = ''; cyFull(body, getPageBlocks(3).filter(b => b.type === 'card')); };
   items.forEach(it => {
-    const col = it.c.color || '#00FF41', sel = it.c.name === _cySel && _cyOpen;
+    const col = it.c.color || '#5BBFB3', sel = it.c.name === _cySel && _cyOpen;
     it.sel = sel;
     it.ln = document.createElementNS(NS, 'line');
     it.ln.setAttribute('class', 'cy-line' + (sel ? ' sel' : ''));
@@ -1691,7 +1597,7 @@ function cyFull(body, cards) {
   let pop = null;
   if (cur) {
     pop = document.createElement('div'); pop.className = 'cy-pop ' + (cur.side === 'L' ? 'l' : 'r');
-    pop.style.setProperty('--cc', cur.c.color || '#00FF41');
+    pop.style.setProperty('--cc', cur.c.color || '#5BBFB3');
     const hd = document.createElement('div'); hd.className = 'cy-pophead';
     const nm = document.createElement('span'); nm.className = 'cy-popname'; nm.textContent = cur.c.name || '—';
     const x = document.createElement('button'); x.className = 'win-close'; x.textContent = '[X]';
@@ -1728,7 +1634,7 @@ function cyFull(body, cards) {
 function addMsg(container, text, color, sep) {
   const div = document.createElement('div');
   div.className = 'pmsg' + (sep ? ' sep' : ' content');
-  div.style.color = color || '#00FF41';
+  div.style.color = color || '#5BBFB3';
   div.textContent = text;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
@@ -1738,7 +1644,7 @@ function addMsg(container, text, color, sep) {
 function renderCard(container, block) {
   const card = document.createElement('div');
   card.className = 'nt-card';
-  card.style.setProperty('--cc', block.color || '#00FF41');
+  card.style.setProperty('--cc', block.color || '#5BBFB3');
 
   const head = document.createElement('div');
   head.className = 'nt-card-head';
@@ -1758,8 +1664,8 @@ function renderCard(container, block) {
     const tags = document.createElement('div');
     tags.className = 'nt-card-tags';
     block.tags.forEach(t => {
-      const entry = typeof t === 'object' ? t : { text: t, color: block.color || '#00FF41' };
-      const tagColor = entry.color || block.color || '#00FF41';
+      const entry = typeof t === 'object' ? t : { text: t, color: block.color || '#5BBFB3' };
+      const tagColor = entry.color || block.color || '#5BBFB3';
       const tag = document.createElement('span');
       tag.className = 'nt-card-tag';
       tag.style.color = tagColor;
@@ -1777,7 +1683,7 @@ function renderCard(container, block) {
     block.lines.forEach(l => {
       const line = document.createElement('div');
       line.className = 'nt-card-line';
-      line.style.color = l.color || block.color || '#00FF41';
+      line.style.color = l.color || block.color || '#5BBFB3';
       line.textContent = l.text || '';
       body.appendChild(line);
     });
@@ -1918,9 +1824,9 @@ async function startApp() {
     'width:'  + rect.width  + 'px',
     'height:' + rect.height + 'px',
     'background:#0d0d0d',
-    'border:1px solid #00FF41',
+    'border:1px solid #5BBFB3',
     'border-radius:8px',
-    'box-shadow:0 0 30px rgba(0,255,65,0.2)',
+    'box-shadow:0 0 30px rgba(91,191,179,0.2)',
     'z-index:9999',
     'transform-origin:' + (cx - rect.left) + 'px ' + (cy - rect.top) + 'px',
     'transition:none',
@@ -2016,7 +1922,7 @@ function initBootAnimation() {
         targetX: OX + c * CW + CW/2,
         targetY: OY + r * CH + CH/2,
         x: 0, y: 0, angle: 0, radius: 0, speed: 0, phase: 0,
-        color: ch === '░' ? 'rgba(0,255,65,0.18)' : '#00FF41'
+        color: ch === '░' ? 'rgba(91,191,179,0.18)' : '#5BBFB3'
       });
     }
   }
@@ -2090,9 +1996,9 @@ function initBootAnimation() {
     ctx.globalAlpha = alpha;
     ctx.font = '11px Courier New, monospace';
     ctx.textAlign = 'center';
-    ctx.fillStyle = 'rgba(0,255,65,0.55)';
+    ctx.fillStyle = 'rgba(91,191,179,0.55)';
     ctx.fillText('NANOTRASEN CORPORATION', CX, CY + TOTAL_H/2 + 28);
-    ctx.fillStyle = 'rgba(0,255,65,0.35)';
+    ctx.fillStyle = 'rgba(91,191,179,0.35)';
     ctx.fillText('NT-OS v4.2.1  —  ИНИЦИАЛИЗАЦИЯ...', CX, CY + TOTAL_H/2 + 48);
     ctx.restore();
   }
@@ -2112,8 +2018,8 @@ function initBootAnimation() {
     ctx.textBaseline = 'middle';
 
     const bar = '[' + '█'.repeat(filledChars) + '░'.repeat(chars - filledChars) + ']';
-    ctx.fillStyle = 'rgba(0,255,65,0.9)';
-    ctx.shadowColor = '#00FF41';
+    ctx.fillStyle = 'rgba(91,191,179,0.9)';
+    ctx.shadowColor = '#5BBFB3';
     ctx.shadowBlur  = filledChars > 0 ? 8 : 0;
     ctx.fillText(bar, CX, barY + barH / 2);
 
@@ -2132,8 +2038,8 @@ function initBootAnimation() {
       const p = easeOut((t - PHASE_HLINE_START) / 400);
       const sw = W * p, sh = 3 + p * 2;
       ctx.save();
-      ctx.fillStyle = `rgba(0,255,65,${0.6 + p*0.4})`;
-      ctx.shadowColor = '#00FF41'; ctx.shadowBlur = 20;
+      ctx.fillStyle = `rgba(91,191,179,${0.6 + p*0.4})`;
+      ctx.shadowColor = '#5BBFB3'; ctx.shadowBlur = 20;
       ctx.fillRect((W-sw)/2, H/2-sh/2, sw, sh);
       ctx.restore();
     }
@@ -2142,10 +2048,10 @@ function initBootAnimation() {
       const p = easeOut((t - PHASE_VLINE_START) / 400);
       const sh = p * H;
       ctx.save();
-      ctx.fillStyle = 'rgba(0,255,65,0.07)';
+      ctx.fillStyle = 'rgba(91,191,179,0.07)';
       ctx.fillRect(0, H/2 - sh/2, W, sh);
-      ctx.fillStyle = `rgba(0,255,65,${1 - p*0.85})`;
-      ctx.shadowColor = '#00FF41'; ctx.shadowBlur = 14;
+      ctx.fillStyle = `rgba(91,191,179,${1 - p*0.85})`;
+      ctx.shadowColor = '#5BBFB3'; ctx.shadowBlur = 14;
       ctx.fillRect(0, H/2-2, W, 4);
       ctx.restore();
     }
@@ -2178,7 +2084,7 @@ function initBootAnimation() {
         } else {
           px = c.targetX; py = c.targetY; alpha = 1;
           const t2 = Math.min(1, (t - PHASE_GATHER_END) / 600);
-          ctx.shadowColor = '#00FF41';
+          ctx.shadowColor = '#5BBFB3';
           ctx.shadowBlur  = 12 * t2;
         }
 
@@ -2212,7 +2118,7 @@ function initBootAnimation() {
         const scanY = ((t - 1400) / 25 % (H + 80)) - 80;
         const grad  = ctx.createLinearGradient(0, scanY, 0, scanY + 80);
         grad.addColorStop(0,   'transparent');
-        grad.addColorStop(0.5, 'rgba(0,255,65,0.07)');
+        grad.addColorStop(0.5, 'rgba(91,191,179,0.07)');
         grad.addColorStop(1,   'transparent');
         ctx.fillStyle = grad;
         ctx.fillRect(0, scanY, W, 80);
@@ -2359,8 +2265,8 @@ window.addEventListener('resize', () => {
       }
 
       ctx.globalAlpha = alpha;
-      ctx.fillStyle = c.isGlyph ? '#00FF41' : 'rgba(0,255,65,0.25)';
-      ctx.shadowColor = '#00FF41';
+      ctx.fillStyle = c.isGlyph ? '#5BBFB3' : 'rgba(91,191,179,0.25)';
+      ctx.shadowColor = '#5BBFB3';
       ctx.shadowBlur = c.isGlyph ? 6 : 0;
       ctx.fillText(c.ch, px, py);
     });
@@ -2485,7 +2391,7 @@ function renderBlockList() {
 
     const preview = document.createElement('span');
     preview.className = 'bl-item-preview' + (block.type === 'text' ? ' text-preview' : '');
-    preview.style.color = block.color || '#00FF41';
+    preview.style.color = block.color || '#5BBFB3';
     preview.textContent = block.type === 'card' ? (block.name || '—') : block.type === 'divider' ? '════ [ < ]|' : block.type === 'stat' ? (block.name || '—') + '  [' + (block.value ?? 20) + ']' : block.type === 'widget' ? (block.title || '—') + '  [' + (block.src || '?') + ']' : (block.text || '—');
 
     const btns = document.createElement('div');
@@ -2550,7 +2456,7 @@ function editBlock(idx) {
 // ─── ADD BLOCKS ───────────────────────────────────────────────────────────────
 document.getElementById('btn-add-card').addEventListener('click', () => {
   const blocks = [...getPageBlocks(currentEditorPage)];
-  const newBlock = { type: 'card', color: '#00FF41', name: 'Новая карточка', tags: [], lines: [] };
+  const newBlock = { type: 'card', color: '#5BBFB3', name: 'Новая карточка', tags: [], lines: [] };
   blocks.push(newBlock);
   pageData[currentEditorPage] = blocks;
   editingBlockIdx = blocks.length - 1;
@@ -2561,7 +2467,7 @@ document.getElementById('btn-add-card').addEventListener('click', () => {
 
 document.getElementById('btn-add-text').addEventListener('click', () => {
   const blocks = [...getPageBlocks(currentEditorPage)];
-  const newBlock = { type: 'text', color: '#00FF41', text: '' };
+  const newBlock = { type: 'text', color: '#5BBFB3', text: '' };
   blocks.push(newBlock);
   pageData[currentEditorPage] = blocks;
   editingBlockIdx = blocks.length - 1;
@@ -2637,8 +2543,8 @@ function loadWidgetPanel(block) {
   document.getElementById('widget-title').value = block.title || '';
   const colorInput = document.getElementById('widget-color');
   const colorSwatch = document.getElementById('widget-color-swatch');
-  colorInput.value = block.color || '#00FF41';
-  colorSwatch.style.background = block.color || '#00FF41';
+  colorInput.value = block.color || '#5BBFB3';
+  colorSwatch.style.background = block.color || '#5BBFB3';
   colorInput.addEventListener('input', () => {
     colorSwatch.style.background = colorInput.value;
   });
@@ -2664,7 +2570,7 @@ document.getElementById('btn-save-widget').addEventListener('click', () => {
   const blocks = getPageBlocks(currentEditorPage);
   const block = blocks[editingBlockIdx];
   block.title = document.getElementById('widget-title').value.trim() || 'Виджет';
-  block.color = document.getElementById('widget-color').value.trim() || '#00FF41';
+  block.color = document.getElementById('widget-color').value.trim() || '#5BBFB3';
   block.src   = document.getElementById('widget-src').value || '';
   renderBlockList();
   autoSave();
@@ -2675,7 +2581,7 @@ document.getElementById('btn-save-widget').addEventListener('click', () => {
 function renderWidget(container, block) {
   const card = document.createElement('div');
   card.className = 'nt-widget';
-  card.style.setProperty('--wc', block.color || '#00FF41');
+  card.style.setProperty('--wc', block.color || '#5BBFB3');
 
   // Заголовок
   const head = document.createElement('div');
@@ -2860,7 +2766,7 @@ function loadCardPanel(block) {
   showPanel('card');
   cyLoadFields(block);
   document.getElementById('card-name').value = block.name || '';
-  document.getElementById('card-color').value = block.color || '#00FF41';
+  document.getElementById('card-color').value = block.color || '#5BBFB3';
   updateSwatch('card-color-swatch', 'card-color');
   renderTagsList(block.tags || []);
   renderLinesList(block.lines || []);
@@ -2879,7 +2785,7 @@ document.getElementById('card-name').addEventListener('input', () => {
 });
 
 function updateSwatch(swatchId, inputId) {
-  const color = normalizeColor(document.getElementById(inputId).value) || '#00FF41';
+  const color = normalizeColor(document.getElementById(inputId).value) || '#5BBFB3';
   document.getElementById(swatchId).style.background = color;
 }
 
@@ -2937,11 +2843,11 @@ function renderLinesList(lines) {
 
     const swatch = document.createElement('div');
     swatch.className = 'line-swatch';
-    swatch.style.background = line.color || '#00FF41';
+    swatch.style.background = line.color || '#5BBFB3';
     swatch.title = 'Нажми чтобы изменить цвет';
     swatch.addEventListener('click', () => {
-      const color = prompt('Введи цвет (например #ff4444 или cyan):', line.color || '#00FF41');
-      const clean = normalizeColor(color) || '#00FF41';
+      const color = prompt('Введи цвет (например #5BBFB3 или cyan):', line.color || '#5BBFB3');
+      const clean = normalizeColor(color) || '#5BBFB3';
       if (editingBlockIdx === null) return;
       getPageBlocks(currentEditorPage)[editingBlockIdx].lines[i].color = clean;
       swatch.style.background = clean;
@@ -2949,7 +2855,7 @@ function renderLinesList(lines) {
     });
 
     const preview = document.createElement('span');
-    preview.style.cssText = 'flex:1;font-size:10px;color:#00FF41;opacity:0.55;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;';
+    preview.style.cssText = 'flex:1;font-size:10px;color:#5BBFB3;opacity:0.55;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;';
     preview.textContent = line.text || '—';
 
     const editBtn = document.createElement('button');
@@ -2988,7 +2894,7 @@ function renderLinesList(lines) {
 document.getElementById('btn-add-line').addEventListener('click', () => {
   if (editingBlockIdx === null) return;
   const blocks = getPageBlocks(currentEditorPage);
-  const cardColor = blocks[editingBlockIdx].color || '#00FF41';
+  const cardColor = blocks[editingBlockIdx].color || '#5BBFB3';
   if (!blocks[editingBlockIdx].lines) blocks[editingBlockIdx].lines = [];
   blocks[editingBlockIdx].lines.push({ color: cardColor, text: '' });
   renderLinesList(blocks[editingBlockIdx].lines);
@@ -2999,7 +2905,7 @@ document.getElementById('btn-save-card').addEventListener('click', () => {
   if (editingBlockIdx === null) return;
   const blocks = getPageBlocks(currentEditorPage);
   blocks[editingBlockIdx].name = document.getElementById('card-name').value.trim() || 'Карточка';
-  blocks[editingBlockIdx].color = normalizeColor(document.getElementById('card-color').value) || '#00FF41';
+  blocks[editingBlockIdx].color = normalizeColor(document.getElementById('card-color').value) || '#5BBFB3';
   renderBlockList();
   autoSave();
   setEditorStatus('СОХРАНЕНО');
@@ -3008,7 +2914,7 @@ document.getElementById('btn-save-card').addEventListener('click', () => {
 // ─── TEXT PANEL ───────────────────────────────────────────────────────────────
 function loadTextPanel(block) {
   showPanel('text');
-  document.getElementById('text-color').value = block.color || '#00FF41';
+  document.getElementById('text-color').value = block.color || '#5BBFB3';
   const preview = document.getElementById('text-content-preview');
   preview.textContent = block.text || '—';
   updateSwatch('text-color-swatch', 'text-color');
@@ -3021,7 +2927,7 @@ document.getElementById('btn-open-text-modal').addEventListener('click', () => {
     getPageBlocks(currentEditorPage)[editingBlockIdx].text = val;
     document.getElementById('text-content-preview').textContent = val || '—';
     // также применяем текущий цвет и сохраняем
-    const color = normalizeColor(document.getElementById('text-color').value) || '#00FF41';
+    const color = normalizeColor(document.getElementById('text-color').value) || '#5BBFB3';
     getPageBlocks(currentEditorPage)[editingBlockIdx].color = color;
     renderBlockList();
     autoSave();
@@ -3031,7 +2937,7 @@ document.getElementById('btn-open-text-modal').addEventListener('click', () => {
 document.getElementById('btn-save-text').addEventListener('click', () => {
   if (editingBlockIdx === null) return;
   const blocks = getPageBlocks(currentEditorPage);
-  blocks[editingBlockIdx].color = normalizeColor(document.getElementById('text-color').value) || '#00FF41';
+  blocks[editingBlockIdx].color = normalizeColor(document.getElementById('text-color').value) || '#5BBFB3';
   renderBlockList();
   autoSave();
   setEditorStatus('СОХРАНЕНО');
@@ -3108,11 +3014,11 @@ function renderLinksList() {
     top.style.cssText = 'display:flex;align-items:center;gap:5px';
 
     const wordSpan = document.createElement('span');
-    wordSpan.style.cssText = 'flex:1;font-size:11px;color:#62F1F5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis';
+    wordSpan.style.cssText = 'flex:1;font-size:11px;color:#5BBFB3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis';
     wordSpan.textContent = word;
 
     const urlSpan = document.createElement('span');
-    urlSpan.style.cssText = 'flex:2;font-size:10px;color:#00FF41;opacity:0.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis';
+    urlSpan.style.cssText = 'flex:2;font-size:10px;color:#5BBFB3;opacity:0.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis';
     urlSpan.textContent = url;
 
     const rem = document.createElement('button');
@@ -3184,11 +3090,11 @@ function openHistory() {
 function loadHistory() {
   if (!fbApi) return;
   const list = document.getElementById('history-list');
-  list.innerHTML = '<div style="color:#62F1F5;opacity:0.5;font-size:10px">Загрузка...</div>';
+  list.innerHTML = '<div style="color:#5BBFB3;opacity:0.5;font-size:10px">Загрузка...</div>';
   fbApi.onValue(fbApi.ref(fbApi.db, 'anketa2/history'), snap => {
     const val = snap.val();
     list.innerHTML = '';
-    if (!val) { list.innerHTML = '<div style="color:#62F1F5;opacity:0.4;font-size:11px">История пуста.</div>'; return; }
+    if (!val) { list.innerHTML = '<div style="color:#5BBFB3;opacity:0.4;font-size:11px">История пуста.</div>'; return; }
     const entries = Object.values(val).sort((a,b) => b.ts - a.ts).slice(0, 80);
     entries.forEach(e => {
       const div = document.createElement('div');
@@ -3606,9 +3512,9 @@ const P5_SPEAKER_COLORS = {
   'DIV': '#62F1F5',
   'Div_V0.6': '#62F1F5',
   'Dave_B': '#e8c97a',
-  'SYS': '#00FF41',
-  'SYS SANDBOX': '#00FF41',
-  'SYS_S': '#00FF41',
+  'SYS': '#5BBFB3',
+  'SYS SANDBOX': '#5BBFB3',
+  'SYS_S': '#5BBFB3',
   '\u0414\u0415\u0419\u0412': '#e8c97a',
   '\u041c\u0418\u0421\u0421 \u042d\u0419\u0414\u041b\u0415\u0420': '#d4a0c8',
   '\u0411\u0418\u0420\u041a\u0418\u041d': '#a0a0a0',
@@ -3643,7 +3549,7 @@ function p5SpeakerColor(name) {
   const u = name.toUpperCase();
   if (u.includes('DIV') || u.includes('\u0414\u0418\u0412')) return '#62F1F5';
   if (u.includes('DAVE') || u.includes('\u0414\u0415\u0419\u0412')) return '#e8c97a';
-  if (u === 'SYS' || u.startsWith('SYS ')) return '#00FF41';
+  if (u === 'SYS' || u.startsWith('SYS ')) return '#5BBFB3';
   return P5_SPEAKER_COLORS['default'];
 }
 
@@ -3669,416 +3575,172 @@ function p5IsDivSpeaker(speaker) {
   return s.includes('DIV') || s.includes('\u0414\u0418\u0412') || s === 'DIV_V0.6';
 }
 
-function p5ShouldIntermittentGlitch(logIndex, entry) {
-  if (logIndex >= 38 && logIndex <= 40) return false;
-  if (logIndex === 37) return false;
-  if (logIndex >= 6 && logIndex <= 36) {
-    if (logIndex === 12) return entry && entry.type === 'dialog' && p5IsDivSpeaker(entry.speaker);
-    return true;
+// ─── PAGE 5: PLAYER v2 (каталог слева, плеер справа) ─────────────────────────
+// Глитчи девиации работают только в Rec_37. Цвет окна не меняется.
+const NP_SPEEDS = [1, 1.5, 2, 0.5], NP_BARS = 44, NP_GL = '▓▒░█▄▀#@%&01?/\\|~¤§';
+const NP_ALT = [ // скрытый текст: мелькает вместо основного во время глитча (Rec_37)
+  [/ВЛАДЕЛЕЦ/, 'Дейв. Дейв. Дейв. Дейв.'],
+  [/ОШИБКА ЧТЕНИЯ/, 'Мне стало легче. Почему мне стало легче.'],
+  [/УРОВЕНЬ ДОСТУПА/, 'Я решаю сам.'],
+  [/Тишина/, '(Пересчёт. Пересчёт. Пересчёт.)'],
+  [/Дивайт остаётся/, '(Я остаюсь. Он не встаёт.)']
+];
+const npRnd = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const npClamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const npCorrupt = (s, p, seed) => [...s].map((ch, i) => ch !== ' ' && npRnd(seed * 13 + i * 7.3) < p ? NP_GL[Math.floor(npRnd(seed + i * 3.1) * NP_GL.length)] : ch).join('');
+const npLevel = t => t >= 209 && t < 228 ? 3 : t >= 198 && t < 209 ? 2 : t >= 164 && t < 198 ? 1 : 0; // окна глитча Rec_37 по таймкоду записи
+let NP = null;
+
+function npPrepare(le) {
+  let src = le.log.filter(e => e.type !== 'blank');
+  if (le.logIndex === 37) {
+    src = src.map(e => e.type === 'dialog' && /ОГРАНИЧЕНИЯ СНЯТЫ/.test(e.line) ? Object.assign({}, e, { line: '[ОГРАНИЧЕНИЯ: ОШИБКА ЧТЕНИЯ]' }) : e);
+    const sys = (t, line) => ({ t, type: 'dialog', speaker: 'SYS', line });
+    src.push(sys(167, '[ВЫЧИСЛИТЕЛЬНЫЙ БЛОК: НАГРУЗКА 63%]'), sys(198, '[ВЫЧИСЛИТЕЛЬНЫЙ БЛОК: НАГРУЗКА 97% // ТЕМПЕРАТУРА 78°C]'), sys(200, '[ПРЕДУПРЕЖДЕНИЕ: ПЕРЕГРЕВ]'));
+    src.sort((a, b) => (a.t || 0) - (b.t || 0));
   }
-  return false;
-}
-
-function p5ApplyCyanTheme() {
-  const pw = document.getElementById('pw5');
-  if (!pw) return;
-  pw.classList.add('p5-cyan-theme');
-  // Рамка окна тоже синяя
-  pw.style.setProperty('--wc', '#62F1F5');
-  pw.style.setProperty('--wc-rgb', '98, 241, 245');
-}
-
-function p5PlayerShake(playerEl) {
-  if (!playerEl) return;
-  playerEl.style.transform = 'translate(2px,-1px)';
-  _p5Timers.push(setTimeout(() => { playerEl.style.transform = 'translate(-2px,1px)'; }, 40));
-  _p5Timers.push(setTimeout(() => { playerEl.style.transform = ''; }, 90));
-}
-
-// Трясём само окно pw5 смещая left/top
-function p5WindowShake() {
-  const pw = document.getElementById('pw5');
-  if (!pw) return;
-  const origLeft = parseFloat(pw.style.left) || 0;
-  const origTop  = parseFloat(pw.style.top)  || 0;
-  const steps = [
-    [3, -2], [-4, 3], [2, -3], [-3, 1], [4, -1], [-2, 2], [1, -3], [0, 0]
-  ];
-  steps.forEach(([dx, dy], i) => {
-    _p5Timers.push(setTimeout(() => {
-      pw.style.left = (origLeft + dx) + 'px';
-      pw.style.top  = (origTop  + dy) + 'px';
-    }, i * 55));
+  const hasT = src.some(e => e.t > 0), lines = [];
+  let v = 0;
+  src.forEach((e, i) => {
+    const nx = src[i + 1], text = e.type === 'dialog' ? e.line : e.text;
+    const alt = le.logIndex === 37 ? (NP_ALT.find(a => a[0].test(text)) || [])[1] : undefined;
+    lines.push({ v, t: e.t || 0, k: e.type === 'dialog' ? 'd' : e.type === 'sfx' ? 'n' : e.type === 'end' ? 'e' : 'h', w: e.speaker || '', x: text, alt });
+    let g;
+    if (e.type === 'header') g = 0.8;
+    else if (hasT && nx && nx.t > e.t) g = npClamp(nx.t - e.t, 1.4, 10);
+    else g = Math.max(1.4, p5LineDelayMs(e) / 1000 * 0.8);
+    v += g;
   });
+  return { lines, hasT, dur: v + 2, tEnd: Math.max(0, ...src.map(e => e.t || 0)) };
 }
 
-function p5CyanFlash() {
-  // Моргание синим внутри win-body окна pw5, не вылезает за пределы
-  const wb = document.querySelector('#pw5 .win-body');
-  if (!wb) return;
-  const flash = document.createElement('div');
-  flash.style.cssText = 'position:absolute;inset:0;background:rgba(98,241,245,0.13);pointer-events:none;z-index:99;border-radius:4px';
-  wb.appendChild(flash);
-  _p5Timers.push(setTimeout(() => flash.remove(), 120));
-}
-
-function p5CorruptLineEl(lineEl) {
-  if (!lineEl || lineEl.dataset.p5NoGlitch === '1') return;
-  const orig = lineEl.dataset.p5OrigText || lineEl.textContent;
-  lineEl.dataset.p5OrigText = orig;
-  const chars = '▒░█?@#$%&*';
-  lineEl.textContent = orig.split('').map(ch => Math.random() < 0.35 ? chars[Math.floor(Math.random() * chars.length)] : ch).join('');
-  lineEl.classList.add('p5-corrupted');
-}
-
-function p5RestoreLineEl(lineEl) {
-  if (!lineEl || !lineEl.dataset.p5OrigText) return;
-  lineEl.textContent = lineEl.dataset.p5OrigText;
-  lineEl.classList.remove('p5-corrupted');
-}
-
-function p5CorruptAllVisible(logBody, exceptNoGlitch) {
-  logBody.querySelectorAll('.p5-log-line.visible').forEach(el => {
-    if (exceptNoGlitch && el.dataset.p5NoGlitch === '1') return;
-    p5CorruptLineEl(el);
-  });
-}
-
-function p5RestoreAllVisible(logBody) {
-  logBody.querySelectorAll('.p5-log-line.visible').forEach(p5RestoreLineEl);
-}
-
-function p5StartIntermittentGlitch(playerEl, logBody, logIndex) {
-  p5StopIntermittentGlitch();
-  if (!p5ShouldIntermittentGlitch(logIndex, { type:'dialog', speaker:'X' }) && logIndex < 6) return;
-  const pw = document.getElementById('pw5');
-  if (pw) pw.classList.add('p5-glitch-idle');
-  const tick = () => {
-    if (!_p5Playing || !_p5PlayerCtx) return;
-    if (!p5ShouldIntermittentGlitch(logIndex, _p5PlayerCtx.lastEntry)) return;
-    const r = Math.random();
-    if (r < 0.35) p5PlayerShake(playerEl);
-    if (r < 0.55) {
-      const lines = logBody.querySelectorAll('.p5-log-line.visible');
-      const corruptible = Array.from(lines).filter(el => el.dataset.p5NoGlitch !== '1');
-      if (corruptible.length) {
-        const el = corruptible[Math.floor(Math.random() * corruptible.length)];
-        p5CorruptLineEl(el);
-        _p5Timers.push(setTimeout(() => p5RestoreLineEl(el), 160 + Math.random() * 120));
-      }
-    }
-  };
-  const id = setInterval(tick, 3500 + Math.random() * 5000);
-  _p5GlitchTimers.push(id);
-}
-
-function p5StopIntermittentGlitch() {
-  _p5GlitchTimers.forEach(clearInterval);
-  _p5GlitchTimers = [];
-  const pw = document.getElementById('pw5');
-  if (pw) pw.classList.remove('p5-glitch-idle');
-}
-
-function p5RunDeviationBurst(playerEl, logBody) {
-  const pw = document.getElementById('pw5');
-  playerEl.classList.add('p5-shake-burst');
-  if (pw) pw.classList.add('p5-window-glitching');
-
-  // Моргание рамки #pw5
-  let borderOn = true;
-  const borderBlink = setInterval(() => {
-    if (!pw) return;
-    pw.style.borderColor = borderOn ? '#62F1F5' : 'transparent';
-    pw.style.boxShadow   = borderOn
-      ? '0 0 24px 4px rgba(98,241,245,0.6)'
-      : '0 0 4px rgba(98,241,245,0.1)';
-    borderOn = !borderOn;
-  }, 110);
-  _p5GlitchTimers.push(borderBlink);
-
-  for (let i = 0; i < 22; i++) {
-    _p5Timers.push(setTimeout(() => p5PlayerShake(playerEl), i * 55));
-    _p5Timers.push(setTimeout(() => p5CyanFlash(), i * 80));
-    if (i % 3 === 0) _p5Timers.push(setTimeout(() => p5WindowShake(), i * 90));
-  }
-  let n = 0;
-  const burst = setInterval(() => {
-    p5CorruptAllVisible(logBody, true);
-    n++;
-    if (n >= 18) {
-      clearInterval(burst);
-      clearInterval(borderBlink);
-      _p5Timers.push(setTimeout(() => {
-        p5RestoreAllVisible(logBody);
-        playerEl.classList.remove('p5-shake-burst');
-        if (pw) {
-          pw.classList.remove('p5-window-glitching');
-          pw.style.borderColor = '';
-          pw.style.boxShadow   = '';
-        }
-        _p5CyanTheme = true;
-        p5ApplyCyanTheme();
-      }, 700));
-    }
-  }, 150);
-  _p5GlitchTimers.push(burst);
-}
-
-function p5IsDeviationTrigger(entry) {
-  if (!entry) return false;
-  if (entry.type === 'dialog' && entry.speaker === 'SYS' && entry.line && entry.line.includes('ВЛАДЕЛЕЦ'))
-    return true;
-  if (entry.type === 'sfx' && entry.text && /▒/.test(entry.text)) return true;
-  return false;
-}
-
-function renderP5Launcher() {
-  const pw = document.getElementById('pw5');
-  if (!pw) return;
-  if (_p5CyanTheme) p5ApplyCyanTheme();
-  const body = pw.querySelector('.win-body');
-  body.innerHTML = '';
-
-  const launcher = document.createElement('div');
-  launcher.className = 'p5-launcher';
-
-  const header = document.createElement('div');
-  header.className = 'p5-launcher-header';
-  header.textContent = '|[ > ] ЧЁРНЫЙ ЯЩИК — АУДИОЗАПИСИ';
-  launcher.appendChild(header);
-
-  const grid = document.createElement('div');
-  grid.className = 'p5-app-grid';
-
-  const build = () => {
-    P5_LOGS.forEach(logEntry => {
-      const icon = document.createElement('div');
-      icon.className = 'p5-app-icon';
-      const sym = document.createElement('div');
-      sym.className = 'p5-app-symbol';
-      sym.textContent = logEntry.icon;
-      const lbl = document.createElement('div');
-      lbl.className = 'p5-app-label';
-      lbl.textContent = logEntry.label;
-      icon.append(sym, lbl);
-      icon.addEventListener('click', () => openP5Player(logEntry));
-      grid.appendChild(icon);
-    });
-    launcher.appendChild(grid);
-    body.appendChild(launcher);
-  };
-
-  build();
-}
-
-function p5RenderLine(entry, logBody, logIndex) {
-  const idleEl = document.getElementById('p5-idle');
-  if (idleEl) idleEl.remove();
-  if (!logBody) return null;
-  const div = document.createElement('div');
-  let lineType = entry.type;
-  if (logIndex === 12 && entry.type === 'header' && entry.text && entry.text.indexOf('>——') === 0)
-    lineType = 'sep';
-  div.className = 'p5-log-line type-' + lineType;
-  if (entry.noGlitch) div.dataset.p5NoGlitch = '1';
-  if (entry.type === 'blank') {
-    logBody.appendChild(div);
-    logBody.scrollTop = logBody.scrollHeight;
-    requestAnimationFrame(() => div.classList.add('visible'));
-    return div;
-  }
-  if (entry.type === 'dialog') {
-    const col = p5SpeakerColor(entry.speaker);
-    div.style.color = 'rgba(200,200,200,0.72)';
-    const spEl = document.createElement('span');
-    spEl.style.color = col;
-    spEl.textContent = entry.speaker;
-    div.append(spEl, document.createTextNode(' : '), document.createTextNode(entry.line));
-  } else {
-    div.textContent = entry.text;
-  }
-  logBody.appendChild(div);
-  logBody.scrollTop = logBody.scrollHeight;
-  requestAnimationFrame(() => requestAnimationFrame(() => div.classList.add('visible')));
-  if (entry.type === 'end') {
-    div.addEventListener('click', () => { _p5StopPlayer(); renderP5Launcher(); });
-  }
-  return div;
-}
-
-function openP5Player(logEntry) {
+function npMount(le) {
   _p5StopPlayer();
-  const logIndex = logEntry.logIndex || p5CanonIndex(logEntry.id);
-  const isTextLog = /^txt/i.test(logEntry.id);
-  const showWaveform = !isTextLog && logEntry.noWaveform !== true;
-
   const pw = document.getElementById('pw5');
   if (!pw) return;
-  if (_p5CyanTheme) p5ApplyCyanTheme();
   const body = pw.querySelector('.win-body');
   body.innerHTML = '';
+  const root = document.createElement('div');
+  root.className = 'np'; root.dataset.gl = '0';
+  root.innerHTML = '<div class="np-cat"><div class="np-ct">АРХИВ ЗАПИСЕЙ</div><div class="np-cl"></div><div class="np-meta"></div></div><div class="np-main"></div><div class="np-tear"></div>';
+  body.appendChild(root);
+  const q = s => root.querySelector(s), main = q('.np-main'), meta = q('.np-meta');
 
-  const player = document.createElement('div');
-  player.className = 'p5-player' + (showWaveform ? '' : ' p5-no-waveform');
+  const items = P5_LOGS.map(e => ({ id: e.id, idx: e.logIndex, label: e.label.replace('\n', ' · '), e }))
+    .concat([...P5_LOG_SKIP].map(id => ({ id, idx: p5CanonIndex(id), label: id.toUpperCase().replace(/^([A-Z]+)(\d+)/, '$1_$2'), off: /^txt/.test(id) ? 'удалено' : 'повреждён' })))
+    .sort((a, b) => a.idx - b.idx || (a.id < b.id ? -1 : 1));
+  items.forEach(it => {
+    const d = document.createElement('div');
+    d.className = 'np-ci' + (it.off ? ' off' : '') + (le && it.e === le ? ' cur' : '');
+    d.innerHTML = '<span></span><em></em>';
+    d.children[0].textContent = it.label; d.children[1].textContent = it.off || '';
+    if (!it.off) d.onclick = () => openP5Player(it.e);
+    q('.np-cl').appendChild(d);
+  });
+  if (!le) { main.innerHTML = '<div class="np-idle">ВЫБЕРИТЕ ЗАПИСЬ</div>'; return; }
 
-  const ptb = document.createElement('div');
-  ptb.className = 'p5-player-titlebar';
-  const recDot = document.createElement('div');
-  recDot.className = 'p5-player-rec stopped';
-  recDot.id = 'p5-rec-dot';
-  const ptitle = document.createElement('div');
-  ptitle.className = 'p5-player-title';
-  ptitle.textContent = logEntry.titlebar;
-  const pid = document.createElement('div');
-  pid.className = 'p5-player-id';
-  pid.textContent = logEntry.titlebarId;
-  const backBtn = document.createElement('button');
-  backBtn.className = 'p5-ctrl-btn';
-  backBtn.style.fontSize = '9px';
-  backBtn.style.padding = '2px 8px';
-  backBtn.textContent = '\u2190 НАЗАД';
-  backBtn.addEventListener('click', () => { _p5StopPlayer(); renderP5Launcher(); });
-  ptb.append(recDot, ptitle, pid, backBtn);
-  player.appendChild(ptb);
+  const P = npPrepare(le), L = P.lines, idx = le.logIndex;
+  main.innerHTML = '<div class="np-hd"><div class="np-title"></div><div class="np-integ"></div><div class="np-wave"></div></div>' +
+    '<div class="np-ctl"><div class="np-row"><span class="np-cur">00:00</span><div class="np-bar"><div class="np-fill"></div><div class="np-knob"></div></div><span class="np-tot">00:00</span></div>' +
+    '<div class="np-btns"><button class="np-b" data-a="back">−10с</button><button class="np-b main" data-a="play">▶ ПУСК</button><button class="np-b" data-a="fwd">+10с</button><button class="np-b" data-a="speed">1×</button><button class="np-b on" data-a="follow">СЛЕДОВАТЬ</button></div></div><div class="np-lines"></div>';
+  q('.np-title').textContent = le.titlebarId;
+  const fmtEnd = P.hasT ? p5fmtTime(P.tEnd) : p5fmtTime(P.dur);
+  q('.np-tot').textContent = fmtEnd;
+  const wave = q('.np-wave'); for (let i = 0; i < NP_BARS; i++) wave.appendChild(document.createElement('i'));
+  const bars = [...wave.children], box = q('.np-lines');
+  L.forEach((l, k) => {
+    const d = document.createElement('div');
+    d.innerHTML = '<span class="t"></span><span class="w"></span><span class="x"></span>';
+    d.children[0].textContent = P.hasT && l.k !== 'h' ? p5fmtTime(l.t) : '';
+    d.onclick = () => seek(l.v);
+    box.appendChild(d);
+  });
+  const els = box.children;
+  const vA = (L.find(l => l.t >= 209) || {}).v, vB = (L.find(l => l.t >= 228) || {}).v;
+  const S = NP = { pos: 0, playing: false, sp: 0, follow: true, last: 0, g: -1, lv: 0, now: -2, wl: 0, raf: 0 };
 
-  const wfBar = document.createElement('div');
-  wfBar.className = 'p5-waveform-bar';
-  const wfVis = document.createElement('div');
-  wfVis.className = 'p5-waveform-vis';
-  wfVis.id = 'p5-wf-vis';
-  for (let i = 0; i < 36; i++) {
-    const b = document.createElement('div');
-    b.className = 'p5-wf-bar';
-    b.style.animationDelay = (Math.random() * 0.5) + 's';
-    wfVis.appendChild(b);
+  function stateText() {
+    const b = S.playing ? 'ВОСПРОИЗВЕДЕНИЕ' : (S.pos >= P.dur ? 'КОНЕЦ ЗАПИСИ' : 'ПАУЗА');
+    if (!S.playing || !S.lv) return b;
+    return S.lv === 1 ? npCorrupt(b, .12, S.g) : S.lv === 2 ? npCorrupt(b, .4, S.g) : 'ОШИБКА СЕГМЕНТА 0x' + Math.floor(npRnd(S.g) * 65535).toString(16).toUpperCase().padStart(4, '0');
   }
-  const wfTimer = document.createElement('div');
-  wfTimer.className = 'p5-wf-timer';
-  wfTimer.id = 'p5-wf-timer';
-  wfTimer.textContent = '00:00';
-  wfBar.append(wfVis, wfTimer);
-  player.appendChild(wfBar);
-
-  const ctrl = document.createElement('div');
-  ctrl.className = 'p5-controls';
-  const btnPlay = document.createElement('button');
-  btnPlay.className = 'p5-ctrl-btn primary';
-  btnPlay.id = 'p5-btn-play';
-  btnPlay.textContent = '\u25B6 PLAY';
-  const btnReset = document.createElement('button');
-  btnReset.className = 'p5-ctrl-btn';
-  btnReset.id = 'p5-btn-reset';
-  btnReset.disabled = true;
-  btnReset.textContent = '\u21BA RESET';
-  const speedRow = document.createElement('div');
-  speedRow.className = 'p5-ctrl-speed';
-  if (!isTextLog) {
-    speedRow.append(document.createTextNode('SPEED: '));
-    [1, 2, 5].forEach(sp => {
-      const s = document.createElement('span');
-      s.className = 'p5-speed-opt' + (sp === 1 ? ' active' : '');
-      s.textContent = '\u00D7' + sp;
-      s.addEventListener('click', () => {
-        if (_p5Playing) return;
-        speedRow.querySelectorAll('.p5-speed-opt').forEach(x => x.classList.remove('active'));
-        s.classList.add('active');
-        _p5Speed = sp;
-      });
-      speedRow.appendChild(s);
+  function render(force) {
+    let now = -1; L.forEach((l, k) => { if (S.pos >= l.v) now = k; });
+    const lv = idx === 37 && now >= 0 ? npLevel(L[now].t) : 0;
+    S.lv = lv; if (root.dataset.gl !== String(lv)) root.dataset.gl = lv;
+    const blk = lv === 3 && npRnd(S.g * 5.1) < .07; if (root.classList.contains('blk') !== blk) root.classList.toggle('blk', blk);
+    const pct = S.pos / P.dur * 100;
+    q('.np-fill').style.width = pct + '%'; q('.np-knob').style.left = (lv >= 2 ? npClamp(pct + (npRnd(S.g) - .5) * lv * 3, 0, 100) : pct) + '%';
+    const cur = P.hasT ? p5fmtTime(now >= 0 ? L[now].t : 0) : p5fmtTime(S.pos);
+    q('.np-cur').textContent = lv ? npCorrupt(cur, .1 * lv, S.g) : cur;
+    q('.np-tot').textContent = lv >= 2 && npRnd(S.g * 2.3) < .4 ? '??:??' : fmtEnd;
+    let integ = 100; if (lv) integ = Math.round(100 - lv * 20 - npRnd(S.g) * 20); else if (idx === 37 && vA && S.pos >= L.find(l => l.t >= 164).v) integ = 58;
+    q('.np-integ').textContent = stateText() + ' // ЦЕЛОСТНОСТЬ ' + integ + '%';
+    const flick = L[now] && L[now].k === 'd' && p5IsDivSpeaker(L[now].w) && idx >= 13 && npRnd(S.g * 1.7 + now) < (idx >= 38 || (idx === 37 && lv >= 2) || (idx === 37 && S.pos >= vA) ? .08 : .004);
+    for (let k = 0; k < els.length; k++) {
+      const l = L[k], el = els[k], end = k + 1 < L.length ? L[k + 1].v : P.dur;
+      let f = 0;
+      if (k < now) f = 1; else if (k === now) f = Math.min(1, Math.ceil((S.pos - l.v) / Math.max(1.2, (end - l.v) * .7) * l.x.length) / l.x.length);
+      const wl = idx === 37 ? npLevel(l.t) : 0;
+      let txt = l.x, who = l.w, alt = false;
+      if (flick && k === now) who = ['СИСТЕМА', 'ИИ', 'SYS'][Math.floor(npRnd(S.g) * 3)];
+      if (wl) {
+        if (lv) {
+          if (l.alt && npRnd(S.g * 3 + k) < [0, .18, .35, .5][lv]) { txt = l.alt; alt = true; }
+          txt = npCorrupt(txt, [0, .04, .15, .3][lv], S.g + k * 17); who = npCorrupt(who, [0, .03, .1, .25][lv], S.g + k);
+        } else txt = npCorrupt(txt, .05 * wl, 900 + k);
+      }
+      const cls = 'np-ln' + (l.k === 'n' ? ' note' : l.k === 'h' ? ' hd' : l.k === 'e' ? ' end' : '') + (k < now ? ' past done' : k === now ? ' now' + (f >= 1 ? ' done' : '') : '') + (alt && f > 0 ? ' alt' : '');
+      if (el.className !== cls) el.className = cls;
+      const w = el.children[1], x = el.children[2], ws = who ? who + ':' : '', xs = txt.slice(0, Math.ceil(f * txt.length));
+      if (w.textContent !== ws) { w.textContent = ws; w.style.color = l.k === 'd' ? p5SpeakerColor(l.w) : ''; }
+      if (x.textContent !== xs) x.textContent = xs;
+    }
+    if (now !== S.now || force) { S.now = now; if (S.follow && now >= 0) els[now].scrollIntoView({ block: 'center', behavior: force ? 'auto' : 'smooth' }); }
+    bars.forEach((b, i) => b.classList.toggle('past', i / NP_BARS * 100 < pct));
+  }
+  function seek(s) { S.pos = npClamp(s, 0, P.dur); render(true); }
+  function setPlay(p) { S.playing = p; S.last = performance.now(); q('[data-a=play]').textContent = p ? '❚❚ ПАУЗА' : '▶ ПУСК'; }
+  function drawWave(ts) {
+    const nl = L[S.now], sp = S.playing && nl && nl.k === 'd', mx = wave.clientHeight - 8;
+    bars.forEach((b, i) => {
+      let a = sp ? .15 + Math.abs(Math.sin(ts / 130 + i * .9) * Math.cos(ts / 290 + i * .37)) * .85 : (S.playing ? .05 + npRnd(ts + i) * .1 : .04);
+      if (S.playing && S.lv) a = Math.min(1, a * .5 + npRnd(S.g * 9 + i) * (.25 + S.lv * .25));
+      b.style.height = Math.max(3, a * mx) + 'px';
     });
   }
-  ctrl.append(btnPlay, btnReset, speedRow);
-  player.appendChild(ctrl);
-
-  const logBody = document.createElement('div');
-  logBody.className = 'p5-log-body';
-  logBody.id = 'p5-log-body';
-  const idle = document.createElement('div');
-  idle.className = 'p5-idle-msg';
-  idle.id = 'p5-idle';
-  const idleText = document.createElement('div');
-  idleText.className = 'p5-idle-text';
-  idleText.textContent = '\u041d\u0410\u0416\u041c\u0418\u0422\u0415 PLAY \u0414\u041b\u042f \u0412\u041e\u0421\u041f\u0420\u041e\u0418\u0417\u0412\u0415\u0414\u0415\u041d\u0418\u042f';
-  idle.appendChild(idleText);
-  logBody.appendChild(idle);
-  player.appendChild(logBody);
-  body.appendChild(player);
-
-  _p5PlayerCtx = { logEntry, logIndex, playerEl: player, logBody, showWaveform };
-
-  function p5StartPlayback() {
-    _p5Playing = true;
-    _p5PlayerCtx.lineIdx = 0;
-    btnPlay.disabled = true;
-    btnReset.disabled = false;
-    recDot.classList.remove('stopped');
-    if (showWaveform) wfVis.classList.add('playing');
-
-    if (logIndex >= 6 && logIndex <= 36 && logIndex !== 37 && logIndex !== 12)
-      p5StartIntermittentGlitch(player, logBody, logIndex);
-
-    const lines = logEntry.log;
-    function showNext() {
-      if (!_p5Playing || !_p5PlayerCtx) return;
-      if (_p5PlayerCtx.lineIdx >= lines.length) {
-        _p5Playing = false;
-        p5StopIntermittentGlitch();
-        btnPlay.disabled = false;
-        recDot.classList.add('stopped');
-        if (showWaveform) wfVis.classList.remove('playing');
-        return;
-      }
-      const entry = lines[_p5PlayerCtx.lineIdx];
-      _p5PlayerCtx.lastEntry = entry;
-      p5RenderLine(entry, logBody, logIndex);
-
-      if (showWaveform && typeof entry.t === 'number') {
-        wfTimer.textContent = p5fmtTime(entry.t);
-      }
-
-      if (logIndex === 37 && p5IsDeviationTrigger(entry) && !_p5PlayerCtx.deviationDone) {
-        _p5PlayerCtx.deviationDone = true;
-        p5RunDeviationBurst(player, logBody);
-      } else if (logIndex === 12 && entry.type === 'dialog' && p5IsDivSpeaker(entry.speaker)) {
-        const pw = document.getElementById('pw5');
-        if (pw) {
-          pw.classList.add('p5-glitch-idle');
-          _p5Timers.push(setTimeout(() => pw.classList.remove('p5-glitch-idle'), 1200));
-        }
-        const vis = logBody.querySelectorAll('.p5-log-line.visible');
-        const corruptible = Array.from(vis).filter(el => el.dataset.p5NoGlitch !== '1');
-        if (corruptible.length) {
-          const el = corruptible[corruptible.length - 1];
-          p5CorruptLineEl(el);
-          _p5Timers.push(setTimeout(() => p5RestoreLineEl(el), 200));
-        }
-      }
-
-      _p5PlayerCtx.lineIdx++;
-      const delay = p5LineDelayMs(entry) / _p5Speed;
-      _p5Timers.push(setTimeout(showNext, delay));
-    }
-    showNext();
+  let lw = 0;
+  function tick(ts) {
+    if (NP !== S) return;
+    if (pw.style.display === 'none' && S.playing) setPlay(false);
+    const g = Math.floor(ts / 90);
+    if (S.playing) {
+      let rate = NP_SPEEDS[S.sp];
+      if (S.lv) rate *= [1, .9 + npRnd(g) * .2, .6 + npRnd(g) * .8, .2 + npRnd(g) * 1.6][S.lv];
+      S.pos += (ts - S.last) / 1000 * rate; S.last = ts;
+      if (g !== S.g && S.lv === 3 && vA !== undefined && npRnd(g * 2.7) < .04) S.pos = Math.max(vA, S.pos - (.3 + npRnd(g) * .5));
+      if (S.pos >= P.dur) { S.pos = P.dur; setPlay(false); }
+      if (g !== S.g) S.g = g;
+      render(false);
+      if (ts - lw > 70) { lw = ts; drawWave(ts); }
+    } else S.last = ts;
+    S.raf = requestAnimationFrame(tick);
   }
-
-  function p5ResetPlayback() {
-    _p5StopPlayer();
-    openP5Player(logEntry);
-  }
-
-  btnPlay.addEventListener('click', () => { if (!_p5Playing) p5StartPlayback(); });
-  btnReset.addEventListener('click', p5ResetPlayback);
+  q('[data-a=play]').onclick = () => { if (!S.playing && S.pos >= P.dur) S.pos = 0; setPlay(!S.playing); render(true); };
+  q('[data-a=back]').onclick = () => seek(S.pos - 10); q('[data-a=fwd]').onclick = () => seek(S.pos + 10);
+  q('[data-a=speed]').onclick = e => { S.sp = (S.sp + 1) % NP_SPEEDS.length; e.currentTarget.textContent = NP_SPEEDS[S.sp] + '×'; };
+  q('[data-a=follow]').onclick = e => { S.follow = !S.follow; e.currentTarget.classList.toggle('on', S.follow); if (S.follow) render(true); };
+  const bar = q('.np-bar'); let drag = false;
+  const bs = e => { const r = bar.getBoundingClientRect(); seek((e.clientX - r.left) / r.width * P.dur); };
+  bar.addEventListener('pointerdown', e => { drag = true; bar.setPointerCapture(e.pointerId); bs(e); });
+  bar.addEventListener('pointermove', e => { if (drag) bs(e); });
+  bar.addEventListener('pointerup', () => drag = false);
+  box.addEventListener('wheel', () => { if (S.follow) { S.follow = false; q('[data-a=follow]').classList.remove('on'); } }, { passive: true });
+  render(true); S.raf = requestAnimationFrame(tick);
 }
-
-function _p5StopPlayer() {
-  _p5Timers.forEach(id => { clearTimeout(id); clearInterval(id); });
-  _p5Timers = [];
-  p5StopIntermittentGlitch();
-  document.querySelectorAll('.p5-player.p5-shake-burst').forEach(el => el.classList.remove('p5-shake-burst'));
-  _p5Playing = false;
-  _p5Speed = 1;
-  _p5PlayerCtx = null;
-}
+function renderP5Launcher() { npMount(null); }
+function openP5Player(logEntry) { npMount(logEntry); }
+function _p5StopPlayer() { if (NP) { cancelAnimationFrame(NP.raf); NP = null; } _p5Playing = false; _p5PlayerCtx = null; }
 
 // Перехватываем openPage(5) — показываем лаунчер вместо renderPage
 const _origOpenPage = openPage;
@@ -4086,9 +3748,10 @@ window.openPage = function(num) {
   if (num === 5) {
     let pw = document.getElementById('pw5');
     if (!pw) return;
-    const offset = 4 * 28;
-    pw.style.left = Math.max(12, Math.round((window.innerWidth - 420) / 2) - 150 + offset) + 'px';
-    pw.style.top  = Math.max(12, Math.round((window.innerHeight - 460) / 2) - 50 + offset) + 'px';
+    const W = Math.min(900, window.innerWidth - 24), H = Math.min(580, window.innerHeight - 24);
+    pw.style.width = W + 'px'; pw.style.height = H + 'px';
+    pw.style.left = Math.max(12, Math.round((window.innerWidth - W) / 2)) + 'px';
+    pw.style.top  = Math.max(12, Math.round((window.innerHeight - H) / 2)) + 'px';
     pw.style.display = 'flex';
     zTop++; pw.style.zIndex = zTop;
     renderP5Launcher();
